@@ -34,6 +34,7 @@ const completionFilter = document.getElementById('completion-filter');
 onAuthStateChanged(auth, (user) => {
     if (user) {
         globalUserRef = user;
+        // Displays the first part of the email in the header (e.g., JWAN from jwan@gmail.com)
         document.getElementById('user-display').innerText = user.email.split('@')[0].toUpperCase();
         
         authScreen.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
@@ -62,14 +63,12 @@ onAuthStateChanged(auth, (user) => {
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const usernameInput = document.getElementById('login-username').value.trim().toLowerCase();
+    // Adjusted placeholder text logic to pass regular email input straight to Firebase
+    const emailInput = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
     
-    // SMART LOGIN CHECK: If you typed a full email, use it. Otherwise, fallback to the local system mapping.
-    const finalEmail = usernameInput.includes('@') ? usernameInput : `${usernameInput}@lifeos.local`;
-    
     try {
-        await signInWithEmailAndPassword(auth, finalEmail, password);
+        await signInWithEmailAndPassword(auth, emailInput, password);
     } catch (error) {
         console.error("Auth Failure Detail:", error.code, error.message);
         alert(`Authentication Error: Access Denied. Check credentials or Firebase console configurations.`);

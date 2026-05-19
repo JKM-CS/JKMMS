@@ -62,13 +62,17 @@ onAuthStateChanged(auth, (user) => {
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.getElementById('login-username').value.trim().toLowerCase();
+    const usernameInput = document.getElementById('login-username').value.trim().toLowerCase();
     const password = document.getElementById('login-password').value;
-    const virtualEmail = `${username}@lifeos.local`;
+    
+    // SMART LOGIN CHECK: If you typed a full email, use it. Otherwise, fallback to the local system mapping.
+    const finalEmail = usernameInput.includes('@') ? usernameInput : `${usernameInput}@lifeos.local`;
+    
     try {
-        await signInWithEmailAndPassword(auth, virtualEmail, password);
+        await signInWithEmailAndPassword(auth, finalEmail, password);
     } catch (error) {
-        alert(`Authentication Error: Invalid username or password.`);
+        console.error("Auth Failure Detail:", error.code, error.message);
+        alert(`Authentication Error: Access Denied. Check credentials or Firebase console configurations.`);
     }
 });
 
@@ -118,7 +122,7 @@ function initializeLiveStream() {
         snapshot.forEach((doc) => {
             activeCachedItems.push({ id: doc.id, ...doc.data() });
         });
-        calculateMetrics(); // Re-index counts across global sync updates
+        calculateMetrics(); 
         processAndRenderStream();
     });
 }
@@ -129,18 +133,15 @@ function calculateMetrics() {
     const completed = activeCachedItems.filter(i => i.completed).length;
     const efficiency = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-    // Isolate today's local timestamp boundaries
     const localTodayStr = new Date().toISOString().split('T')[0];
     const rawTodayTasks = activeCachedItems.filter(i => i.dueDate === localTodayStr);
     const activeTodayTasksCount = rawTodayTasks.filter(i => !i.completed).length;
 
-    // Render numbers inside layout targets
     document.getElementById('stat-total').innerText = total;
     document.getElementById('stat-completed').innerText = completed;
     document.getElementById('stat-efficiency').innerText = `${efficiency}%`;
     document.getElementById('stat-today').innerText = activeTodayTasksCount;
 
-    // Reactive styling if urgent active tasks are remaining for the day
     const todayCard = document.getElementById('stat-today-card');
     const todayIconBg = document.getElementById('stat-today-icon-bg');
     
@@ -155,14 +156,12 @@ function calculateMetrics() {
     }
 }
 
-// Interactive Dashboard Click Processing Function Trigger
 window.toggleTodayFilter = function() {
     todayFilterActive = !todayFilterActive;
     const todayCard = document.getElementById('stat-today-card');
     const todayLabel = document.getElementById('stat-today-label');
 
     if (todayFilterActive) {
-        // Highlighting that an isolated system state restriction is operational
         todayCard.classList.remove('border-slate-800/80', 'border-rose-500/30');
         todayCard.classList.add('border-amber-500', 'bg-amber-500/5');
         todayLabel.innerHTML = "Filtering: Due Today <span class='text-[10px] lowercase'>(Click clear)</span>";
@@ -174,12 +173,10 @@ window.toggleTodayFilter = function() {
     processAndRenderStream();
 };
 
-// --- INTERACTIVE SYSTEM EVENT FILTERS ---
 window.switchTab = function(category) {
     currentCategoryFilter = category;
-    todayFilterActive = false; // Break today isolation lock if switching side categories explicitly
+    todayFilterActive = false; 
     
-    // Clear Today UI adjustments
     const todayCard = document.getElementById('stat-today-card');
     document.getElementById('stat-today-label').innerText = "Due Today";
     todayCard.classList.remove('border-amber-500', 'bg-amber-500/5');
@@ -200,7 +197,6 @@ window.switchTab = function(category) {
 searchBar.addEventListener('input', processAndRenderStream);
 completionFilter.addEventListener('change', processAndRenderStream);
 
-// --- COMPONENT STREAM PIPELINE GENERATOR ---
 function processAndRenderStream() {
     dataStreamContainer.innerHTML = '';
     
@@ -210,7 +206,6 @@ function processAndRenderStream() {
 
     let filtered = activeCachedItems;
 
-    // Apply dashboard metric system filters if toggled active
     if (todayFilterActive) {
         filtered = filtered.filter(item => item.dueDate === localTodayStr);
         document.getElementById('stream-heading').innerText = "Today's Agenda Stream";

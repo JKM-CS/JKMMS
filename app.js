@@ -314,7 +314,7 @@ function renderStreamContainer() {
 }
 
 // ==========================================
-// 7. MULTI-LANGUAGE UTILITY CONTROLS
+// 7. MULTI-LANGUAGE UTILITY CONTROLS (FONT SCALED)
 // ==========================================
 function applyLocalization(langCode) {
     const dict = locales[langCode] || locales.en;
@@ -336,14 +336,21 @@ function applyLocalization(langCode) {
     document.getElementById('opt-filter-active').textContent = dict.filterActive;
     document.getElementById('opt-filter-comp').textContent = dict.filterComp;
 
-    // Toggle Right-to-Left writing flows cleanly
     const dashboard = document.getElementById('dashboard-screen');
+    
+    // Check if the current chosen language layout option is Arabic or Kurdish
     if (langCode === 'ar' || langCode === 'ku') {
         dashboard.dir = "rtl";
-        dashboard.classList.add('font-serif');
+        dashboard.classList.add('font-ibm-plex');
+        
+        // Scale base typography sizing larger for optimized legibility
+        dashboard.style.fontSize = "15.5px"; 
     } else {
         dashboard.dir = "ltr";
-        dashboard.classList.remove('font-serif');
+        dashboard.classList.remove('font-ibm-plex');
+        
+        // Restore standard baseline formatting scale rule
+        dashboard.style.fontSize = "14px"; 
     }
 }
 

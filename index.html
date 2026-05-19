@@ -43,11 +43,11 @@
             </div>
             <form id="login-form" class="space-y-4">
                 <div>
-                    <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5 font-mono">Email Address</label>
+                    <label class="block text-[13px] font-semibold uppercase tracking-wider text-slate-300 mb-2 font-mono">Email Address</label>
                     <input type="email" id="login-username" required class="w-full bg-slate-900/40 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-all" placeholder="name@email.com">
                 </div>
                 <div>
-                    <label class="block text-[10px] font-semibold uppercase tracking-wider text-slate-400 mb-1.5 font-mono">Password</label>
+                    <label class="block text-[13px] font-semibold uppercase tracking-wider text-slate-300 mb-2 font-mono">Password</label>
                     <input type="password" id="login-password" required class="w-full bg-slate-900/40 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-all" placeholder="••••••••">
                 </div>
                 <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl transition-all shadow-lg text-sm mt-2 flex items-center justify-center gap-2">
@@ -100,28 +100,28 @@
             <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
                 <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme">
                     <div>
-                        <p id="lbl-stat-total" class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Total Items</p>
+                        <p id="lbl-stat-total" class="text-[11px] font-mono text-slate-500 uppercase tracking-wider">Total Items</p>
                         <h3 id="stat-total" class="text-xl font-bold mt-0.5 text-slate-200">0</h3>
                     </div>
                     <div class="p-2 bg-slate-900 text-theme rounded-lg border border-slate-800/40"><i data-lucide="layers" class="w-4 h-4"></i></div>
                 </div>
                 <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme">
                     <div>
-                        <p id="lbl-stat-completed" class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Completed</p>
+                        <p id="lbl-stat-completed" class="text-[11px] font-mono text-slate-500 uppercase tracking-wider">Completed</p>
                         <h3 id="stat-completed" class="text-xl font-bold mt-0.5 text-emerald-400">0</h3>
                     </div>
                     <div class="p-2 bg-slate-900 text-emerald-400 rounded-lg border border-slate-800/40"><i data-lucide="check-circle-2" class="w-4 h-4"></i></div>
                 </div>
                 <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme">
                     <div>
-                        <p id="lbl-stat-efficiency" class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Efficiency</p>
+                        <p id="lbl-stat-efficiency" class="text-[11px] font-mono text-slate-500 uppercase tracking-wider">Efficiency</p>
                         <h3 id="stat-efficiency" class="text-xl font-bold mt-0.5 text-cyan-400">0%</h3>
                     </div>
                     <div class="p-2 bg-slate-900 text-cyan-400 rounded-lg border border-slate-800/40"><i data-lucide="percent" class="w-4 h-4"></i></div>
                 </div>
                 <div id="stat-today-card" onclick="window.toggleTodayFilter()" class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm cursor-pointer group transition-all duration-200 hover:border-theme-active border-theme">
                     <div>
-                        <p id="stat-today-label" class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Due Today</p>
+                        <p id="stat-today-label" class="text-[11px] font-mono text-slate-500 uppercase tracking-wider">Due Today</p>
                         <h3 id="stat-today" class="text-xl font-bold mt-0.5 text-rose-400">0</h3>
                     </div>
                     <div id="stat-today-icon-bg" class="p-2 bg-slate-900 text-slate-500 rounded-lg border border-slate-800/40 group-hover:text-theme transition-all duration-200">
@@ -139,14 +139,14 @@
                         <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-theme"></i>
                         <span id="lbl-matrix-title">New Entry Matrix</span>
                     </h3>
-                    <form id="item-form" class="space-y-3.5">
+                    <form id="item-form" class="space-y-4">
                         <div>
-                            <label id="lbl-field-desc" class="block text-[10px] font-mono text-slate-500 uppercase tracking-wider mb-1">Description / Title</label>
+                            <label id="lbl-field-desc" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Description / Title</label>
                             <input type="text" id="item-title" required class="w-full bg-slate-900/40 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus-theme transition-all placeholder-slate-700" placeholder="...">
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
-                                <label id="lbl-field-cat" class="block text-[10px] font-mono text-slate-500 uppercase tracking-wider mb-1">Category</label>
+                                <label id="lbl-field-cat" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Category</label>
                                 <select id="item-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus-theme transition-colors">
                                     <option value="Personal" id="opt-cat-personal">Personal</option>
                                     <option value="University" id="opt-cat-uni">University</option>
@@ -155,7 +155,7 @@
                                 </select>
                             </div>
                             <div>
-                                <label id="lbl-field-priority" class="block text-[10px] font-mono text-slate-500 uppercase tracking-wider mb-1">Priority</label>
+                                <label id="lbl-field-priority" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Priority</label>
                                 <select id="item-priority" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus-theme transition-colors">
                                     <option value="Low" id="opt-pr-low">Low</option>
                                     <option value="Medium" id="opt-pr-med" selected>Medium</option>
@@ -164,10 +164,10 @@
                             </div>
                         </div>
                         <div>
-                            <label id="lbl-field-date" class="block text-[10px] font-mono text-slate-500 uppercase tracking-wider mb-1">Target Date</label>
+                            <label id="lbl-field-date" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Target Date</label>
                             <input type="date" id="item-duedate" class="w-full bg-slate-900/40 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus-theme transition-colors">
                         </div>
-                        <button type="submit" id="lbl-btn-submit" class="w-full bg-slate-900 hover:bg-theme border border-slate-800 hover:border-theme text-slate-300 hover:text-white text-[11px] font-bold py-2.5 rounded-xl transition-all tracking-wider uppercase mt-1">
+                        <button type="submit" id="lbl-btn-submit" class="w-full bg-slate-900 hover:bg-theme border border-slate-800 hover:border-theme text-slate-300 hover:text-white text-[11px] font-bold py-2.5 rounded-xl transition-all tracking-wider uppercase mt-2">
                             Commit Entry
                         </button>
                     </form>

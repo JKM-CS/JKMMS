@@ -16,7 +16,6 @@ import {
     doc 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Global Filter Configurations
 let currentCategoryFilter = 'all';
 let globalUserRef = null;
 let activeCachedItems = [];
@@ -30,7 +29,7 @@ const dataStreamContainer = document.getElementById('data-stream');
 const searchBar = document.getElementById('search-bar');
 const completionFilter = document.getElementById('completion-filter');
 
-// --- AUTH SYSTEM HANDLING ---
+// --- AUTH HANDLING ---
 onAuthStateChanged(auth, (user) => {
     if (user) {
         globalUserRef = user;
@@ -41,14 +40,14 @@ onAuthStateChanged(auth, (user) => {
             authScreen.classList.add('hidden');
             dashboardScreen.classList.remove('hidden');
             setTimeout(() => {
-                dashboardScreen.classList.remove('opacity-0', 'translate-y-4');
+                dashboardScreen.classList.remove('opacity-0', 'translate-y-0');
             }, 50);
         }, 400);
 
         initializeLiveStream();
     } else {
         globalUserRef = null;
-        dashboardScreen.classList.add('opacity-0', 'translate-y-4');
+        dashboardScreen.classList.add('opacity-0');
         setTimeout(() => {
             dashboardScreen.classList.add('hidden');
             authScreen.classList.remove('hidden');
@@ -69,13 +68,13 @@ loginForm.addEventListener('submit', async (e) => {
         await signInWithEmailAndPassword(auth, emailInput, password);
     } catch (error) {
         console.error("Auth Failure Detail:", error.code, error.message);
-        alert(`Authentication Error: Access Denied. Check credentials or Firebase console configurations.`);
+        alert(`Authentication Error: Access Denied. Check credentials.`);
     }
 });
 
 document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
 
-// --- REAL-TIME DATASET PIPELINES ---
+// --- PIPELINES ---
 itemForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!globalUserRef) return;
@@ -100,7 +99,7 @@ itemForm.addEventListener('submit', async (e) => {
         dueDateInput.value = '';
         priorityInput.value = 'Medium';
     } catch (err) {
-        console.error("Failed writing dataset row entry: ", err);
+        console.error("Failed writing document entry: ", err);
     }
 });
 
@@ -124,7 +123,7 @@ function initializeLiveStream() {
     });
 }
 
-// --- CORE ANALYTICS ENGINE ---
+// --- ENGINE CORE ANALYTICS ---
 function calculateMetrics() {
     const total = activeCachedItems.length;
     const completed = activeCachedItems.filter(i => i.completed).length;
@@ -140,15 +139,12 @@ function calculateMetrics() {
     document.getElementById('stat-today').innerText = activeTodayTasksCount;
 
     const todayCard = document.getElementById('stat-today-card');
-    const todayIconBg = document.getElementById('stat-today-icon-bg');
     
     if (!todayFilterActive) {
         if (activeTodayTasksCount > 0) {
-            todayCard.className = "glass p-5 rounded-2xl border border-rose-500/30 flex items-center justify-between shadow-lg cursor-pointer group transition-all duration-300 hover:scale-[1.02]";
-            todayIconBg.className = "p-3 bg-rose-500/10 text-rose-400 rounded-xl group-hover:rotate-12 transition-all duration-300";
+            todayCard.className = "glass p-4 rounded-xl border border-rose-500/20 flex items-center justify-between shadow-sm cursor-pointer transition-all duration-200 hover:scale-[1.01]";
         } else {
-            todayCard.className = "glass p-5 rounded-2xl border border-slate-800/80 flex items-center justify-between shadow-lg cursor-pointer group transition-all duration-300 hover:scale-[1.02] hover:border-amber-500/30";
-            todayIconBg.className = "p-3 bg-slate-800 text-slate-400 rounded-xl group-hover:rotate-12 transition-all duration-300";
+            todayCard.className = "glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm cursor-pointer transition-all duration-200 hover:scale-[1.01] hover:border-slate-700";
         }
     }
 }
@@ -159,12 +155,11 @@ window.toggleTodayFilter = function() {
     const todayLabel = document.getElementById('stat-today-label');
 
     if (todayFilterActive) {
-        todayCard.classList.remove('border-slate-800/80', 'border-rose-500/30');
-        todayCard.classList.add('border-amber-500', 'bg-amber-500/5');
-        todayLabel.innerHTML = "Filtering: Due Today <span class='text-[10px] lowercase'>(Click clear)</span>";
+        todayCard.className = "glass p-4 rounded-xl border border-amber-500 bg-amber-500/5 flex items-center justify-between shadow-sm cursor-pointer transition-all duration-200";
+        todayLabel.innerHTML = "Today <span class='text-[9px] lowercase opacity-60'>(Clear)</span>";
     } else {
-        todayCard.classList.remove('border-amber-500', 'bg-amber-500/5');
         todayLabel.innerText = "Due Today";
+        calculateMetrics();
     }
 
     processAndRenderStream();
@@ -174,18 +169,15 @@ window.switchTab = function(category) {
     currentCategoryFilter = category;
     todayFilterActive = false; 
     
-    const todayCard = document.getElementById('stat-today-card');
     document.getElementById('stat-today-label').innerText = "Due Today";
-    todayCard.classList.remove('border-amber-500', 'bg-amber-500/5');
+    calculateMetrics();
 
     document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-indigo-600/10', 'text-indigo-400', 'border-indigo-500/20');
-        btn.classList.add('text-slate-400', 'hover:text-slate-200');
+        btn.className = "tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent";
     });
 
     const activeTabButton = document.getElementById(`tab-${category}`);
-    activeTabButton.classList.remove('text-slate-400', 'hover:text-slate-200');
-    activeTabButton.classList.add('bg-indigo-600/10', 'text-indigo-400', 'border-indigo-500/20');
+    activeTabButton.className = "tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 bg-indigo-600/10 text-indigo-400 border border-indigo-500/20";
 
     document.getElementById('stream-heading').innerText = `${category === 'all' ? 'Everything' : category} Stream`;
     processAndRenderStream();
@@ -205,7 +197,7 @@ function processAndRenderStream() {
 
     if (todayFilterActive) {
         filtered = filtered.filter(item => item.dueDate === localTodayStr);
-        document.getElementById('stream-heading').innerText = "Today's Agenda Stream";
+        document.getElementById('stream-heading').innerText = "Today's Agenda";
     } else if (currentCategoryFilter !== 'all') {
         filtered = filtered.filter(item => item.category === currentCategoryFilter);
     }
@@ -220,13 +212,13 @@ function processAndRenderStream() {
         filtered = filtered.filter(item => item.completed);
     }
 
-    document.getElementById('counter-badge').innerText = `${filtered.length} Items Evaluated`;
+    document.getElementById('counter-badge').innerText = `${filtered.length} Items`;
 
     if (filtered.length === 0) {
         dataStreamContainer.innerHTML = `
-            <div class="col-span-full py-12 flex flex-col items-center justify-center text-slate-500 border border-dashed border-slate-800 rounded-2xl w-full">
-                <i data-lucide="help-circle" class="w-10 h-10 mb-2 stroke-[1.5]"></i>
-                <p class="text-sm">No workspace parameters matched your layout criteria.</p>
+            <div class="col-span-full py-8 flex flex-col items-center justify-center text-slate-600 border border-dashed border-slate-800/80 rounded-xl w-full">
+                <i data-lucide="help-circle" class="w-6 h-6 mb-1 opacity-60"></i>
+                <p class="text-xs">No matching matrix nodes layout found.</p>
             </div>`;
         lucide.createIcons();
         return;
@@ -235,61 +227,61 @@ function processAndRenderStream() {
     filtered.forEach((item, index) => {
         const itemCard = document.createElement('div');
         
-        let categoryColorMap = 'from-indigo-500 to-cyan-400';
-        if (item.category === 'University') categoryColorMap = 'from-amber-400 to-orange-500';
-        if (item.category === 'Work') categoryColorMap = 'from-emerald-400 to-teal-500';
-        if (item.category === 'Misc') categoryColorMap = 'from-pink-400 to-purple-500';
+        let categoryColorMap = 'from-indigo-400 to-cyan-400';
+        if (item.category === 'University') categoryColorMap = 'from-amber-400 to-orange-400';
+        if (item.category === 'Work') categoryColorMap = 'from-emerald-400 to-teal-400';
+        if (item.category === 'Misc') categoryColorMap = 'from-pink-400 to-purple-400';
 
-        let priorityBadge = `<span class="text-[10px] px-2 py-0.5 rounded border bg-slate-900 border-emerald-500/30 text-emerald-400">Low</span>`;
-        if (item.priority === 'Medium') priorityBadge = `<span class="text-[10px] px-2 py-0.5 rounded border bg-slate-900 border-amber-500/30 text-amber-400">Medium</span>`;
-        if (item.priority === 'High') priorityBadge = `<span class="text-[10px] px-2 py-0.5 rounded border bg-slate-900 border-rose-500/30 text-rose-400 font-bold">High</span>`;
+        let priorityBadge = `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded border bg-slate-950 border-emerald-500/20 text-emerald-500/90">Low</span>`;
+        if (item.priority === 'Medium') priorityBadge = `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded border bg-slate-950 border-amber-500/20 text-amber-400/90">Medium</span>`;
+        if (item.priority === 'High') priorityBadge = `<span class="text-[9px] font-mono px-1.5 py-0.5 rounded border bg-slate-950 border-rose-500/20 text-rose-400/90 font-bold">High</span>`;
 
         let dueDateElement = '';
         if (item.dueDate) {
             const isOverdue = item.dueDate < localTodayStr && !item.completed;
             const dateObj = new Date(item.dueDate);
             const formattingClasses = isOverdue 
-                ? 'text-rose-400 bg-rose-500/5 border-rose-500/20' 
-                : 'text-amber-400/80 bg-amber-500/5 border-amber-500/10';
+                ? 'text-rose-400 bg-rose-500/5 border-rose-500/10' 
+                : 'text-slate-400 bg-slate-900 border-slate-800/80';
 
             dueDateElement = `
-                <div class="flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md mt-2 w-max border ${formattingClasses}">
+                <div class="flex items-center gap-1 text-[10px] px-2 py-0.5 rounded mt-2 w-max border ${formattingClasses}">
                     <i data-lucide="${isOverdue ? 'alert-triangle' : 'clock'}" class="w-3 h-3"></i> 
-                    ${isOverdue ? 'Overdue' : 'Due'}: ${dateObj.toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}
+                    <span>${dateObj.toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}</span>
                 </div>`;
         }
 
         const completionCardStyles = item.completed 
-            ? 'opacity-40 bg-slate-900/20 line-through text-slate-500 border-slate-900/40' 
-            : 'border-slate-800/80 hover:border-slate-700/60 shadow-lg';
+            ? 'opacity-40 bg-slate-950/40 line-through text-slate-500 border-slate-900' 
+            : 'border-slate-800/60 hover:border-slate-700/80 shadow-sm';
 
-        itemCard.className = `glass p-5 rounded-2xl flex flex-col justify-between border shadow-lg transform transition-all duration-300 translate-y-4 opacity-0 hover:-translate-y-1 hover:shadow-2xl ${completionCardStyles}`;
-        itemCard.style.animation = `fadeInCard 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.05}s`;
+        itemCard.className = `glass p-4 rounded-xl flex flex-col justify-between border transform transition-all duration-200 opacity-0 translate-y-2 ${completionCardStyles}`;
+        itemCard.style.animation = `fadeInCard 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards ${index * 0.03}s`;
         
         itemCard.innerHTML = `
             <div>
-                <div class="flex items-center justify-between mb-3">
+                <div class="flex items-center justify-between mb-2">
                     <div class="flex items-center gap-2">
-                        <button class="toggle-complete-btn p-1 rounded-md transition-colors ${item.completed ? 'text-emerald-400 hover:text-slate-400' : 'text-slate-500 hover:text-emerald-400'}" data-id="${item.id}" data-status="${item.completed}">
-                            <i data-lucide="${item.completed ? 'check-square' : 'square'}" class="w-5 h-5"></i>
+                        <button class="toggle-complete-btn text-slate-600 hover:text-emerald-400 transition-colors" data-id="${item.id}" data-status="${item.completed}">
+                            <i data-lucide="${item.completed ? 'check-square' : 'square'}" class="w-4 h-4"></i>
                         </button>
-                        <span class="text-xs font-bold uppercase tracking-wider bg-gradient-to-r ${categoryColorMap} bg-clip-text text-transparent px-2.5 py-0.5 rounded-md bg-slate-900/80 border border-slate-800">
+                        <span class="text-[9px] font-bold uppercase tracking-wider bg-gradient-to-r ${categoryColorMap} bg-clip-text text-transparent px-2 py-0.5 rounded bg-slate-900 border border-slate-800/40 font-mono">
                             ${item.category}
                         </span>
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-1.5">
                         ${priorityBadge}
-                        <button class="delete-btn text-slate-500 hover:text-rose-400 transition-colors p-1" data-id="${item.id}">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        <button class="delete-btn text-slate-600 hover:text-rose-400 transition-colors p-0.5" data-id="${item.id}">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
                     </div>
                 </div>
-                <h3 class="text-slate-100 font-medium tracking-wide text-base leading-snug px-1">${item.title}</h3>
+                <h3 class="text-slate-200 text-sm tracking-wide leading-tight px-0.5">${item.title}</h3>
                 ${dueDateElement}
             </div>
-            <div class="mt-4 pt-3 border-t border-slate-800/60 flex items-center justify-between text-[11px] text-slate-500 font-mono">
-                <span>Ref: ${item.id.substring(0, 5)}</span>
-                <span>${new Date(item.timestamp).toLocaleDateString(undefined, {month: 'short', day: 'numeric', hour: '2-digit'})}</span>
+            <div class="mt-3 pt-2 border-t border-slate-900 flex items-center justify-between text-[10px] text-slate-600 font-mono">
+                <span>ID: ${item.id.substring(0, 4)}</span>
+                <span>${new Date(item.timestamp).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})}</span>
             </div>
         `;
 
@@ -298,12 +290,8 @@ function processAndRenderStream() {
             const targetId = e.currentTarget.getAttribute('data-id');
             const currentStatus = e.currentTarget.getAttribute('data-status') === 'true';
             try {
-                await updateDoc(doc(db, "management_items", targetId), {
-                    completed: !currentStatus
-                });
-            } catch (err) {
-                console.error("Error setting completion updates: ", err);
-            }
+                await updateDoc(doc(db, "management_items", targetId), { completed: !currentStatus });
+            } catch (err) { console.error(err); }
         });
 
         itemCard.querySelector('.delete-btn').addEventListener('click', async (e) => {
@@ -313,10 +301,8 @@ function processAndRenderStream() {
             setTimeout(async () => {
                 try {
                     await deleteDoc(doc(db, "management_items", targetId));
-                } catch (err) {
-                    console.error("Action error deleting document entry reference: ", err);
-                }
-            }, 200);
+                } catch (err) { console.error(err); }
+            }, 150);
         });
 
         dataStreamContainer.appendChild(itemCard);

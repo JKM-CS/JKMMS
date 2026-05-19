@@ -20,7 +20,7 @@ import {
 let currentCategoryFilter = 'all';
 let globalUserRef = null;
 let activeCachedItems = [];
-let todayFilterActive = false; // Toggle tracker for interactive dashboard metric card
+let todayFilterActive = false; 
 
 const authScreen = document.getElementById('auth-screen');
 const dashboardScreen = document.getElementById('dashboard-screen');
@@ -34,7 +34,6 @@ const completionFilter = document.getElementById('completion-filter');
 onAuthStateChanged(auth, (user) => {
     if (user) {
         globalUserRef = user;
-        // Displays the first part of the email in the header (e.g., JWAN from jwan@gmail.com)
         document.getElementById('user-display').innerText = user.email.split('@')[0].toUpperCase();
         
         authScreen.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
@@ -63,7 +62,6 @@ onAuthStateChanged(auth, (user) => {
 
 loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    // Adjusted placeholder text logic to pass regular email input straight to Firebase
     const emailInput = document.getElementById('login-username').value.trim();
     const password = document.getElementById('login-password').value;
     

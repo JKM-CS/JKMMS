@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JKMMS - Personal Management System</title>
+    <title>LifeOS - Elite Control Center</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Lucide Icons -->
@@ -23,7 +23,7 @@
 </head>
 <body class="h-full font-sans antialiased overflow-hidden relative">
 
-    <!-- Background Ambient Glow Effects -->
+    <!-- Ambient Grid Glows -->
     <div class="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] rounded-full bg-indigo-600/20 blur-[120px] animate-pulse-slow pointer-events-none"></div>
     <div class="absolute bottom-[-10%] right-[-10%] w-[600px] h-[600px] rounded-full bg-emerald-600/15 blur-[150px] animate-pulse-slow pointer-events-none" style="animation-delay: 2s;"></div>
 
@@ -34,14 +34,14 @@
                 <div class="p-4 bg-indigo-600/20 text-indigo-400 rounded-2xl mb-3">
                     <i data-lucide="shield-check" class="w-8 h-8"></i>
                 </div>
-                <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Welcome to JKMMS</h1>
-                <p class="text-slate-400 text-sm mt-1">Your personal productivity command center.</p>
+                <h1 class="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">Welcome to LifeOS</h1>
+                <p class="text-slate-400 text-sm mt-1">Your advanced personal command center.</p>
             </div>
 
             <form id="login-form" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-semibold tracking-wider uppercase text-slate-400 mb-2">Email Address</label>
-                    <input type="email" id="login-email" required class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="you@example.com">
+                    <label class="block text-xs font-semibold tracking-wider uppercase text-slate-400 mb-2">Username</label>
+                    <input type="text" id="login-username" required class="w-full bg-slate-900/60 border border-slate-700/50 rounded-xl px-4 py-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all" placeholder="jwan">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold tracking-wider uppercase text-slate-400 mb-2">Password</label>
@@ -54,9 +54,9 @@
         </div>
     </div>
 
-    <!-- ================= MAIN CORE DASHBOARD ================= -->
+    <!-- ================= MAIN DASHBOARD ================= -->
     <div id="dashboard-screen" class="hidden h-full flex flex-col transition-all duration-500 opacity-0 transform translate-y-4">
-        <!-- Header Topbar -->
+        <!-- Top Header -->
         <header class="glass border-b border-slate-800/60 px-8 py-4 flex justify-between items-center z-10">
             <div class="flex items-center gap-3">
                 <div class="p-2 bg-gradient-to-tr from-indigo-500 to-purple-500 rounded-xl text-white">
@@ -72,9 +72,9 @@
             </div>
         </header>
 
-        <!-- Main Layout Section -->
+        <!-- Sidebar & Main Content Space -->
         <div class="flex flex-1 overflow-hidden">
-            <!-- Navigation Sidebar Panels -->
+            <!-- Sidebar Panel Links -->
             <aside class="w-64 glass border-r border-slate-800/60 p-6 flex flex-col gap-2 z-10">
                 <p class="text-xs font-semibold uppercase tracking-widest text-slate-500 mb-2 px-3">Categories</p>
                 <button onclick="switchTab('all')" id="tab-all" class="tab-btn active flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 bg-indigo-600/10 text-indigo-400 border border-indigo-500/20">
@@ -89,35 +89,119 @@
                 <button onclick="switchTab('Meetings')" id="tab-Meetings" class="tab-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
                     <i data-lucide="calendar" class="w-4 h-4"></i> Meetings & Tasks
                 </button>
+                <button onclick="switchTab('Misc')" id="tab-Misc" class="tab-btn flex items-center gap-3 w-full px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i> Misc
+                </button>
             </aside>
 
-            <!-- Working Content Stream -->
-            <main class="flex-1 overflow-y-auto p-8 space-y-8">
-                <!-- Data Entry Component Form -->
+            <!-- Workspace Viewport -->
+            <main class="flex-1 overflow-y-auto p-8 space-y-6">
+
+                <!-- ================= ANALYTICS DASHBOARD ROW ================= -->
+                <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <!-- Stat 1: Total Active Task Volume -->
+                    <div class="glass p-5 rounded-2xl border border-slate-800/80 flex items-center justify-between shadow-lg group hover:border-indigo-500/30 transition-all duration-300">
+                        <div>
+                            <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">Total Tasks</p>
+                            <h3 id="stat-total" class="text-3xl font-black text-white mt-1 tracking-tight">0</h3>
+                        </div>
+                        <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="bar-chart-3" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <!-- Stat 2: Complete Performance Rates -->
+                    <div class="glass p-5 rounded-2xl border border-slate-800/80 flex items-center justify-between shadow-lg group hover:border-emerald-500/30 transition-all duration-300">
+                        <div>
+                            <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">Completed</p>
+                            <h3 id="stat-completed" class="text-3xl font-black text-emerald-400 mt-1 tracking-tight">0</h3>
+                        </div>
+                        <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="check-circle" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <!-- Stat 3: Completion Efficiency Ratio -->
+                    <div class="glass p-5 rounded-2xl border border-slate-800/80 flex items-center justify-between shadow-lg group hover:border-cyan-500/30 transition-all duration-300">
+                        <div>
+                            <p class="text-xs font-semibold tracking-wider text-slate-400 uppercase">Efficiency</p>
+                            <h3 id="stat-efficiency" class="text-3xl font-black text-cyan-400 mt-1 tracking-tight">0%</h3>
+                        </div>
+                        <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl group-hover:scale-110 transition-transform duration-300">
+                            <i data-lucide="pie-chart" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                    <!-- Stat 4: INTERACTIVE TODAY TOGGLE MATRIX BOX -->
+                    <div id="stat-today-card" onclick="toggleTodayFilter()" class="glass p-5 rounded-2xl border border-slate-800/80 flex items-center justify-between shadow-lg cursor-pointer group transition-all duration-300 hover:scale-[1.02]">
+                        <div>
+                            <p id="stat-today-label" class="text-xs font-semibold tracking-wider text-slate-400 uppercase group-hover:text-amber-400 transition-colors">Due Today</p>
+                            <h3 id="stat-today" class="text-3xl font-black text-white mt-1 tracking-tight">0</h3>
+                        </div>
+                        <div id="stat-today-icon-bg" class="p-3 bg-slate-800 text-slate-400 rounded-xl group-hover:rotate-12 transition-all duration-300">
+                            <i data-lucide="bell" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Expanded Feature Entry Form Component -->
                 <section class="glass rounded-2xl p-6 shadow-xl border border-slate-800/80 transition-all hover:border-slate-700/50">
                     <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
-                        <i data-lucide="plus-circle" class="text-indigo-400 w-5 h-5"></i> Log New Entry
+                        <i data-lucide="plus-circle" class="text-indigo-400 w-5 h-5"></i> Deploy New Task / Event
                     </h2>
-                    <form id="item-form" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                        <div class="md:col-span-2">
-                            <label class="block text-xs font-medium text-slate-400 mb-1.5">Task / Meeting Title</label>
-                            <input type="text" id="item-title" required class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2.5 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all" placeholder="Enter details here...">
+                    <form id="item-form" class="space-y-4">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-medium text-slate-400 mb-1.5">Task / Metric Title</label>
+                                <input type="text" id="item-title" required class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2.5 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all" placeholder="Enter task action item details...">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1.5">Category Target</label>
+                                <select id="item-category" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500 transition-all">
+                                    <option value="University">🎓 University</option>
+                                    <option value="Work">🛠️ Work</option>
+                                    <option value="Meetings">📅 Meetings & Tasks</option>
+                                    <option value="Misc">✨ Misc</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1.5">Category Target</label>
-                            <select id="item-category" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500 transition-all">
-                                <option value="University">🎓 University</option>
-                                <option value="Work">🛠️ Work</option>
-                                <option value="Meetings">📅 Meetings & Tasks</option>
-                            </select>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1.5">Optional Due Date</label>
+                                <input type="date" id="item-duedate" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2 text-slate-200 focus:outline-none focus:border-indigo-500 transition-all">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-slate-400 mb-1.5">Priority Flag</label>
+                                <select id="item-priority" class="w-full bg-slate-900/80 border border-slate-700/60 rounded-xl px-4 py-2.5 text-slate-200 focus:outline-none focus:border-indigo-500 transition-all">
+                                    <option value="Low">🟢 Low Priority</option>
+                                    <option value="Medium" selected>🟡 Medium Priority</option>
+                                    <option value="High">🔴 High Priority</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-medium py-2.5 px-4 rounded-xl shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transform hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="zap" class="w-4 h-4"></i> Deploy Item
+                            </button>
                         </div>
-                        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 px-4 rounded-xl shadow-lg shadow-indigo-600/10 hover:shadow-indigo-600/20 transform hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2">
-                            <i data-lucide="sparkles" class="w-4 h-4"></i> Deploy Item
-                        </button>
                     </form>
                 </section>
 
-                <!-- Activity Feed Stream Viewports -->
+                <!-- Search and Controls Filter Bar -->
+                <section class="flex flex-col md:flex-row gap-4 items-center justify-between bg-slate-900/40 p-4 rounded-xl border border-slate-800/60">
+                    <div class="relative w-full md:w-72">
+                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-500">
+                            <i data-lucide="search" class="w-4 h-4"></i>
+                        </span>
+                        <input type="text" id="search-bar" class="w-full bg-slate-950/60 border border-slate-800 rounded-xl pl-9 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-all" placeholder="Search across current view...">
+                    </div>
+                    <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                        <span class="text-xs text-slate-500">Filter View:</span>
+                        <select id="completion-filter" class="bg-slate-950/60 border border-slate-800 text-xs rounded-lg px-3 py-1.5 text-slate-400 focus:outline-none">
+                            <option value="all">Show All Tasks</option>
+                            <option value="active">Active Only</option>
+                            <option value="completed">Completed Only</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Activity Feed Layout Streams -->
                 <section>
                     <div class="flex justify-between items-center mb-4">
                         <h2 id="stream-heading" class="text-xl font-bold tracking-tight text-slate-200">Everything Stream</h2>
@@ -130,7 +214,7 @@
         </div>
     </div>
 
-    <!-- Execution Module Linking Hooks -->
+    <!-- Execution Module Links -->
     <script type="module" src="firebase-config.js"></script>
     <script type="module" src="app.js"></script>
 </body>

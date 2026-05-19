@@ -7,28 +7,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        .glass {
-            background: rgba(13, 18, 30, 0.45);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Theme Theme Core Variable Injectors */
-        body.theme-slate { --theme-primary: 99, 102, 241; --theme-bg: #0b0f19; --theme-surface: rgba(13, 18, 30, 0.45); }
-        body.theme-emerald { --theme-primary: 16, 185, 129; --theme-bg: #060f0e; --theme-surface: rgba(10, 25, 23, 0.45); }
-        body.theme-amber { --theme-primary: 245, 158, 11; --theme-bg: #140f06; --theme-surface: rgba(28, 20, 10, 0.45); }
-        body.theme-rose { --theme-primary: 244, 63, 94; --theme-bg: #120a0d; --theme-surface: rgba(26, 12, 17, 0.45); }
-        body.theme-violet { --theme-primary: 139, 92, 246; --theme-bg: #100a1c; --theme-surface: rgba(20, 12, 32, 0.45); }
+        /* Theme Core Engine Properties */
+        body.theme-slate { --theme-primary: 99, 102, 241; --theme-bg: #0b0f19; --theme-surface: rgba(13, 18, 30, 0.75); }
+        body.theme-emerald { --theme-primary: 16, 185, 129; --theme-bg: #060f0e; --theme-surface: rgba(10, 25, 23, 0.75); }
+        body.theme-amber { --theme-primary: 245, 158, 11; --theme-bg: #140f06; --theme-surface: rgba(28, 20, 10, 0.75); }
+        body.theme-rose { --theme-primary: 244, 63, 94; --theme-bg: #120a0d; --theme-surface: rgba(26, 12, 17, 0.75); }
+        body.theme-violet { --theme-primary: 139, 92, 246; --theme-bg: #100a1c; --theme-surface: rgba(20, 12, 32, 0.75); }
 
-        body { bg-color: var(--theme-bg); transition: background-color 0.3s ease; }
+        body { background-color: var(--theme-bg) !important; transition: background-color 0.25s ease; }
         .dynamic-glass { background: var(--theme-surface); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+        
         .border-theme { border-color: rgba(var(--theme-primary), 0.15); }
         .border-theme-active { border-color: rgba(var(--theme-primary), 0.4); }
         .text-theme { color: rgb(var(--theme-primary)); }
         .bg-theme { background-color: rgb(var(--theme-primary)); }
-        .bg-theme-hover:hover { background-color: rgba(var(--theme-primary), 0.85); }
         .bg-theme-opacity { background-color: rgba(var(--theme-primary), 0.1); }
         .focus-theme:focus { border-color: rgb(var(--theme-primary)); box-shadow: 0 0 0 2px rgba(var(--theme-primary), 0.1); }
     </style>
@@ -38,7 +33,7 @@
     <!-- AUTHENTICATION LAYER -->
     <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#070a12] transition-all duration-500 ease-out p-4">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.05),transparent_60%)]"></div>
-        <div class="glass w-full max-w-md p-6 sm:p-8 rounded-2xl border border-slate-800/60 shadow-2xl relative transition-all duration-500">
+        <div class="dynamic-glass w-full max-w-md p-6 sm:p-8 rounded-2xl border border-slate-800/60 shadow-2xl relative transition-all duration-500">
             <div class="flex flex-col items-center mb-6">
                 <div class="p-3 bg-indigo-600/10 text-indigo-400 rounded-xl border border-indigo-500/20 mb-3">
                     <i data-lucide="terminal" class="w-6 h-6 stroke-[1.5]"></i>
@@ -77,18 +72,16 @@
                     </div>
                 </div>
 
-                <!-- Global Sync Config Toolbar -->
+                <!-- Settings Toolbar Node -->
                 <div class="flex items-center gap-2 shrink-0">
-                    <!-- Language Selection Node -->
                     <select id="global-lang-select" class="bg-slate-900/80 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 h-8 cursor-pointer">
                         <option value="en">English</option>
                         <option value="ar">العربية</option>
                         <option value="ku">کوردی</option>
                     </select>
 
-                    <!-- Theme Matrix Node -->
                     <select id="global-theme-select" class="bg-slate-900/80 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 h-8 cursor-pointer">
-                        <option value="theme-slate">Deep Cyan</option>
+                        <option value="theme-slate">Original Cyan</option>
                         <option value="theme-emerald">Matrix Emerald</option>
                         <option value="theme-amber">Cyber Amber</option>
                         <option value="theme-rose">Crimson Rose</option>
@@ -137,7 +130,7 @@
                 </div>
             </section>
 
-            <!-- Main Split Layout Engine -->
+            <!-- Main Layout Grid Engine Split -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                 
                 <!-- Entry Form Component -->

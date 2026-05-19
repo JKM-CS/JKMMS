@@ -3,13 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JKMMS Workspace</title>
+    <title>LifeOS Workspace</title>
+    <!-- Import Google Fonts for IBM Plex Sans Arabic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
+        /* Custom IBM Plex Font Routing Utility */
+        .font-ibm-plex { 
+            font-family: 'IBM Plex Sans Arabic', sans-serif !important; 
+        }
+
         /* Theme Core Engine Properties */
         body.theme-slate { --theme-primary: 99, 102, 241; --theme-bg: #0b0f19; --theme-surface: rgba(13, 18, 30, 0.75); }
         body.theme-emerald { --theme-primary: 16, 185, 129; --theme-bg: #060f0e; --theme-surface: rgba(10, 25, 23, 0.75); }

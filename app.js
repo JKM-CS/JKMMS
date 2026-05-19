@@ -9,7 +9,6 @@ import {
     getFirestore, 
     collection, 
     addDoc, 
-    getDocs, 
     query, 
     where, 
     orderBy, 
@@ -43,6 +42,7 @@ let currentUserId = null;
 let currentTabFilter = "all";
 let todayFilterActive = false;
 let globalDataArray = [];
+let unsubscribeStream = null; // Track live listener to prevent duplication leaks
 
 // Localization Engine Dictionaries
 const locales = {
@@ -117,6 +117,8 @@ onAuthStateChanged(auth, (user) => {
         fetchDataStream();
     } else {
         currentUserId = null;
+        if (unsubscribeStream) unsubscribeStream(); // Disconnect pipeline on logout
+        
         dashboardScreen.classList.add('opacity-0', 'translate-y-2');
         setTimeout(() => {
             dashboardScreen.classList.add('hidden');
@@ -138,26 +140,39 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     }
 });
 
-document.getElementById('logout-btn').addEventListener('click', () => signOut(auth));
+document.getElementById('logout-btn').addEventListener('click', () => {
+    if (unsubscribeStream) unsubscribeStream();
+    signOut(auth);
+});
 
 // ==========================================
-// 5. FIRESTORE DATABASE MUTATIONS & READS
+// 5. FIRESTORE DATABASE MUTATIONS & READS (REAL-TIME ENGINE)
 // ==========================================
 async function fetchDataStream() {
     if (!currentUserId) return;
+    
+    // Kill existing socket reference before attaching a clean one
+    if (unsubscribeStream) unsubscribeStream();
+
     try {
         const q = query(
             collection(db, `users/${currentUserId}/items`),
             orderBy("createdAt", "desc")
         );
-        const snapshot = await getDocs(q);
-        globalDataArray = [];
-        snapshot.forEach(doc => {
-            globalDataArray.push({ id: doc.id, ...doc.data() });
+        
+        // Open live streaming pipeline channel
+        unsubscribeStream = onSnapshot(q, (snapshot) => {
+            globalDataArray = [];
+            snapshot.forEach(doc => {
+                globalDataArray.push({ id: doc.id, ...doc.data() });
+            });
+            renderStreamContainer(); // Continuously triggers UI changes
+        }, (err) => {
+            console.error("Critical Stream Interruption:", err);
         });
-        renderStreamContainer();
+
     } catch (err) {
-        console.error("Critical Stream Interruption:", err);
+        console.error("Failed to establish stream pipeline:", err);
     }
 }
 
@@ -177,7 +192,6 @@ document.getElementById('item-form').addEventListener('submit', async (e) => {
     try {
         await addDoc(collection(db, `users/${currentUserId}/items`), newItem);
         document.getElementById('item-form').reset();
-        await fetchDataStream();
     } catch (err) {
         alert("Commit Action Interrupted: " + err.message);
     }
@@ -187,7 +201,6 @@ window.toggleItemComplete = async (id, currentStatus) => {
     try {
         const docRef = doc(db, `users/${currentUserId}/items`, id);
         await updateDoc(docRef, { completed: !currentStatus });
-        await fetchDataStream();
     } catch (err) {
         console.error("Mutation Error:", err);
     }
@@ -197,7 +210,6 @@ window.deleteItemRecord = async (id) => {
     if (!confirm("Confirm immediate absolute disposal?")) return;
     try {
         await deleteDoc(doc(db, `users/${currentUserId}/items`, id));
-        await fetchDataStream();
     } catch (err) {
         console.error("Disposal Error:", err);
     }
@@ -223,7 +235,7 @@ function renderStreamContainer() {
     document.getElementById('stat-efficiency').textContent = `${efficiency}%`;
     document.getElementById('stat-today').textContent = dueTodayCount;
 
-    // Toggle styling on Today Badge based on state
+    // Toggle styling on Today Badge based on active state
     const todayCard = document.getElementById('stat-today-card');
     const todayIconBg = document.getElementById('stat-today-icon-bg');
     if (todayFilterActive) {

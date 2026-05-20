@@ -18,7 +18,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ==========================================
-// 1. REAL FIREBASE ARCHITECTURE CONFIGURATION
+// 1. FIREBASE ARCHITECTURE INITIALIZATION
 // ==========================================
 const firebaseConfig = {
     apiKey: "AIzaSyCkDkK86iyNwWmdeY-GZHMVS8MwMZOBKIU",
@@ -35,7 +35,7 @@ const auth = getAuth(app);
 const db = getFirestore(app);
 
 // ==========================================
-// 2. RUNTIME APPLICATION STATE
+// 2. RUNTIME CORE STATES
 // ==========================================
 let currentUserId = null;
 let currentTabFilter = "all";
@@ -43,13 +43,14 @@ let todayFilterActive = false;
 let globalDataArray = [];
 let unsubscribeStream = null;
 
-// New Features Runtime States
+// Tool Specific States
 let userXP = parseInt(localStorage.getItem('jkmms-xp')) || 0;
 let focusTimerInterval = null;
 let focusTimerSecondsLeft = 25 * 60;
 let isFocusTimerRunning = false;
+let converterActiveFileBuffer = null;
 
-// Localization Engine Dictionaries
+// Localization Engine Multi-lingual Dictionary
 const locales = {
     en: {
         total: "Total Items", completed: "Completed", efficiency: "Efficiency", today: "Due Today",
@@ -60,7 +61,12 @@ const locales = {
         xpTitle: "System Rank Matrix", timerTitle: "Focus Clock Sequence", settingsTitle: "System Preferences",
         langLabel: "Localization Interface", themeLabel: "Color Palette Core", exportNav: "Export PDF",
         exportTitle: "Export Parameters", exportDesc: "Select the categories you wish to include within your compiled target documentation report manifest.",
-        btnExport: "Compile Document"
+        btnExport: "Compile Document", scratchpadTitle: "Workspace Scratchpad", milestoneTitle: "Project & Exam Milestones",
+        savedStatus: "Saved", savingStatus: "Saving...", noMilestones: "No impending deadlines tracked.",
+        converterTitle: "Media Format Converter", converterDroptext: "Select or Drop Image", converterTarget: "Target Extension",
+        converterQuality: "Quality", converterBtn: "Process Transcoding",
+        errSelectFile: "Please select a valid local image stream source first.",
+        errProcess: "Error processing client transcoding vectors: "
     },
     ar: {
         total: "إجمالي العناصر", completed: "المكتملة", efficiency: "الكفاءة", today: "المستحق اليوم",
@@ -71,7 +77,12 @@ const locales = {
         xpTitle: "مصفوفة الرتبة والنظام", timerTitle: "تسلسل ساعة التركيز", settingsTitle: "تفضيلات النظام",
         langLabel: "واجهة اللغة والتوطين", themeLabel: "لوحة ألوان النظام الأساسية", exportNav: "تصدير PDF",
         exportTitle: "محددات تصدير البيانات", exportDesc: "اختر الفئات المحددة التي ترغب في تضمينها داخل تقرير البيانات العام المستخرج.",
-        btnExport: "تجميع وطباعة المستند"
+        btnExport: "تجميع وطباعة المستند", scratchpadTitle: "مسودة الملاحظات السريعة", milestoneTitle: "مؤشرات المشاريع والامتحانات",
+        savedStatus: "تم الحفظ", savingStatus: "جاري الحفظ...", noMilestones: "لا توجد مواعيد نهائية قريبة.",
+        converterTitle: "محول صيغ الملفات والمرئيات", converterDroptext: "اختر صورة أو اسحبها هنا",
+        converterTarget: "الصيغة المستهدفة", converterQuality: "جودة وضغط الصورة", converterBtn: "بدء معالجة وتحويل الصيغة",
+        errSelectFile: "يرجى تحديد ملف صورة محلي صالح أولاً.",
+        errProcess: "فشل نظام التحويل الداخلي في معالجة الملف: "
     },
     ku: {
         total: "گشتی بڕگەکان", completed: "تەواوکراو", efficiency: "کارایی", today: "بۆ ئەمڕۆ",
@@ -82,15 +93,21 @@ const locales = {
         xpTitle: "ماتریسی پلەبەرزکردنەوە", timerTitle: "کاتی تەرخانکراو بۆ سەرنجدان", settingsTitle: "ڕێکخستنەکانی سیستم",
         langLabel: "زمانی سیستم", themeLabel: "ڕەنگەکانی سەرەکی سیستم", exportNav: "هەناردەی PDF",
         exportTitle: "دیاریکردنی هەناردەکردن", exportDesc: "ئەو هاوپۆلانە دەستنیشان بکە کە دەتەوێت لە ناو ڕاپۆرتی فەرمی کۆکراوەدا جێگیر بکرێن.",
-        btnExport: "کۆکردنەوە و دروستکردنی PDF"
+        btnExport: "کۆکردنەوە و دروستکردنی PDF", scratchpadTitle: "تێبینییە خێراکان", milestoneTitle: "قیبلەنما و وادەکانی تاقیکردنەوە",
+        savedStatus: "پاشەکەوتکرا", savingStatus: "پاشەکەوت دەکرێت...", noMilestones: "هیچ وادەیەکی گرنگ دیاری نەکراوە.",
+        converterTitle: "گۆڕەری جۆری پەڕگەکان", converterDroptext: "وێنەیەک لێرە دابنێ یان دیاریبکە",
+        converterTarget: "جۆری مەبەست (فۆرمات)", converterQuality: "ئاستی پەستاندن و کوالێتی", converterBtn: "دەستپێکردنی گۆڕینی فۆرمات",
+        errSelectFile: "تکایە سەرەتا پەڕگەیەکی وێنەی دروست دیاری بکە.",
+        errProcess: "هەڵە لە سیستەمی گۆڕینی ناوخۆیی ڕوویدا: "
     }
 };
 
 // ==========================================
-// 3. CORE THEME LAYER ENGINE
+// 3. CORE PALETTE THEME VECTOR LAYERS
 // ==========================================
 function applyTheme(themeClassName) {
     const body = document.getElementById('main-body');
+    if (!body) return;
     body.className = body.className.replace(/theme-\w+/g, '').trim();
     const targetedTheme = themeClassName || 'theme-slate';
     body.classList.add(targetedTheme);
@@ -99,7 +116,7 @@ function applyTheme(themeClassName) {
 }
 
 // ==========================================
-// 4. AUTHENTICATION MONITOR & SECURE ROUTING
+// 4. AUTH SECURITY PIPELINE
 // ==========================================
 onAuthStateChanged(auth, (user) => {
     const authScreen = document.getElementById('auth-screen');
@@ -108,59 +125,45 @@ onAuthStateChanged(auth, (user) => {
 
     if (user) {
         currentUserId = user.uid;
-        userDisplay.textContent = user.email.split('@')[0];
+        if (userDisplay) userDisplay.textContent = user.email.split('@')[0];
         
         const savedTheme = localStorage.getItem('lifeos-theme') || 'theme-slate';
-        document.getElementById('global-theme-select').value = savedTheme;
+        const themeSelector = document.getElementById('global-theme-select');
+        if (themeSelector) themeSelector.value = savedTheme;
         applyTheme(savedTheme);
 
         const savedLang = localStorage.getItem('lifeos-lang') || 'en';
-        document.getElementById('global-lang-select').value = savedLang;
+        const langSelector = document.getElementById('global-lang-select');
+        if (langSelector) langSelector.value = savedLang;
         applyLocalization(savedLang);
-        updateXPSystem(0); // Sync display graphics on initialization
+        updateXPSystem(0);
 
-        authScreen.classList.add('opacity-0', 'pointer-events-none');
-        setTimeout(() => {
-            authScreen.classList.add('hidden');
-            dashboardScreen.classList.remove('hidden');
-            setTimeout(() => dashboardScreen.classList.remove('opacity-0', 'translate-y-2'), 50);
-        }, 400);
-
+        if (authScreen && dashboardScreen) {
+            authScreen.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                authScreen.classList.add('hidden');
+                dashboardScreen.classList.remove('hidden');
+                setTimeout(() => dashboardScreen.classList.remove('opacity-0', 'translate-y-2'), 50);
+            }, 400);
+        }
         fetchDataStream();
     } else {
         currentUserId = null;
         if (unsubscribeStream) unsubscribeStream();
         
-        dashboardScreen.classList.add('opacity-0', 'translate-y-2');
-        setTimeout(() => {
-            dashboardScreen.classList.add('hidden');
-            authScreen.classList.remove('hidden');
-            setTimeout(() => authScreen.classList.remove('opacity-0', 'pointer-events-none'), 50);
-        }, 400);
+        if (dashboardScreen && authScreen) {
+            dashboardScreen.classList.add('opacity-0', 'translate-y-2');
+            setTimeout(() => {
+                dashboardScreen.classList.add('hidden');
+                authScreen.classList.remove('hidden');
+                setTimeout(() => authScreen.classList.remove('opacity-0', 'pointer-events-none'), 50);
+            }, 400);
+        }
     }
 });
 
-// Authentication Bindings
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('login-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-username').value;
-        const pass = document.getElementById('login-password').value;
-        try {
-            await signInWithEmailAndPassword(auth, email, pass);
-        } catch (err) {
-            alert("Authentication Engine Failed: Access Denied.");
-        }
-    });
-
-    document.getElementById('logout-btn').addEventListener('click', () => {
-        if (unsubscribeStream) unsubscribeStream();
-        signOut(auth);
-    });
-});
-
 // ==========================================
-// 5. FIRESTORE DATABASE MUTATIONS & READS
+// 5. FIRESTORE REAL-TIME DATA PROCESSING
 // ==========================================
 async function fetchDataStream() {
     if (!currentUserId) return;
@@ -176,50 +179,13 @@ async function fetchDataStream() {
     } catch (err) { console.error("Failed to establish stream pipeline:", err); }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById('item-form').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        if (!currentUserId) return;
-
-        const newItem = {
-            title: document.getElementById('item-title').value,
-            category: document.getElementById('item-category').value,
-            priority: document.getElementById('item-priority').value,
-            dueDate: document.getElementById('item-duedate').value || "",
-            completed: false,
-            createdAt: new Date().toISOString()
-        };
-
-        try {
-            await addDoc(collection(db, `users/${currentUserId}/items`), newItem);
-            document.getElementById('item-form').reset();
-            updateXPSystem(15); // Reward behavior loop on tracking action inputs
-        } catch (err) { alert("Commit Action Interrupted: " + err.message); }
-    });
-});
-
-window.toggleItemComplete = async (id, currentStatus) => {
-    try {
-        const docRef = doc(db, `users/${currentUserId}/items`, id);
-        await updateDoc(docRef, { completed: !currentStatus });
-        if (!currentStatus) {
-            updateXPSystem(35); // Boost rewards output upon target objective clearance completions
-        }
-    } catch (err) { console.error("Mutation Error:", err); }
-};
-
-window.deleteItemRecord = async (id) => {
-    if (!confirm("Confirm immediate absolute disposal?")) return;
-    try {
-        await deleteDoc(doc(db, `users/${currentUserId}/items`, id));
-    } catch (err) { console.error("Disposal Error:", err); }
-};
-
 // ==========================================
-// 6. UI RENDER ENGINE AND CALCULATION CORE
+// 6. UI COMPILING MATRIX & MATHEMATICAL DELTAS
 // ==========================================
 function renderStreamContainer() {
     const stream = document.getElementById('data-stream');
+    if (!stream) return;
+
     const searchTerm = document.getElementById('search-bar').value.toLowerCase();
     const completionFilter = document.getElementById('completion-filter').value;
     const todayStr = new Date().toISOString().split('T')[0];
@@ -237,11 +203,11 @@ function renderStreamContainer() {
     const todayCard = document.getElementById('stat-today-card');
     const todayIconBg = document.getElementById('stat-today-icon-bg');
     if (todayFilterActive) {
-        todayCard.classList.add('border-theme-active', 'bg-theme-opacity');
-        todayIconBg.classList.add('text-theme');
+        if (todayCard) todayCard.classList.add('border-theme-active', 'bg-theme-opacity');
+        if (todayIconBg) todayIconBg.classList.add('text-theme');
     } else {
-        todayCard.classList.remove('border-theme-active', 'bg-theme-opacity');
-        todayIconBg.classList.remove('text-theme');
+        if (todayCard) todayCard.classList.remove('border-theme-active', 'bg-theme-opacity');
+        if (todayIconBg) todayIconBg.classList.remove('text-theme');
     }
 
     let filtered = globalDataArray.filter(item => {
@@ -267,6 +233,7 @@ function renderStreamContainer() {
             </div>
         `;
         if (typeof lucide !== 'undefined') lucide.createIcons();
+        renderMilestonesWidget(); // Keep rendering milestones even if list display is zero
         return;
     }
 
@@ -282,7 +249,7 @@ function renderStreamContainer() {
         
         card.innerHTML = `
             <div class="flex items-start gap-3">
-                <button onclick="window.toggleItemComplete('${item.id}', ${item.completed})" class="mt-0.5 shrink-0 transition-colors ${item.completed ? 'text-emerald-400' : 'text-slate-600 hover:text-theme'}">
+                <button data-id="${item.id}" data-comp="${item.completed}" class="item-comp-toggle-btn mt-0.5 shrink-0 transition-colors ${item.completed ? 'text-emerald-400' : 'text-slate-600 hover:text-theme'}">
                     <i data-lucide="${item.completed ? 'check-square' : 'square'}" class="w-4 h-4"></i>
                 </button>
                 <div class="min-w-0 flex-1">
@@ -299,7 +266,7 @@ function renderStreamContainer() {
                 </div>
             </div>
             <div class="flex items-center justify-end border-t border-slate-900/40 pt-2 mt-1">
-                <button onclick="window.deleteItemRecord('${item.id}')" class="text-slate-600 hover:text-rose-400 p-1 transition-colors rounded">
+                <button data-id="${item.id}" class="item-delete-record-btn text-slate-600 hover:text-rose-400 p-1 transition-colors rounded">
                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                 </button>
             </div>
@@ -307,23 +274,42 @@ function renderStreamContainer() {
         stream.appendChild(card);
     });
 
+    // Event binding proxies to support asynchronous module architectures
+    stream.querySelectorAll('.item-comp-toggle-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            const comp = btn.getAttribute('data-comp') === 'true';
+            try {
+                await updateDoc(doc(db, `users/${currentUserId}/items`, id), { completed: !comp });
+                if (!comp) updateXPSystem(35);
+            } catch (err) { console.error(err); }
+        });
+    });
+
+    stream.querySelectorAll('.item-delete-record-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const id = btn.getAttribute('data-id');
+            if (!confirm("Confirm absolute disposal?")) return;
+            try { await deleteDoc(doc(db, `users/${currentUserId}/items`, id)); } catch (err) { console.error(err); }
+        });
+    });
+
     if (typeof lucide !== 'undefined') lucide.createIcons();
+    renderMilestonesWidget();
 }
 
 // ==========================================
-// 7. MULTI-LANGUAGE UTILITY CONTROLS
+// 7. MULTI-LINGUAL SYSTEM LOCALIZATION INTERACTION
 // ==========================================
 function applyLocalization(langCode) {
     const dict = locales[langCode] || locales.en;
     localStorage.setItem('lifeos-lang', langCode);
 
-    // Main Core Metrics Text
     document.getElementById('lbl-stat-total').textContent = dict.total;
     document.getElementById('lbl-stat-completed').textContent = dict.completed;
     document.getElementById('lbl-stat-efficiency').textContent = dict.efficiency;
     document.getElementById('stat-today-label').textContent = dict.today;
     
-    // Form Translation Nodes
     document.getElementById('lbl-matrix-title').textContent = dict.matrixTitle;
     document.getElementById('lbl-field-desc').textContent = dict.fieldDesc;
     document.getElementById('lbl-field-cat').textContent = dict.fieldCat;
@@ -332,7 +318,6 @@ function applyLocalization(langCode) {
     document.getElementById('lbl-btn-submit').textContent = dict.btnSubmit;
     document.getElementById('stream-heading').textContent = dict.streamHead;
     
-    // Form Selection Options
     document.getElementById('opt-cat-personal').textContent = dict.catPersonal;
     document.getElementById('opt-cat-uni').textContent = dict.catUni;
     document.getElementById('opt-cat-work').textContent = dict.catWork;
@@ -341,7 +326,6 @@ function applyLocalization(langCode) {
     document.getElementById('opt-filter-active').textContent = dict.filterActive;
     document.getElementById('opt-filter-comp').textContent = dict.filterComp;
 
-    // Advanced Controls & Features Translation Nodes
     document.getElementById('lbl-xp-title').textContent = dict.xpTitle;
     document.getElementById('lbl-timer-title').textContent = dict.timerTitle;
     document.getElementById('lbl-nav-export').textContent = dict.exportNav;
@@ -350,41 +334,41 @@ function applyLocalization(langCode) {
     document.getElementById('lbl-setting-theme').textContent = dict.themeLabel;
     document.getElementById('lbl-modal-export-title').textContent = dict.exportTitle;
     document.getElementById('lbl-export-desc').textContent = dict.exportDesc;
-    document.getElementById('lbl-btn-trigger-export').textContent = dict.btnExport;
+    document.getElementById('trigger-export-action-btn').textContent = dict.btnExport;
     
-    // Checkbox mapping lists translation
     document.getElementById('lbl-exp-personal').textContent = dict.catPersonal;
     document.getElementById('lbl-exp-uni').textContent = dict.catUni;
     document.getElementById('lbl-exp-work').textContent = dict.catWork;
     document.getElementById('lbl-exp-misc').textContent = dict.catMisc;
 
+    document.getElementById('lbl-scratchpad-title').textContent = dict.scratchpadTitle;
+    document.getElementById('lbl-milestone-title').textContent = dict.milestoneTitle;
+
+    document.getElementById('lbl-converter-title').textContent = dict.converterTitle;
+    document.getElementById('lbl-converter-droptext').textContent = dict.converterDroptext;
+    document.getElementById('lbl-converter-target').textContent = dict.converterTarget;
+    document.getElementById('lbl-converter-quality').textContent = dict.converterQuality;
+    document.getElementById('converter-trigger-btn').textContent = dict.converterBtn;
+
     const dashboard = document.getElementById('dashboard-screen');
-    if (langCode === 'ar' || langCode === 'ku') {
-        dashboard.dir = "rtl";
-        dashboard.classList.add('font-ibm-plex');
-        dashboard.style.fontSize = "15.5px"; 
-    } else {
-        dashboard.dir = "ltr";
-        dashboard.classList.remove('font-ibm-plex');
-        dashboard.style.fontSize = "14px"; 
+    if (dashboard) {
+        if (langCode === 'ar' || langCode === 'ku') {
+            dashboard.dir = "rtl";
+            dashboard.classList.add('font-ibm-plex');
+            dashboard.style.fontSize = "15.5px"; 
+        } else {
+            dashboard.dir = "ltr";
+            dashboard.classList.remove('font-ibm-plex');
+            dashboard.style.fontSize = "14px"; 
+        }
     }
+    renderMilestonesWidget();
 }
 
 // ==========================================
-// 8. INTERFACE MODAL & COMPLEX FEATURES CORE
+// 8. SIDE PANEL WIDGET FUNCTIONS
 // ==========================================
 
-// Global Interface Modal System Toggles
-window.toggleModal = (modalId, shouldOpen) => {
-    const modalElement = document.getElementById(modalId);
-    if (shouldOpen) {
-        modalElement.classList.remove('hidden');
-    } else {
-        modalElement.classList.add('hidden');
-    }
-};
-
-// FEATURE 1: XP Gamification Calculation Engine Processing Logic
 function updateXPSystem(pointsGained) {
     userXP += pointsGained;
     localStorage.setItem('jkmms-xp', userXP);
@@ -392,138 +376,288 @@ function updateXPSystem(pointsGained) {
     const level = Math.floor(userXP / 100) + 1;
     const currentLevelXP = userXP % 100;
 
-    document.getElementById('user-level-badge').textContent = `LVL ${level}`;
-    document.getElementById('xp-display-text').textContent = `${currentLevelXP} / 100 XP to next clearance level`;
-    document.getElementById('xp-progress-bar').style.width = `${currentLevelXP}%`;
+    const badge = document.getElementById('user-level-badge');
+    const displayTxt = document.getElementById('xp-display-text');
+    const bar = document.getElementById('xp-progress-bar');
+
+    if (badge) badge.textContent = `LVL ${level}`;
+    if (displayTxt) displayTxt.textContent = `${currentLevelXP} / 100 XP to next clearance level`;
+    if (bar) bar.style.width = `${currentLevelXP}%`;
 }
 
-// FEATURE 2: Pomodoro Clock Sequence Focus Timers Core
-window.toggleTimer = () => {
-    const toggleBtn = document.getElementById('timer-toggle-btn');
-    if (isFocusTimerRunning) {
-        clearInterval(focusTimerInterval);
-        isFocusTimerRunning = false;
-        toggleBtn.textContent = "Start";
-        toggleBtn.classList.replace('bg-rose-500/20', 'bg-theme-opacity');
-    } else {
-        isFocusTimerRunning = true;
-        toggleBtn.textContent = "Pause";
-        toggleBtn.classList.replace('bg-theme-opacity', 'bg-rose-500/20');
-        
-        focusTimerInterval = setInterval(() => {
-            focusTimerSecondsLeft--;
-            updateTimerDisplay();
-            
-            if (focusTimerSecondsLeft <= 0) {
-                clearInterval(focusTimerInterval);
-                isFocusTimerRunning = false;
-                alert("Focus interval baseline cycle complete! Reward output points mapped.");
-                updateXPSystem(50); // XP Burst Reward for passing Pomodoro clock intervals
-                window.resetTimer();
-            }
-        }, 1000);
-    }
-};
+function renderMilestonesWidget() {
+    const milestoneBox = document.getElementById('milestone-container');
+    if (!milestoneBox) return;
+    
+    const currentLang = localStorage.getItem('lifeos-lang') || 'en';
+    milestoneBox.innerHTML = "";
 
-window.resetTimer = () => {
-    clearInterval(focusTimerInterval);
-    isFocusTimerRunning = false;
-    focusTimerSecondsLeft = 25 * 60;
-    updateTimerDisplay();
-    const toggleBtn = document.getElementById('timer-toggle-btn');
-    toggleBtn.textContent = "Start";
-    toggleBtn.className = "flex-1 bg-theme-opacity border border-theme text-theme rounded-xl py-1.5 text-xs font-mono uppercase font-bold hover:bg-theme hover:text-slate-950 transition-all";
-};
+    const upcomingDeadlines = globalDataArray.filter(item => item.dueDate && !item.completed);
 
-function updateTimerDisplay() {
-    const mins = Math.floor(focusTimerSecondsLeft / 60).toString().padStart(2, '0');
-    const secs = (focusTimerSecondsLeft % 60).toString().padStart(2, '0');
-    document.getElementById('timer-display').textContent = `${mins}:${secs}`;
-}
-
-// ADVANCED CORE MODULE: Native Vector PDF Export Processing Engine
-window.executeExportSequence = () => {
-    const selectedCheckboxes = document.querySelectorAll('#export-checkbox-matrix input[type="checkbox"]:checked');
-    const categoriesToExport = Array.from(selectedCheckboxes).map(cb => cb.value);
-
-    if (categoriesToExport.length === 0) {
-        alert("Please select at least one active segment parameter option category.");
+    if (upcomingDeadlines.length === 0) {
+        milestoneBox.innerHTML = `<p class="text-[11px] font-mono text-slate-600 text-center py-2">${locales[currentLang]?.noMilestones || "No deadlines."}</p>`;
         return;
     }
 
-    const targetItems = globalDataArray.filter(item => categoriesToExport.includes(item.category));
-    const canvasElement = document.getElementById('print-canvas');
-    
-    let htmlDocumentBuffer = `
-        <div style="font-family: sans-serif; color: #111; padding: 20px;">
-            <h1 style="font-size: 20px; border-b: 2px solid #000; padding-bottom: 6px; margin-bottom: 4px;">JKMMS Data Manifest Report</h1>
-            <p style="font-size: 11px; color: #555; margin-bottom: 24px;">Generated on: ${new Date().toLocaleString()}</p>
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px;">
-                <thead>
-                    <tr style="border-bottom: 1px solid #111; background-color: #f4f4f5;">
-                        <th style="padding: 8px;">Status</th>
-                        <th style="padding: 8px;">Description Title</th>
-                        <th style="padding: 8px;">Category</th>
-                        <th style="padding: 8px;">Priority</th>
-                        <th style="padding: 8px;">Target Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
+    const todayNoon = new Date();
+    todayNoon.setHours(0,0,0,0);
 
-    if (targetItems.length === 0) {
-        htmlDocumentBuffer += `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #777;">No record tracks parsed inside target matrices segments.</td></tr>`;
-    } else {
-        targetItems.forEach(i => {
-            htmlDocumentBuffer += `
-                <tr style="border-bottom: 1px solid #e4e4e7;">
-                    <td style="padding: 8px; font-weight: bold; color: ${i.completed ? 'green' : 'orange'}">${i.completed ? 'COMPLETED' : 'ACTIVE'}</td>
-                    <td style="padding: 8px; ${i.completed ? 'text-decoration: line-through; color:#777;' : ''}">${i.title}</td>
-                    <td style="padding: 8px;"><span style="background:#f4f4f5; border:1px solid #e4e4e7; padding:2px 6px; border-radius:4px; font-size:10px;">${i.category}</span></td>
-                    <td style="padding: 8px;">${i.priority || 'Medium'}</td>
-                    <td style="padding: 8px; color: #444;">${i.dueDate || '-'}</td>
-                </tr>
-            `;
-        });
-    }
+    upcomingDeadlines.slice(0, 4).forEach(item => {
+        const targetDate = new Date(item.dueDate);
+        targetDate.setHours(0,0,0,0);
+        const daysRemaining = Math.ceil((targetDate.getTime() - todayNoon.getTime()) / (1000 * 60 * 60 * 24));
+        
+        let deltaString = "";
+        let badgeColor = "text-slate-400 bg-slate-900";
 
-    htmlDocumentBuffer += `</tbody></table></div>`;
-    
-    // Execute Native Print Window Routing System Swap Channel Pipeline
-    canvasElement.innerHTML = htmlDocumentBuffer;
-    window.toggleModal('export-modal', false);
-    
-    window.print();
-};
+        if (daysRemaining < 0) {
+            deltaString = currentLang === 'en' ? "Overdue" : currentLang === 'ar' ? "متأخر" : "تێپەڕیوە";
+            badgeColor = "text-rose-400 bg-rose-500/10 border-rose-500/20";
+        } else if (daysRemaining === 0) {
+            deltaString = currentLang === 'en' ? "Today" : currentLang === 'ar' ? "اليوم" : "ئەمڕۆ";
+            badgeColor = "text-amber-400 bg-amber-500/10 border-amber-500/20 animate-pulse";
+        } else if (daysRemaining === 1) {
+            deltaString = currentLang === 'en' ? "Tomorrow" : currentLang === 'ar' ? "غداً" : "بەیانی";
+            badgeColor = "text-amber-300 bg-amber-500/5";
+        } else {
+            const weeks = Math.floor(daysRemaining / 7);
+            const remainingDays = daysRemaining % 7;
+            if (currentLang === 'en') {
+                deltaString = weeks > 0 ? `${weeks}w ${remainingDays}d` : `${remainingDays}d`;
+            } else if (currentLang === 'ar') {
+                deltaString = weeks > 0 ? `${weeks}أسابيع ${remainingDays}يوم` : `${remainingDays} يوم`;
+            } else {
+                deltaString = weeks > 0 ? `${weeks}هەفتە ${remainingDays}ڕۆژ` : `${remainingDays} ڕۆژ`;
+            }
+            badgeColor = "text-cyan-400 bg-cyan-500/5";
+        }
 
-// ==========================================
-// 9. WINDOW INTERFACE ACCESS LISTENER ACTIONS
-// ==========================================
-window.switchTab = (tabName) => {
-    currentTabFilter = tabName;
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.className = "tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent";
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between gap-2 p-2 bg-slate-950/40 rounded-xl border border-slate-900 text-xs";
+        row.innerHTML = `
+            <div class="min-w-0 flex-1">
+                <p class="font-medium text-slate-300 truncate">${item.title}</p>
+                <p class="text-[9px] font-mono text-slate-500">${item.category}</p>
+            </div>
+            <span class="text-[10px] font-mono font-bold px-2 py-0.5 rounded border whitespace-nowrap ${badgeColor}">${deltaString}</span>
+        `;
+        milestoneBox.appendChild(row);
     });
-    
-    const activeBtn = document.getElementById(`tab-${tabName}`);
-    if (activeBtn) {
-        activeBtn.className = "tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 bg-theme-opacity text-theme border border-theme";
-    }
-    renderStreamContainer();
-};
+}
 
-window.toggleTodayFilter = () => {
-    todayFilterActive = !todayFilterActive;
-    renderStreamContainer();
-};
-
+// ==========================================
+// 9. ASYNCHRONOUS SECURE INITIALIZATION SEQUENCE
+// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+    
+    // Header Panel Trigger Bindings
+    document.getElementById('nav-settings-btn').addEventListener('click', () => document.getElementById('settings-modal').classList.remove('hidden'));
+    document.getElementById('close-settings-btn').addEventListener('click', () => document.getElementById('settings-modal').classList.add('hidden'));
+    document.getElementById('nav-export-btn').addEventListener('click', () => document.getElementById('export-modal').classList.remove('hidden'));
+    document.getElementById('close-export-btn').addEventListener('click', () => document.getElementById('export-modal').classList.add('hidden'));
+
+    // Config Control Mutation Sync Targets
     document.getElementById('global-theme-select').addEventListener('change', (e) => applyTheme(e.target.value));
     document.getElementById('global-lang-select').addEventListener('change', (e) => applyLocalization(e.target.value));
     document.getElementById('search-bar').addEventListener('input', renderStreamContainer);
     document.getElementById('completion-filter').addEventListener('change', renderStreamContainer);
 
-    if (typeof lucide !== 'undefined') {
-        lucide.createIcons();
+    // Tab Grouping Click Listeners
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            currentTabFilter = btn.id.replace('tab-', '');
+            document.querySelectorAll('.tab-btn').forEach(b => b.className = "tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent");
+            btn.className = "tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 bg-theme-opacity text-theme border border-theme";
+            renderStreamContainer();
+        });
+    });
+
+    // Due Today Dashboard Analytic Badge Filter Click Toggles
+    document.getElementById('stat-today-card').addEventListener('click', () => {
+        todayFilterActive = !todayFilterActive;
+        renderStreamContainer();
+    });
+
+    // DB Commit Operations
+    document.getElementById('item-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!currentUserId) return;
+        const newItem = {
+            title: document.getElementById('item-title').value,
+            category: document.getElementById('item-category').value,
+            priority: document.getElementById('item-priority').value,
+            dueDate: document.getElementById('item-duedate').value || "",
+            completed: false,
+            createdAt: new Date().toISOString()
+        };
+        try {
+            await addDoc(collection(db, `users/${currentUserId}/items`), newItem);
+            document.getElementById('item-form').reset();
+            updateXPSystem(15);
+        } catch (err) { alert("Commit Action Interrupted: " + err.message); }
+    });
+
+    // Scratchpad Auto-Save Operations
+    const scratchpad = document.getElementById('scratchpad-area');
+    const statusLabel = document.getElementById('scratchpad-save-status');
+    scratchpad.value = localStorage.getItem('jkmms-scratchpad-data') || "";
+    let saveTimeout;
+    scratchpad.addEventListener('input', () => {
+        const currentLang = localStorage.getItem('lifeos-lang') || 'en';
+        statusLabel.textContent = locales[currentLang]?.savingStatus || "Saving...";
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(() => {
+            localStorage.setItem('jkmms-scratchpad-data', scratchpad.value);
+            statusLabel.textContent = locales[currentLang]?.savedStatus || "Saved";
+        }, 1000);
+    });
+
+    // Pomodoro Timer Management Click Routing
+    const timerToggleBtn = document.getElementById('timer-toggle-btn');
+    timerToggleBtn.addEventListener('click', () => {
+        if (isFocusTimerRunning) {
+            clearInterval(focusTimerInterval);
+            isFocusTimerRunning = false;
+            timerToggleBtn.textContent = "Start";
+            timerToggleBtn.classList.replace('bg-rose-500/20', 'bg-theme-opacity');
+        } else {
+            isFocusTimerRunning = true;
+            timerToggleBtn.textContent = "Pause";
+            timerToggleBtn.classList.replace('bg-theme-opacity', 'bg-rose-500/20');
+            focusTimerInterval = setInterval(() => {
+                focusTimerSecondsLeft--;
+                const mins = Math.floor(focusTimerSecondsLeft / 60).toString().padStart(2, '0');
+                const secs = (focusTimerSecondsLeft % 60).toString().padStart(2, '0');
+                document.getElementById('timer-display').textContent = `${mins}:${secs}`;
+                if (focusTimerSecondsLeft <= 0) {
+                    clearInterval(focusTimerInterval);
+                    isFocusTimerRunning = false;
+                    alert("Focus interval cycle complete! Reward outputs mapped.");
+                    updateXPSystem(50);
+                    resetTimer();
+                }
+            }, 1000);
+        }
+    });
+
+    function resetTimer() {
+        clearInterval(focusTimerInterval);
+        isFocusTimerRunning = false;
+        focusTimerSecondsLeft = 25 * 60;
+        document.getElementById('timer-display').textContent = "25:00";
+        timerToggleBtn.textContent = "Start";
+        timerToggleBtn.className = "flex-1 bg-theme-opacity border border-theme text-theme rounded-xl py-1.5 text-xs font-mono uppercase font-bold hover:bg-theme hover:text-slate-950 transition-all";
     }
+    document.getElementById('timer-reset-btn').addEventListener('click', resetTimer);
+
+    // Media Processing Hardware Component Listeners
+    const fileInput = document.getElementById('converter-file-input');
+    const fileNameDisplay = document.getElementById('converter-file-name');
+    const convertTriggerBtn = document.getElementById('converter-trigger-btn');
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            converterActiveFileBuffer = file;
+            fileNameDisplay.textContent = `${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+            convertTriggerBtn.disabled = false;
+            convertTriggerBtn.className = "w-full bg-theme-opacity border border-theme text-theme hover:bg-theme hover:text-slate-950 text-[11px] font-bold py-2 rounded-xl transition-all tracking-wider uppercase";
+        } else {
+            converterActiveFileBuffer = null;
+            fileNameDisplay.textContent = "";
+            convertTriggerBtn.disabled = true;
+            convertTriggerBtn.className = "w-full bg-slate-900 border border-slate-800 disabled:opacity-40 disabled:cursor-not-allowed text-slate-400 text-[11px] font-bold py-2 rounded-xl transition-all tracking-wider uppercase";
+        }
+    });
+
+    convertTriggerBtn.addEventListener('click', () => {
+        const currentLang = localStorage.getItem('lifeos-lang') || 'en';
+        const dict = locales[currentLang] || locales.en;
+        if (!converterActiveFileBuffer) return;
+
+        const targetMimeType = document.getElementById('converter-target-format').value;
+        const compressionQuality = parseFloat(document.getElementById('converter-target-quality').value);
+
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const img = new Image();
+            img.onload = function () {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+
+                    canvas.toBlob((blob) => {
+                        if (!blob) { alert(dict.errProcess + "Null blob mapping."); return; }
+                        const inputNameParsed = converterActiveFileBuffer.name.substring(0, converterActiveFileBuffer.name.lastIndexOf('.'));
+                        const extensionsMap = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/avif": "avif", "image/bmp": "bmp" };
+                        const outputExtension = extensionsMap[targetMimeType] || "bin";
+
+                        const downloadUrl = URL.createObjectURL(blob);
+                        const downloadAnchor = document.createElement('a');
+                        downloadAnchor.href = downloadUrl;
+                        downloadAnchor.download = `${inputNameParsed}_converted.${outputExtension}`;
+                        document.body.appendChild(downloadAnchor);
+                        downloadAnchor.click();
+                        document.body.removeChild(downloadAnchor);
+                        URL.revokeObjectURL(downloadUrl);
+                        updateXPSystem(20);
+                    }, targetMimeType, compressionQuality);
+                } catch (err) { alert(dict.errProcess + err.message); }
+            };
+            img.src = event.target.result;
+        };
+        reader.readAsDataURL(converterActiveFileBuffer);
+    });
+
+    // Vector PDF Exporter Engine Canvas Assembly Line
+    document.getElementById('trigger-export-action-btn').addEventListener('click', () => {
+        const selectedCheckboxes = document.querySelectorAll('#export-checkbox-matrix input[type="checkbox"]:checked');
+        const categoriesToExport = Array.from(selectedCheckboxes).map(cb => cb.value);
+        if (categoriesToExport.length === 0) { alert("Please select a valid filter parameter option category."); return; }
+
+        const targetItems = globalDataArray.filter(item => categoriesToExport.includes(item.category));
+        const canvasElement = document.getElementById('print-canvas');
+        
+        let htmlDocumentBuffer = `
+            <div style="font-family: sans-serif; color: #111; padding: 20px;">
+                <h1 style="font-size: 20px; border-bottom: 2px solid #000; padding-bottom: 6px; margin-bottom: 4px;">JKMMS Manifest Data Document Report</h1>
+                <p style="font-size: 11px; color: #555; margin-bottom: 24px;">Generated on: ${new Date().toLocaleString()}</p>
+                <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 12px;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid #111; background-color: #f4f4f5;">
+                            <th style="padding: 8px;">Status</th>
+                            <th style="padding: 8px;">Description Title</th>
+                            <th style="padding: 8px;">Category</th>
+                            <th style="padding: 8px;">Priority</th>
+                            <th style="padding: 8px;">Target Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        `;
+
+        if (targetItems.length === 0) {
+            htmlDocumentBuffer += `<tr><td colspan="5" style="padding: 16px; text-align: center; color: #777;">No matching logs found inside target metrics profiles.</td></tr>`;
+        } else {
+            targetItems.forEach(i => {
+                htmlDocumentBuffer += `
+                    <tr style="border-bottom: 1px solid #e4e4e7;">
+                        <td style="padding: 8px; font-weight: bold; color: ${i.completed ? 'green' : 'orange'}">${i.completed ? 'COMPLETED' : 'ACTIVE'}</td>
+                        <td style="padding: 8px; ${i.completed ? 'text-decoration: line-through; color:#777;' : ''}">${i.title}</td>
+                        <td style="padding: 8px;"><span style="background:#f4f4f5; border:1px solid #e4e4e7; padding:2px 6px; border-radius:4px; font-size:10px;">${i.category}</span></td>
+                        <td style="padding: 8px;">${i.priority || 'Medium'}</td>
+                        <td style="padding: 8px; color: #444;">${i.dueDate || '-'}</td>
+                    </tr>
+                `;
+            });
+        }
+        htmlDocumentBuffer += `</tbody></table></div>`;
+        canvasElement.innerHTML = htmlDocumentBuffer;
+        document.getElementById('export-modal').classList.add('hidden');
+        window.print();
+    });
+
+    if (typeof lucide !== 'undefined') lucide.createIcons();
 });

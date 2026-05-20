@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JKMMS Workspace</title>
+    <title>JKMMS Workspace Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,12 +14,8 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Custom IBM Plex Font Routing Utility */
-        .font-ibm-plex { 
-            font-family: 'IBM Plex Sans Arabic', sans-serif !important; 
-        }
+        .font-ibm-plex { font-family: 'IBM Plex Sans Arabic', sans-serif !important; }
 
-        /* Theme Core Engine Properties */
         body.theme-slate { --theme-primary: 99, 102, 241; --theme-bg: #0b0f19; --theme-surface: rgba(13, 18, 30, 0.75); }
         body.theme-emerald { --theme-primary: 16, 185, 129; --theme-bg: #060f0e; --theme-surface: rgba(10, 25, 23, 0.75); }
         body.theme-amber { --theme-primary: 245, 158, 11; --theme-bg: #140f06; --theme-surface: rgba(28, 20, 10, 0.75); }
@@ -35,13 +31,19 @@
         .bg-theme { background-color: rgb(var(--theme-primary)); }
         .bg-theme-opacity { background-color: rgba(var(--theme-primary), 0.1); }
         .focus-theme:focus { border-color: rgb(var(--theme-primary)); box-shadow: 0 0 0 2px rgba(var(--theme-primary), 0.1); }
+
+        @media print {
+            body { background: white !important; color: black !important; }
+            .no-print { display: none !important; }
+            .print-window { display: block !important; width: 100% !important; position: absolute; left: 0; top: 0; }
+        }
     </style>
 </head>
 <body class="theme-slate text-slate-200 min-h-screen font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200" id="main-body">
 
     <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#070a12] transition-all duration-500 ease-out p-4">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.05),transparent_60%)]"></div>
-        <div class="dynamic-glass w-full max-w-md p-6 sm:p-8 rounded-2xl border border-slate-800/60 shadow-2xl relative transition-all duration-500">
+        <div class="dynamic-glass w-full max-w-md p-6 sm:p-8 rounded-2xl border border-slate-800/60 shadow-2xl relative">
             <div class="flex flex-col items-center mb-6">
                 <div class="p-3 bg-indigo-600/10 text-indigo-400 rounded-xl border border-indigo-500/20 mb-3">
                     <i data-lucide="terminal" class="w-6 h-6 stroke-[1.5]"></i>
@@ -52,13 +54,13 @@
             <form id="login-form" class="space-y-4">
                 <div>
                     <label class="block text-[13px] font-semibold uppercase tracking-wider text-slate-300 mb-2 font-mono">Email Address</label>
-                    <input type="email" id="login-username" required class="w-full bg-slate-900/40 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-all" placeholder="name@email.com">
+                    <input type="email" id="login-username" required class="w-full bg-slate-900/40 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-all" placeholder="name@email.com">
                 </div>
                 <div>
                     <label class="block text-[13px] font-semibold uppercase tracking-wider text-slate-300 mb-2 font-mono">Password</label>
-                    <input type="password" id="login-password" required class="w-full bg-slate-900/40 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-indigo-500 transition-all" placeholder="••••••••">
+                    <input type="password" id="login-password" required class="w-full bg-slate-900/40 border border-slate-800/80 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-indigo-500 transition-all" placeholder="••••••••">
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl transition-all shadow-lg text-sm mt-2 flex items-center justify-center gap-2">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-xl transition-all shadow-lg text-sm flex items-center justify-center gap-2">
                     <span>Sign In</span>
                     <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </button>
@@ -67,7 +69,8 @@
     </div>
 
     <div id="dashboard-screen" class="hidden opacity-0 transform translate-y-2 transition-all duration-500 ease-out pb-12">
-        <header class="border-b border-slate-900/60 sticky top-0 z-40 dynamic-glass border-theme">
+        
+        <header class="border-b border-slate-900/60 sticky top-0 z-40 dynamic-glass border-theme no-print">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
                 <div class="flex items-center gap-2.5 min-w-0">
                     <div class="p-2 bg-theme-opacity text-theme rounded-lg border border-theme">
@@ -79,28 +82,42 @@
                 </div>
 
                 <div class="flex items-center gap-2 shrink-0">
-                    <select id="global-lang-select" class="bg-slate-900/80 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 h-8 cursor-pointer">
-                        <option value="en">English</option>
-                        <option value="ar">العربية</option>
-                        <option value="ku">کوردی</option>
-                    </select>
+                    <button onclick="window.toggleModal('export-modal', true)" class="flex items-center gap-1.5 px-3 h-8 border border-slate-800 rounded-lg text-xs font-medium text-slate-400 hover:text-theme hover:border-theme-active transition-all">
+                        <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                        <span id="lbl-nav-export">Export PDF</span>
+                    </button>
+                    
+                    <button onclick="window.toggleModal('settings-modal', true)" class="p-2 border border-slate-800 rounded-lg text-slate-400 hover:text-slate-200 transition-all h-8 flex items-center justify-center">
+                        <i data-lucide="settings" class="w-4 h-4"></i>
+                    </button>
 
-                    <select id="global-theme-select" class="bg-slate-900/80 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 h-8 cursor-pointer">
-                        <option value="theme-slate">Original Cyan</option>
-                        <option value="theme-emerald">Matrix Emerald</option>
-                        <option value="theme-amber">Cyber Amber</option>
-                        <option value="theme-rose">Crimson Rose</option>
-                        <option value="theme-violet">Neo Violet</option>
-                    </select>
-
-                    <button id="logout-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 border border-slate-800 rounded-lg text-xs font-medium text-slate-400 hover:text-rose-400 transition-all h-8">
-                        <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <button id="logout-btn" class="flex items-center justify-center p-2 border border-slate-800 rounded-lg text-slate-400 hover:text-rose-400 transition-all h-8">
+                        <i data-lucide="log-out" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
         </header>
 
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 no-print">
+            
+            <section class="dynamic-glass p-4 rounded-2xl border border-slate-800/60 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-theme">
+                <div class="flex items-center gap-3">
+                    <div class="p-3 bg-theme-opacity border border-theme-active rounded-xl text-theme">
+                        <i data-lucide="award" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <h4 id="lbl-xp-title" class="text-xs font-mono font-bold tracking-wider uppercase text-slate-400">System Rank Matrix</h4>
+                            <span id="user-level-badge" class="text-[10px] bg-theme text-slate-950 font-bold font-mono px-1.5 rounded">LVL 1</span>
+                        </div>
+                        <p id="xp-display-text" class="text-xs text-slate-400 mt-0.5 font-mono">0 / 100 XP to next clearance level</p>
+                    </div>
+                </div>
+                <div class="w-full sm:w-64 bg-slate-950/60 border border-slate-900 rounded-full h-3 overflow-hidden p-0.5">
+                    <div id="xp-progress-bar" class="bg-theme h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </section>
+
             <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
                 <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme">
                     <div>
@@ -136,49 +153,67 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                 
-                <div class="dynamic-glass p-5 rounded-2xl border border-slate-800/60 shadow-md lg:sticky lg:top-24 border-theme">
-                    <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2 font-mono">
-                        <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-theme"></i>
-                        <span id="lbl-matrix-title">New Entry Matrix</span>
-                    </h3>
-                    <form id="item-form" class="space-y-4">
-                        <div>
-                            <label id="lbl-field-desc" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Description / Title</label>
-                            <input type="text" id="item-title" required class="w-full bg-slate-900/40 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus-theme transition-all placeholder-slate-700" placeholder="...">
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-4 lg:sticky lg:top-24">
+                    
+                    <div class="dynamic-glass p-5 rounded-2xl border border-slate-800/60 shadow-md border-theme">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2 font-mono">
+                            <i data-lucide="plus-circle" class="w-3.5 h-3.5 text-theme"></i>
+                            <span id="lbl-matrix-title">New Entry Matrix</span>
+                        </h3>
+                        <form id="item-form" class="space-y-4">
                             <div>
-                                <label id="lbl-field-cat" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Category</label>
-                                <select id="item-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus-theme transition-colors">
-                                    <option value="Personal" id="opt-cat-personal">Personal</option>
-                                    <option value="University" id="opt-cat-uni">University</option>
-                                    <option value="Work" id="opt-cat-work">Work</option>
-                                    <option value="Misc" id="opt-cat-misc">Misc</option>
-                                </select>
+                                <label id="lbl-field-desc" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Description / Title</label>
+                                <input type="text" id="item-title" required class="w-full bg-slate-900/40 border border-slate-800 rounded-xl px-3 py-2 text-sm text-slate-200 focus:outline-none focus-theme transition-all placeholder-slate-700" placeholder="...">
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label id="lbl-field-cat" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Category</label>
+                                    <select id="item-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus-theme">
+                                        <option value="Personal" id="opt-cat-personal">Personal</option>
+                                        <option value="University" id="opt-cat-uni">University</option>
+                                        <option value="Work" id="opt-cat-work">Work</option>
+                                        <option value="Misc" id="opt-cat-misc">Misc</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label id="lbl-field-priority" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Priority</label>
+                                    <select id="item-priority" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus-theme">
+                                        <option value="Low" id="opt-pr-low">Low</option>
+                                        <option value="Medium" id="opt-pr-med" selected>Medium</option>
+                                        <option value="High" id="opt-pr-high">High</option>
+                                    </select>
+                                </div>
                             </div>
                             <div>
-                                <label id="lbl-field-priority" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Priority</label>
-                                <select id="item-priority" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus-theme transition-colors">
-                                    <option value="Low" id="opt-pr-low">Low</option>
-                                    <option value="Medium" id="opt-pr-med" selected>Medium</option>
-                                    <option value="High" id="opt-pr-high">High</option>
-                                </select>
+                                <label id="lbl-field-date" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Target Date</label>
+                                <input type="date" id="item-duedate" class="w-full bg-slate-900/40 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus-theme">
+                            </div>
+                            <button type="submit" id="lbl-btn-submit" class="w-full bg-slate-900 hover:bg-theme border border-slate-800 hover:border-theme text-slate-300 hover:text-white text-[11px] font-bold py-2.5 rounded-xl transition-all tracking-wider uppercase mt-2">
+                                Commit Entry
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="dynamic-glass p-5 rounded-2xl border border-slate-800/60 shadow-md border-theme">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3 flex items-center gap-2 font-mono">
+                            <i data-lucide="timer" class="w-3.5 h-3.5 text-theme"></i>
+                            <span id="lbl-timer-title">Focus Clock Sequence</span>
+                        </h3>
+                        <div class="flex flex-col items-center justify-center py-2">
+                            <span id="timer-display" class="text-3xl font-mono font-bold tracking-widest text-slate-100">25:00</span>
+                            <div class="flex gap-2 mt-4 w-full">
+                                <button onclick="window.toggleTimer()" id="timer-toggle-btn" class="flex-1 bg-theme-opacity border border-theme text-theme rounded-xl py-1.5 text-xs font-mono uppercase font-bold hover:bg-theme hover:text-slate-950 transition-all">Start</button>
+                                <button onclick="window.resetTimer()" class="px-3 bg-slate-900 border border-slate-800 text-slate-400 rounded-xl py-1.5 text-xs font-mono uppercase hover:text-slate-200 transition-all">Reset</button>
                             </div>
                         </div>
-                        <div>
-                            <label id="lbl-field-date" class="block text-[13px] font-mono text-slate-300 uppercase tracking-wider mb-1.5">Target Date</label>
-                            <input type="date" id="item-duedate" class="w-full bg-slate-900/40 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none focus-theme transition-colors">
-                        </div>
-                        <button type="submit" id="lbl-btn-submit" class="w-full bg-slate-900 hover:bg-theme border border-slate-800 hover:border-theme text-slate-300 hover:text-white text-[11px] font-bold py-2.5 rounded-xl transition-all tracking-wider uppercase mt-2">
-                            Commit Entry
-                        </button>
-                    </form>
+                    </div>
+
                 </div>
 
                 <div class="lg:col-span-2 space-y-4">
                     
                     <div class="dynamic-glass p-3 rounded-xl border border-slate-800/60 flex flex-col md:flex-row gap-3 items-center justify-between shadow-sm border-theme">
-                        <div id="tab-container" class="flex gap-1 overflow-x-auto w-full md:w-auto no-scrollbar pb-1 md:pb-0 border-b border-slate-900 md:border-none">
+                        <div id="tab-container" class="flex gap-1 overflow-x-auto w-full md:w-auto no-scrollbar pb-1 md:pb-0">
                             <button id="tab-all" onclick="window.switchTab('all')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 bg-theme-opacity text-theme border border-theme">All Arrays</button>
                             <button id="tab-Personal" onclick="window.switchTab('Personal')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent">Personal</button>
                             <button id="tab-University" onclick="window.switchTab('University')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent">University</button>
@@ -189,7 +224,7 @@
                         <div class="flex gap-2 w-full md:w-auto items-center">
                             <div class="relative flex-1 md:w-44">
                                 <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-600"></i>
-                                <input type="text" id="search-bar" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg pl-8 pr-2 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-theme" placeholder="...">
+                                <input type="text" id="search-bar" class="w-full bg-slate-900/60 border border-slate-800 rounded-lg pl-8 pr-2 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-theme" placeholder="...">
                             </div>
                             <select id="completion-filter" class="bg-slate-900/60 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-400 focus:outline-none focus:border-theme h-8">
                                 <option value="all" id="opt-filter-all">Unfiltered</option>
@@ -210,6 +245,64 @@
         </main>
     </div>
 
-    <script type="module" src="./app.js"></script>
+    <div id="settings-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print">
+        <div class="dynamic-glass w-full max-w-sm p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-900 pb-3">
+                <h3 id="lbl-modal-settings-title" class="text-sm font-bold tracking-tight text-slate-200">System Preferences</h3>
+                <button onclick="window.toggleModal('settings-modal', false)" class="text-slate-500 hover:text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="space-y-3">
+                <div>
+                    <label id="lbl-setting-lang" class="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Localization Interface</label>
+                    <select id="global-lang-select" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none">
+                        <option value="en">English</option>
+                        <option value="ar">العربية</option>
+                        <option value="ku">کوردی</option>
+                    </select>
+                </div>
+                <div>
+                    <label id="lbl-setting-theme" class="block text-xs font-mono text-slate-400 uppercase tracking-wider mb-1">Color Palette Core</label>
+                    <select id="global-theme-select" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 focus:outline-none">
+                        <option value="theme-slate">Original Cyan</option>
+                        <option value="theme-emerald">Matrix Emerald</option>
+                        <option value="theme-amber">Cyber Amber</option>
+                        <option value="theme-rose">Crimson Rose</option>
+                        <option value="theme-violet">Neo Violet</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="export-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm no-print">
+        <div class="dynamic-glass w-full max-w-sm p-6 rounded-2xl border border-slate-800 shadow-2xl space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-900 pb-3">
+                <h3 id="lbl-modal-export-title" class="text-sm font-bold tracking-tight text-slate-200">Export Parameters</h3>
+                <button onclick="window.toggleModal('export-modal', false)" class="text-slate-500 hover:text-slate-300"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <p id="lbl-export-desc" class="text-xs text-slate-400 leading-relaxed">Select the categories you wish to include within your compiled target documentation report manifest.</p>
+            <div class="space-y-2 py-1" id="export-checkbox-matrix">
+                <label class="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer select-none">
+                    <input type="checkbox" value="Personal" checked class="rounded border-slate-800 accent-indigo-500 bg-slate-950 w-4 h-4"> <span id="lbl-exp-personal">Personal</span>
+                </label>
+                <label class="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer select-none">
+                    <input type="checkbox" value="University" checked class="rounded border-slate-800 accent-indigo-500 bg-slate-950 w-4 h-4"> <span id="lbl-exp-uni">University</span>
+                </label>
+                <label class="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer select-none">
+                    <input type="checkbox" value="Work" checked class="rounded border-slate-800 accent-indigo-500 bg-slate-950 w-4 h-4"> <span id="lbl-exp-work">Work</span>
+                </label>
+                <label class="flex items-center gap-2.5 text-xs text-slate-300 cursor-pointer select-none">
+                    <input type="checkbox" value="Misc" checked class="rounded border-slate-800 accent-indigo-500 bg-slate-950 w-4 h-4"> <span id="lbl-exp-misc">Misc</span>
+                </label>
+            </div>
+            <button onclick="window.executeExportSequence()" id="lbl-btn-trigger-export" class="w-full bg-theme text-slate-950 font-bold text-xs py-2.5 rounded-xl uppercase tracking-wider transition-all">
+                Compile Document
+            </button>
+        </div>
+    </div>
+
+    <div id="print-canvas" class="hidden print-window p-8 text-black bg-white"></div>
+
+    <script type="module" src="app.js"></script>
 </body>
 </html>

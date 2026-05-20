@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JKMMS Workspace Pro</title>
+    <title>JKMMS Workspace Ultra Pro</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2 family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        /* UI Enhancement 2: Glassmorphic Smooth Scrollbars */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); }
-        ::-webkit-scrollbar-thumb { background: rgba(var(--theme-primary), 0.3); border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: rgba(var(--theme-primary), 0.6); }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(var(--theme-primary), 0.25); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(var(--theme-primary), 0.5); }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -39,13 +38,11 @@
         .bg-theme-opacity { background-color: rgba(var(--theme-primary), 0.08); }
         .focus-theme:focus { border-color: rgb(var(--theme-primary)); box-shadow: 0 0 0 2px rgba(var(--theme-primary), 0.15); }
         
-        /* UI Enhancement 4: Micro-interactions */
-        .interactive-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .interactive-btn:active { transform: scale(0.96); }
+        .interactive-btn { transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1); }
+        .interactive-btn:active { transform: scale(0.97); }
 
-        /* UI Enhancement 5: Skeleton Loader Animation */
-        @keyframes pulse-shimmer { 0% { opacity: 0.3; } 50% { opacity: 0.6; } 100% { opacity: 0.3; } }
-        .skeleton-pulse { animation: pulse-shimmer 1.5s infinite ease-in-out; }
+        @keyframes pulse-shimmer { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.6; } }
+        .skeleton-pulse { animation: pulse-shimmer 2s infinite ease-in-out; }
     </style>
 </head>
 <body class="theme-slate text-slate-200 min-h-screen font-sans antialiased selection:bg-indigo-500/30 selection:text-indigo-200" id="main-body">
@@ -54,13 +51,13 @@
 
     <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#070a12] p-4">
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(99,102,241,0.06),transparent_60%)]"></div>
-        <div class="dynamic-glass w-full max-w-md p-6 sm:p-8 rounded-2xl border border-slate-800/60 shadow-2xl relative">
+        <div class="dynamic-glass w-full max-w-md p-8 rounded-2xl border border-slate-800/60 shadow-2xl relative">
             <div class="flex flex-col items-center mb-6">
                 <div class="p-3 bg-indigo-600/10 text-indigo-400 rounded-xl border border-indigo-500/20 mb-3">
                     <i data-lucide="terminal" class="w-6 h-6 stroke-[1.5]"></i>
                 </div>
                 <h1 class="text-xl font-bold tracking-tight text-slate-100 font-mono">JKMMS Central</h1>
-                <p class="text-[11px] text-slate-500 font-mono mt-0.5">Secure Workspace Shell</p>
+                <p class="text-[11px] text-slate-500 font-mono mt-0.5">Secure Workspace Shell v4.0</p>
             </div>
             <form id="login-form" class="space-y-4">
                 <div>
@@ -103,7 +100,6 @@
                         <option value="ar">العربية</option>
                         <option value="ku">کوردی</option>
                     </select>
-
                     <select id="global-theme-select" class="bg-slate-900/90 border border-slate-800 rounded-lg px-2 py-1.5 text-xs text-slate-300 focus:outline-none focus:border-theme h-8 cursor-pointer font-mono">
                         <option value="theme-slate">Slate Core</option>
                         <option value="theme-emerald">Emerald Net</option>
@@ -111,7 +107,6 @@
                         <option value="theme-rose">Rose Crimson</option>
                         <option value="theme-violet">Violet Neo</option>
                     </select>
-
                     <button id="logout-btn" class="flex items-center justify-center p-2 border border-slate-800 rounded-lg text-slate-400 hover:text-rose-400 transition-all h-8 w-8 interactive-btn">
                         <i data-lucide="power" class="w-4 h-4"></i>
                     </button>
@@ -121,21 +116,21 @@
 
         <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
             <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme hover:border-slate-700 transition-all duration-300">
+                <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme">
                     <div>
                         <p id="lbl-stat-total" class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Total Arrays</p>
                         <h3 id="stat-total" class="text-xl font-bold mt-0.5 text-slate-200 font-mono">0</h3>
                     </div>
                     <div class="p-2 bg-slate-950 text-theme rounded-lg border border-slate-900"><i data-lucide="database" class="w-4 h-4"></i></div>
                 </div>
-                <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme hover:border-slate-700 transition-all duration-300">
+                <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme">
                     <div>
                         <p id="lbl-stat-completed" class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Resolved</p>
                         <h3 id="stat-completed" class="text-xl font-bold mt-0.5 text-emerald-400 font-mono">0</h3>
                     </div>
                     <div class="p-2 bg-slate-950 text-emerald-400 rounded-lg border border-slate-900"><i data-lucide="shield-check" class="w-4 h-4"></i></div>
                 </div>
-                <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme hover:border-slate-700 transition-all duration-300">
+                <div class="dynamic-glass p-4 rounded-xl border border-slate-800/60 flex items-center justify-between shadow-sm border-theme">
                     <div>
                         <p id="lbl-stat-efficiency" class="text-[10px] font-mono text-slate-500 uppercase tracking-wider">Runtime Yield</p>
                         <h3 id="stat-efficiency" class="text-xl font-bold mt-0.5 text-cyan-400 font-mono">0%</h3>
@@ -154,8 +149,7 @@
             </section>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-                
-                <div class="dynamic-glass p-5 rounded-2xl border border-slate-800/60 shadow-md lg:sticky lg:top-24 border-theme">
+                <div class="dynamic-glass p-5 rounded-2xl border border-slate-800/60 shadow-md border-theme">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4 flex items-center gap-2 font-mono">
                         <i data-lucide="terminal" class="w-3.5 h-3.5 text-theme"></i>
                         <span id="lbl-matrix-title">Inject Stream Context</span>
@@ -169,18 +163,18 @@
                             <div>
                                 <label id="lbl-field-cat" class="block text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1.5">Partition</label>
                                 <select id="item-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus-theme font-mono">
-                                    <option value="Personal" id="opt-cat-personal">Personal</option>
-                                    <option value="University" id="opt-cat-uni">University</option>
-                                    <option value="Work" id="opt-cat-work">Work</option>
-                                    <option value="Misc" id="opt-cat-misc">Misc</option>
+                                    <option value="Personal">Personal</option>
+                                    <option value="University">University</option>
+                                    <option value="Work">Work</option>
+                                    <option value="Misc">Misc</option>
                                 </select>
                             </div>
                             <div>
                                 <label id="lbl-field-priority" class="block text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1.5">Severity</label>
                                 <select id="item-priority" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-2.5 py-2 text-xs text-slate-300 focus:outline-none focus-theme font-mono">
-                                    <option value="Low" id="opt-pr-low">Low</option>
-                                    <option value="Medium" id="opt-pr-med" selected>Medium</option>
-                                    <option value="High" id="opt-pr-high">High</option>
+                                    <option value="Low">Low</option>
+                                    <option value="Medium" selected>Medium</option>
+                                    <option value="High">High</option>
                                 </select>
                             </div>
                         </div>
@@ -195,16 +189,14 @@
                 </div>
 
                 <div class="lg:col-span-2 space-y-4">
-                    
                     <div class="dynamic-glass p-3 rounded-xl border border-slate-800/60 flex flex-col md:flex-row gap-3 items-center justify-between shadow-sm border-theme">
-                        <div id="tab-container" class="flex gap-1 overflow-x-auto w-full md:w-auto no-scrollbar pb-1 md:pb-0 border-b border-slate-900 md:border-none">
-                            <button id="tab-all" onclick="window.switchTab('all')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 bg-theme-opacity text-theme border border-theme font-mono relative">All_Sectors</button>
-                            <button id="tab-Personal" onclick="window.switchTab('Personal')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent font-mono">Personal</button>
-                            <button id="tab-University" onclick="window.switchTab('University')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent font-mono">University</button>
-                            <button id="tab-Work" onclick="window.switchTab('Work')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent font-mono">Work</button>
-                            <button id="tab-Misc" onclick="window.switchTab('Misc')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 border border-transparent font-mono">Misc</button>
+                        <div id="tab-container" class="flex gap-1 overflow-x-auto w-full md:w-auto no-scrollbar pb-1 md:pb-0">
+                            <button id="tab-all" onclick="window.switchTab('all')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 bg-theme-opacity text-theme border border-theme font-mono">All_Sectors</button>
+                            <button id="tab-Personal" onclick="window.switchTab('Personal')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 font-mono">Personal</button>
+                            <button id="tab-University" onclick="window.switchTab('University')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 font-mono">University</button>
+                            <button id="tab-Work" onclick="window.switchTab('Work')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 font-mono">Work</button>
+                            <button id="tab-Misc" onclick="window.switchTab('Misc')" class="tab-btn text-xs font-medium px-3 py-1.5 rounded-lg transition-all shrink-0 text-slate-400 hover:text-slate-200 font-mono">Misc</button>
                         </div>
-                        
                         <div class="flex gap-2 w-full md:w-auto items-center">
                             <div class="relative flex-1 md:w-44">
                                 <i data-lucide="search" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-600"></i>
@@ -224,43 +216,48 @@
                     </div>
 
                     <div id="data-stream" class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
-                        <div class="col-span-full dynamic-glass p-8 border border-slate-800 rounded-xl skeleton-pulse text-center font-mono text-xs text-slate-500">Binding real-time stream sockets...</div>
+                        <div class="col-span-full dynamic-glass p-8 border border-slate-800 rounded-xl skeleton-pulse text-center font-mono text-xs text-slate-500">Binding real-time snapshot listeners...</div>
                     </div>
                 </div>
             </div>
 
-            <section class="mt-12 border-t border-slate-900/60 pt-8">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="p-2 bg-slate-950 text-theme rounded-lg border border-slate-800"><i data-lucide="terminal" class="w-4 h-4"></i></div>
-                    <div>
-                        <h3 class="text-md font-bold tracking-tight text-slate-200 font-mono">Client-Side IT Execution Workbench</h3>
-                        <p class="text-xs text-slate-500 font-mono">Isolated in-memory utility clusters</p>
+            <section class="mt-12 border-t border-slate-900 pt-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="p-2 bg-slate-950 text-theme rounded-lg border border-slate-800"><i data-lucide="terminal" class="w-4 h-4"></i></div>
+                        <div>
+                            <h3 class="text-md font-bold tracking-tight text-slate-200 font-mono">Industrial Engine Workbench Pro</h3>
+                            <p class="text-xs text-slate-500 font-mono">100 Highly Optimized Isolated Computing Containers</p>
+                        </div>
+                    </div>
+                    <div class="relative w-full md:w-64">
+                        <i data-lucide="filter" class="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                        <input type="text" id="workbench-tool-search" class="w-full bg-slate-950 border border-slate-800 rounded-xl pl-8 pr-3 py-1.5 text-xs text-slate-200 placeholder-slate-600 focus:outline-none focus:border-theme font-mono" placeholder="Filter 100 tools...">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 items-start">
-                    <div class="dynamic-glass p-3 rounded-xl border border-slate-800/60 space-y-1 max-h-[480px] overflow-y-auto border-theme">
-                        <p class="text-[9px] font-mono font-bold uppercase text-slate-500 px-2 mb-2 tracking-widest">Tool Modules</p>
-                        <ul id="tools-menu-list" class="space-y-1">
-                            </ul>
-                    </div>
+                    <div id="workbench-sidebar" class="dynamic-glass p-3 rounded-xl border border-slate-800/60 h-[560px] overflow-y-auto border-theme space-y-4">
+                        </div>
 
-                    <div class="lg:col-span-3 dynamic-glass p-5 rounded-2xl border border-slate-800/60 min-h-[480px] flex flex-col justify-between border-theme relative">
+                    <div class="lg:col-span-3 dynamic-glass p-6 rounded-2xl border border-slate-800/60 min-h-[560px] flex flex-col justify-between border-theme relative">
                         <div class="absolute top-4 right-4 flex gap-1.5">
-                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500/40"></span>
-                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500/40"></span>
-                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/40"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-rose-500/30"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-amber-500/30"></span>
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500/30"></span>
                         </div>
                         
                         <div class="w-full flex-1 flex flex-col">
-                            <div class="border-b border-slate-900 pb-3 mb-4 flex items-center gap-2">
-                                <i id="current-tool-icon" data-lucide="sliders" class="w-4 h-4 text-theme"></i>
-                                <h4 id="current-tool-title" class="text-xs font-bold font-mono uppercase text-slate-300 tracking-wider">Module Console Sandbox</h4>
+                            <div class="border-b border-slate-900 pb-3 mb-4 flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <i id="workbench-active-icon" data-lucide="sliders" class="w-4 h-4 text-theme"></i>
+                                    <h4 id="workbench-active-title" class="text-xs font-bold font-mono uppercase text-slate-300 tracking-wider">Console Input Buffer</h4>
+                                </div>
+                                <span id="workbench-active-cat" class="text-[9px] font-mono px-2 py-0.5 rounded bg-slate-950 text-slate-500 uppercase tracking-tight">System</span>
                             </div>
                             
-                            <div id="tool-runtime-frame" class="w-full flex-1 text-sm font-mono text-slate-300">
-                                <p class="text-xs text-slate-500 italic">Select a processing unit module from the left register cluster matrix to run direct safe client computing cycles.</p>
-                            </div>
+                            <div id="workbench-runtime-mount" class="w-full flex-1 text-xs font-mono text-slate-300">
+                                </div>
                         </div>
                     </div>
                 </div>

@@ -1,12 +1,10 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { auth, db } from "./firebase-config.js";
 import { 
-    getAuth, 
     signInWithEmailAndPassword, 
     onAuthStateChanged, 
     signOut 
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { 
-    getFirestore, 
     collection, 
     addDoc, 
     query, 
@@ -18,24 +16,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 // ==========================================
-// 1. FIREBASE ARCHITECTURE INITIALIZATION
-// ==========================================
-const firebaseConfig = {
-    apiKey: "AIzaSyCkDkK86iyNwWmdeY-GZHMVS8MwMZOBKIU",
-    authDomain: "jkmms-79fb1.firebaseapp.com",
-    projectId: "jkmms-79fb1",
-    storageBucket: "jkmms-79fb1.firebasestorage.app",
-    messagingSenderId: "701759230780",
-    appId: "1:701759230780:web:5c2fc4a13d8bf11ab58439",
-    measurementId: "G-P7N1FMX5D0"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-// ==========================================
-// 2. RUNTIME CORE STATES
+// 1. RUNTIME CORE STATES
 // ==========================================
 let currentUserId = null;
 let currentTabFilter = "all";
@@ -103,7 +84,7 @@ const locales = {
 };
 
 // ==========================================
-// 3. CORE PALETTE THEME VECTOR LAYERS
+// 2. CORE PALETTE THEME VECTOR LAYERS
 // ==========================================
 function applyTheme(themeClassName) {
     const body = document.getElementById('main-body');
@@ -116,7 +97,7 @@ function applyTheme(themeClassName) {
 }
 
 // ==========================================
-// 4. AUTH SECURITY PIPELINE
+// 3. AUTH SECURITY PIPELINE
 // ==========================================
 onAuthStateChanged(auth, (user) => {
     const authScreen = document.getElementById('auth-screen');
@@ -163,7 +144,7 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // ==========================================
-// 5. FIRESTORE REAL-TIME DATA PROCESSING
+// 4. FIRESTORE REAL-TIME DATA PROCESSING
 // ==========================================
 async function fetchDataStream() {
     if (!currentUserId) return;
@@ -180,7 +161,7 @@ async function fetchDataStream() {
 }
 
 // ==========================================
-// 6. UI COMPILING MATRIX & MATHEMATICAL DELTAS
+// 5. UI COMPILING MATRIX & MATHEMATICAL DELTAS
 // ==========================================
 function renderStreamContainer() {
     const stream = document.getElementById('data-stream');
@@ -233,7 +214,7 @@ function renderStreamContainer() {
             </div>
         `;
         if (typeof lucide !== 'undefined') lucide.createIcons();
-        renderMilestonesWidget(); // Keep rendering milestones even if list display is zero
+        renderMilestonesWidget();
         return;
     }
 
@@ -274,7 +255,6 @@ function renderStreamContainer() {
         stream.appendChild(card);
     });
 
-    // Event binding proxies to support asynchronous module architectures
     stream.querySelectorAll('.item-comp-toggle-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
             const id = btn.getAttribute('data-id');
@@ -299,7 +279,7 @@ function renderStreamContainer() {
 }
 
 // ==========================================
-// 7. MULTI-LINGUAL SYSTEM LOCALIZATION INTERACTION
+// 6. MULTI-LINGUAL SYSTEM LOCALIZATION INTERACTION
 // ==========================================
 function applyLocalization(langCode) {
     const dict = locales[langCode] || locales.en;
@@ -366,9 +346,8 @@ function applyLocalization(langCode) {
 }
 
 // ==========================================
-// 8. SIDE PANEL WIDGET FUNCTIONS
+// 7. SIDE PANEL WIDGET FUNCTIONS
 // ==========================================
-
 function updateXPSystem(pointsGained) {
     userXP += pointsGained;
     localStorage.setItem('jkmms-xp', userXP);
@@ -446,10 +425,39 @@ function renderMilestonesWidget() {
 }
 
 // ==========================================
-// 9. ASYNCHRONOUS SECURE INITIALIZATION SEQUENCE
+// 8. ASYNCHRONOUS SECURE INITIALIZATION SEQUENCE
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     
+    // Auth Form Logic - Sign In Pipeline
+    const loginForm = document.getElementById('login-form');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                loginForm.reset();
+            } catch (err) {
+                alert("Authentication Interrupted: " + err.message);
+            }
+        });
+    }
+
+    // Header Logout Binding
+    const logoutBtn = document.getElementById('logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+            } catch (err) {
+                console.error("Signout Error: ", err);
+            }
+        });
+    }
+
     // Header Panel Trigger Bindings
     document.getElementById('nav-settings-btn').addEventListener('click', () => document.getElementById('settings-modal').classList.remove('hidden'));
     document.getElementById('close-settings-btn').addEventListener('click', () => document.getElementById('settings-modal').classList.add('hidden'));
@@ -475,7 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Due Today Dashboard Analytic Badge Filter Click Toggles
     document.getElementById('stat-today-card').addEventListener('click', () => {
         todayFilterActive = !todayFilterActive;
-        renderStreamContainer();
+        renderStreamContainer);
     });
 
     // DB Commit Operations

@@ -5,6 +5,10 @@ const FRUIT_FLAVORS = ["Strawberry", "Blueberry", "Apple", "Mango", "Peach", "Pi
 // Cart State
 let cart = [];
 
+// 1. READ THE TABLE NUMBER FROM THE URL PARAMS
+const urlParams = new URLSearchParams(window.location.search);
+const tableNumber = urlParams.get('table'); // Will grab "1" from ?table=1
+
 // Helper to generate flavored items dynamically
 const createFlavoredItems = (suffix, price, prefix = "") => {
     return FRUIT_FLAVORS.map(flavor => ({
@@ -13,7 +17,7 @@ const createFlavoredItems = (suffix, price, prefix = "") => {
     }));
 };
 
-// Menu Data Structure (Image paths are now mapped directly to the root)
+// Menu Data Structure
 const menuData = [
     {
         name: "Mojito",
@@ -124,7 +128,19 @@ menuData.forEach(cat => cat.items.forEach(i => itemPriceLookup[i.name] = i.price
 document.addEventListener("DOMContentLoaded", () => {
     renderMenu();
     setupCartListeners();
+    displayTableNotice(); // Run visibility notice helper
 });
+
+// Helper to show table number header dynamically if present
+function displayTableNotice() {
+    if (tableNumber) {
+        const notice = document.getElementById("table-notice");
+        if (notice) {
+            notice.textContent = `📍 Table ${tableNumber}`;
+            notice.classList.remove("hidden");
+        }
+    }
+}
 
 function renderMenu() {
     const container = document.getElementById("menu-container");
@@ -234,7 +250,6 @@ function updateCartUI() {
     });
 }
 
-// Bind basic global control clicks
 function setupCartListeners() {
     document.getElementById("clear-cart-btn").addEventListener("click", () => {
         cart = [];
@@ -243,13 +258,23 @@ function setupCartListeners() {
     document.getElementById("whatsapp-btn").addEventListener("click", sendWhatsAppOrder);
 }
 
+// 2. INJECT TABLE NUMBER INTO WHATSAPP TEXT
 function sendWhatsAppOrder() {
     if (cart.length === 0) return;
 
     const counts = {};
     cart.forEach(name => counts[name] = (counts[name] || 0) + 1);
 
-    let textMessage = "Hello Maccannoli 👋\n\nMy Order:\n";
+    // Dynamic header greeting incorporating location if available
+    let textMessage = "Hello Maccannoli 👋\n";
+    if (tableNumber) {
+        textMessage += `👉 ORDER FROM TABLE: ${tableNumber}\n\n`;
+    } else {
+        textMessage += "\n";
+    }
+    
+    textMessage += "My Order:\n";
+    
     let totalCost = 0;
     Object.entries(counts).forEach(([name, qty]) => {
         const itemCost = itemPriceLookup[name] || 0;

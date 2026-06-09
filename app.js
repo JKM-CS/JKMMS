@@ -1,5 +1,5 @@
 // Configuration constants
-const WHATSAPP_NUMBER = "9647511631324";
+const WHATSAPP_NUMBER = "9647505055000";
 
 // Translation Lookups Engine Data
 const translations = {

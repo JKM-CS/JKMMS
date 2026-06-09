@@ -7,14 +7,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Kufi+Arabic:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Noto Kufi Arabic', sans-serif;
         }
-        /* Custom scrollbar behaviors for the category bar */
         .no-scrollbar::-webkit-scrollbar {
             display: none;
         }
@@ -24,18 +23,50 @@
         }
     </style>
 </head>
-<body class="min-h-screen bg-[#09090b] text-[#fafafa] antialiased selection:bg-yellow-400 selection:text-black pb-36">
+<body class="min-h-screen bg-[#09090b] text-[#fafafa] antialiased pb-36 invisible" id="main-body">
+
+    <div id="language-gate" class="fixed inset-0 z-50 bg-[#09090b] flex flex-col items-center justify-center p-4">
+        <div class="max-w-md w-full text-center space-y-8 border border-zinc-900 bg-zinc-950/50 p-8 rounded-3xl backdrop-blur-md">
+            <div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-zinc-900 shadow-2xl">
+                <img src="logo.png" alt="Maccannoli" class="w-full h-full object-cover">
+            </div>
+            <div class="space-y-2">
+                <h2 class="text-xl font-black tracking-widest text-yellow-400">MACCANNOLI</h2>
+                <p class="text-zinc-400 text-xs font-medium">Please choose your preferred language / تکایە زمانێک هەڵبژێرە / الرجاء اختيار اللغة</p>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <button onclick="selectLanguage('en')" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3.5 px-6 rounded-xl transition-all cursor-pointer text-sm">
+                    English
+                </button>
+                <button onclick="selectLanguage('ku')" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3.5 px-6 rounded-xl transition-all cursor-pointer text-sm">
+                    کوردی (Kurdî)
+                </button>
+                <button onclick="selectLanguage('ar')" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3.5 px-6 rounded-xl transition-all cursor-pointer text-sm">
+                    العربية (العربية)
+                </button>
+            </div>
+        </div>
+    </div>
 
     <div class="sticky top-0 z-40 bg-[#09090b]/80 backdrop-blur-md border-b border-zinc-900 px-4 py-3">
         <div class="max-w-5xl mx-auto flex items-center justify-between gap-4">
             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex items-center gap-2 cursor-pointer group">
-                <img src="IMG_6187.png" alt="M" class="w-8 h-8 rounded-lg object-cover group-hover:scale-105 transition-transform">
+                <img src="logo.png" alt="M" class="w-8 h-8 rounded-lg object-cover group-hover:scale-105 transition-transform">
                 <span class="font-extrabold text-sm tracking-widest text-yellow-400">MACCANNOLI</span>
             </button>
             
-            <div id="table-notice" class="hidden flex items-center gap-1.5 bg-gradient-to-r from-yellow-500 to-amber-500 text-black font-black px-4 py-1.5 rounded-full text-xs tracking-wide shadow-lg shadow-yellow-500/10">
-                <i data-lucide="map-pin" class="w-3.5 h-3.5 stroke-[3]"></i>
-                <span id="table-notice-val">Table --</span>
+            <div class="flex items-center gap-3">
+                <select id="lang-switcher" onchange="selectLanguage(this.value)" class="bg-zinc-950 text-zinc-400 border border-zinc-800 text-xs font-bold rounded-xl px-2.5 py-1.5 focus:outline-none focus:border-yellow-400 cursor-pointer">
+                    <option value="en">EN</option>
+                    <option value="ku">KU</option>
+                    <option value="ar">AR</option>
+                </select>
+
+                <div id="table-notice" class="hidden flex items-center gap-1.5 bg-gradient-to-r from-yellow-500 to-amber-500 text-black font-black px-4 py-1.5 rounded-full text-xs tracking-wide shadow-lg shadow-yellow-500/10">
+                    <i data-lucide="map-pin" class="w-3.5 h-3.5 stroke-[3]"></i>
+                    <span id="table-notice-val">Table --</span>
+                </div>
             </div>
         </div>
         
@@ -45,15 +76,15 @@
     <div class="max-w-5xl mx-auto px-4 mt-8">
         <header class="text-center mb-12 relative max-w-xl mx-auto border border-zinc-900 bg-zinc-950/40 p-8 rounded-3xl backdrop-blur-sm">
             <div class="mx-auto mb-4 relative w-24 h-24 rounded-2xl overflow-hidden ring-4 ring-zinc-900 shadow-2xl">
-                <img src="IMG_6187.png" alt="Maccannoli Logo" class="w-full h-full object-cover">
+                <img src="logo.png" alt="Maccannoli Logo" class="w-full h-full object-cover">
             </div>
             <h1 class="text-3xl font-black tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white to-zinc-400">MACCANNOLI</h1>
             <div class="flex items-center justify-center gap-2 mt-2 text-zinc-400 text-xs font-medium tracking-wide">
-                <span>Bakery & Café</span>
+                <span id="txt-sub-sub">Bakery & Café</span>
                 <span class="w-1 h-1 rounded-full bg-zinc-700"></span>
-                <span>Erbil</span>
+                <span id="txt-location">Erbil</span>
             </div>
-            <p class="text-zinc-500 text-xs leading-relaxed mt-4">
+            <p class="text-zinc-500 text-xs leading-relaxed mt-4" id="txt-hero-desc">
                 Tap items to build your selection. When finished, press the checkout button below to route your dynamic table request straight to our waiters via WhatsApp.
             </p>
         </header>
@@ -65,17 +96,17 @@
                 <div class="relative inline-block bg-white p-3 rounded-2xl shadow-xl shadow-black/40">
                     <img src="qr.png" alt="Menu QR code Link" class="w-36 h-36 mx-auto">
                 </div>
-                <h4 class="text-yellow-400 font-bold mt-4 tracking-wide text-sm">Scan to Order</h4>
-                <p class="text-zinc-500 text-xs mt-1 leading-relaxed px-4"> Point your mobile camera over this design element to automatically launch the interactive portal link directly.</p>
+                <h4 class="text-yellow-400 font-bold mt-4 tracking-wide text-sm" id="txt-qr-title">Scan to Order</h4>
+                <p class="text-zinc-500 text-xs mt-1 leading-relaxed px-4" id="txt-qr-desc">Point your mobile camera over this design element to automatically launch the interactive portal link directly.</p>
             </div>
             
             <div class="pt-4">
                 <a href="menu-full.jpg" target="_blank" rel="noreferrer" class="inline-flex items-center gap-2 text-zinc-400 hover:text-yellow-400 transition-colors text-xs font-semibold tracking-wide border border-zinc-800 hover:border-yellow-500/30 px-4 py-2 rounded-xl bg-zinc-950/40">
                     <i data-lucide="file-text" class="w-4 h-4"></i>
-                    View Traditional Printed Layout Menu
+                    <span id="txt-printed-btn">View Traditional Printed Layout Menu</span>
                 </a>
             </div>
-            <p class="text-zinc-600 text-[10px] tracking-widest uppercase font-medium">Thank you and enjoy • Maccannoli Bakery & Café</p>
+            <p class="text-zinc-600 text-[10px] tracking-widest uppercase font-medium" id="txt-footer-thanks">Thank you and enjoy • Maccannoli Bakery & Café</p>
         </footer>
     </div>
 
@@ -87,28 +118,26 @@
                         <i data-lucide="shopping-bag" class="w-4 h-4"></i>
                     </div>
                     <div>
-                        <p class="font-bold text-sm tracking-wide text-white">Selected Order</p>
+                        <p class="font-bold text-sm tracking-wide text-white" id="txt-cart-title">Selected Order</p>
                         <p id="cart-count" class="text-zinc-500 text-[11px] font-medium">0 items selected</p>
                     </div>
                 </div>
                 <div class="text-right">
-                    <p class="text-[10px] text-zinc-500 font-medium tracking-wide uppercase">Total Bill</p>
+                    <p class="text-[10px] text-zinc-500 font-medium tracking-wide uppercase" id="txt-cart-total-label">Total Bill</p>
                     <p id="cart-total" class="font-black text-lg text-yellow-400 tracking-wide">0 IQD</p>
                 </div>
             </div>
-            
             <div id="cart-summary-tags" class="flex gap-2 overflow-x-auto no-scrollbar py-0.5"></div>
-            
             <div class="flex gap-2.5 mt-1">
                 <button id="clear-cart-btn" class="border border-zinc-800 hover:border-zinc-700 active:bg-zinc-900 text-zinc-400 hover:text-white px-4 py-3 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shrink-0">
                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
-                    Clear
+                    <span id="txt-clear-btn">Clear</span>
                 </button>
                 <button id="whatsapp-btn" class="flex-1 bg-green-600 hover:bg-green-500 active:scale-[0.99] shadow-lg shadow-green-900/20 text-white px-6 py-3 rounded-xl text-xs font-extrabold flex items-center justify-center gap-2 transition-all cursor-pointer tracking-wider uppercase">
                     <svg viewBox="0 0 24 24" class="w-4 h-4 fill-current">
                         <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                     </svg>
-                    Submit Order to Waiters
+                    <span id="txt-submit-btn">Submit Order to Waiters</span>
                 </button>
             </div>
         </div>

@@ -1,5 +1,5 @@
 // Configuration constants
-const WHATSAPP_NUMBER = "9647505055000";
+const WHATSAPP_NUMBER = "9647511631324";
 
 // Translation Lookups Engine Data
 const translations = {
@@ -135,7 +135,7 @@ const getMenuData = (lang) => {
             items: [
                 { name: lang === "en" ? "Banana Cake" : lang === "ku" ? "کێکی مۆز" : "كيك موز", price: 3000 },
                 { name: lang === "en" ? "Brownie Cube" : lang === "ku" ? "بڕاونی چوارگۆشە" : "مكعب براوني", price: 6000 },
-                { name: lang === "en" ? "Brownie" : lang === "ku" ? "بڕاونی" : "براوني", price: 7000 },
+                { name: lang === "en" ? "Brownie" : lang === "ku" ? "بڕاونی" : "braouni", price: 7000 },
                 { name: lang === "en" ? "Chocolate Mousse" : lang === "ku" ? "موویسی شوکۆلاتە" : "موس الشوكولاتة", price: 6000 },
                 { name: lang === "en" ? "Tiramisu" : lang === "ku" ? "تیرامیسو" : "تيراميسو", price: 5000 },
                 { name: lang === "en" ? "Red Velvet" : lang === "ku" ? "ڕێد ڤێلڤێت" : "ريد فيلفيت", price: 7000 },
@@ -176,11 +176,11 @@ function langNameAR(n) {
 
 let itemPriceLookup = {};
 
-// Handle Language Selections & Overwrite the Explicit CSS Display States
+// Handle Language Selections & Overwrite explicit CSS display blocks
 window.selectLanguage = function(lang) {
     currentLang = lang;
     
-    // Toggle displays securely using primitive standard rules
+    // Toggle page displays smoothly
     document.getElementById("language-gate").style.setProperty("display", "none", "important");
     document.getElementById("application-content-wrapper").style.setProperty("display", "block", "important");
     
@@ -191,7 +191,7 @@ window.selectLanguage = function(lang) {
     itemPriceLookup = {};
     menuData.forEach(cat => cat.items.forEach(i => itemPriceLookup[i.name] = i.price));
 
-    // Fill strings
+    // Fill structural string containers
     document.getElementById("txt-sub-sub").textContent = translations[lang].subSub;
     document.getElementById("txt-location").textContent = translations[lang].location;
     document.getElementById("txt-hero-desc").textContent = translations[lang].heroDesc;

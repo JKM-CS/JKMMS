@@ -23,15 +23,18 @@
             scrollbar-width: none;
         }
         
-        /* FIXED PHONE OVERFLOW ENGINE */
+        /* MOBILE VIEWPORT FIX ENGINE */
         #language-gate {
             display: flex !important;
             position: fixed !important;
-            inset: 0 !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            height: 100dvh !important; /* Uses Dynamic Viewport Height to automatically shrink with phone navigation bars */
             z-index: 50 !important;
             background-color: #09090b !important;
-            overflow-y: auto !important; /* Forces scrollability if items overflow screen height */
-            -webkit-overflow-scrolling: touch;
+            overflow-y: auto !important;
         }
         #application-content-wrapper {
             display: none;
@@ -40,25 +43,25 @@
 </head>
 <body class="min-h-screen bg-[#09090b] text-[#fafafa] antialiased pb-36">
 
-    <div id="language-gate" class="flex flex-col items-center justify-start sm:justify-center p-6 py-12">
-        <div class="max-w-md w-full text-center space-y-8 border border-zinc-900 bg-zinc-950/50 p-6 sm:p-8 rounded-3xl backdrop-blur-md my-auto">
-            <div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden ring-4 ring-zinc-900 shadow-2xl">
+    <div id="language-gate" class="items-center justify-center p-4">
+        <div class="max-w-xs w-full text-center space-y-5 border border-zinc-900 bg-zinc-950/50 p-5 rounded-3xl backdrop-blur-md shadow-2xl my-auto">
+            <div class="mx-auto w-16 h-16 rounded-xl overflow-hidden ring-4 ring-zinc-900">
                 <img src="logo.png" alt="Maccannoli" class="w-full h-full object-cover">
             </div>
-            <div class="space-y-2">
-                <h2 class="text-xl font-black tracking-widest text-yellow-400">MACCANNOLI</h2>
-                <p class="text-zinc-400 text-xs font-medium px-2">Please choose your preferred language / تکایە زمانێک هەڵبژێرە / الرجاء اختيار اللغة</p>
+            <div class="space-y-1">
+                <h2 class="text-lg font-black tracking-widest text-yellow-400">MACCANNOLI</h2>
+                <p class="text-zinc-500 text-[10px] font-medium leading-normal">Choose your language / زمانت هەڵبژێرە / اختر لغتك</p>
             </div>
             
-            <div class="flex flex-col gap-3 pt-2">
-                <button onclick="if(window.selectLanguage){window.selectLanguage('en')}else{alert('Loading application engine, please wait...')}" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-4 px-6 rounded-xl transition-all cursor-pointer text-sm active:scale-[0.98]">
+            <div class="flex flex-col gap-2 pt-1">
+                <button onclick="if(window.selectLanguage){window.selectLanguage('en')}else{alert('Loading application...')}" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3 px-4 rounded-xl transition-all cursor-pointer text-xs active:scale-[0.98]">
                     English
                 </button>
-                <button onclick="if(window.selectLanguage){window.selectLanguage('ku')}else{alert('Loading application engine, please wait...')}" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-4 px-6 rounded-xl transition-all cursor-pointer text-sm active:scale-[0.98]">
+                <button onclick="if(window.selectLanguage){window.selectLanguage('ku')}else{alert('Loading application...')}" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3 px-4 rounded-xl transition-all cursor-pointer text-xs active:scale-[0.98]">
                     کوردی (Kurdî)
                 </button>
-                <button onclick="if(window.selectLanguage){window.selectLanguage('ar')}else{alert('Loading application engine, please wait...')}" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-4 px-6 rounded-xl transition-all cursor-pointer text-sm active:scale-[0.98]">
-                    العربية (العربية)
+                <button onclick="if(window.selectLanguage){window.selectLanguage('ar')}else{alert('Loading application...')}" class="w-full bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3 px-4 rounded-xl transition-all cursor-pointer text-xs active:scale-[0.98]">
+                    العربية
                 </button>
             </div>
         </div>

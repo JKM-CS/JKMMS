@@ -71,14 +71,12 @@ const FRUIT_FLAVORS = {
     ar: ["فراولة", "توت أزرق", "تفاح", "مانجو", "خوخ", "أناناس", "توت عليق", "كيوي", "كرز", "فاكهة العاطفة"]
 };
 
-// Current dynamic runtime selections 
 let currentLang = null;
 let cart = [];
 
 const urlParams = new URLSearchParams(window.location.search);
 const tableNumber = urlParams.get('table');
 
-// Core dynamic item generation mapping tree
 const getMenuData = (lang) => {
     const f = FRUIT_FLAVORS[lang];
     const makeFlavors = (suffix, price, prefix = "") => f.map(flavor => ({
@@ -107,12 +105,7 @@ const getMenuData = (lang) => {
             name: translations[lang].latte, id: "cat-latte", image: "latte.jpg",
             items: ["Classic", "Vanilla", "Caramel", "Spanish", "Rose", "Cinnamon", "Lavender"].map(n => {
                 const mapPrices = { "Classic": 6000, "Vanilla": 7000, "Caramel": 7000, "Spanish": 7000, "Rose": 7000, "Cinnamon": 7000, "Lavender": 7000 };
-                const locNames = {
-                    en: `${n} Latte`,
-                    ku: `لاتێ ${langNameKU(n)}`,
-                    ar: `لاتيه ${langNameAR(n)}`
-                };
-                return { name: locNames[lang], price: mapPrices[n] };
+                return { name: lang === "en" ? `${n} Latte` : lang === "ku" ? `لاتێ ${langNameKU(n)}` : `لاتيه ${langNameAR(n)}`, price: mapPrices[n] };
             })
         },
         {
@@ -183,23 +176,22 @@ function langNameAR(n) {
 
 let itemPriceLookup = {};
 
-// Handle App Language Changes Trigger State Routing
-window.selectLanguage = (lang) => {
+// Handle Language Selections & Overwrite the Explicit CSS Display States
+window.selectLanguage = function(lang) {
     currentLang = lang;
-    document.getElementById("language-gate").classList.add("hidden");
     
-    const bodyEl = document.getElementById("main-body");
-    bodyEl.classList.remove("invisible");
-    bodyEl.setAttribute("dir", translations[lang].dir);
+    // Toggle displays securely using primitive standard rules
+    document.getElementById("language-gate").style.setProperty("display", "none", "important");
+    document.getElementById("application-content-wrapper").style.setProperty("display", "block", "important");
     
+    document.body.setAttribute("dir", translations[lang].dir);
     document.getElementById("lang-switcher").value = lang;
 
-    // Repopulate dynamic calculations tree
     const menuData = getMenuData(lang);
     itemPriceLookup = {};
     menuData.forEach(cat => cat.items.forEach(i => itemPriceLookup[i.name] = i.price));
 
-    // Update hardcoded document content blocks strings
+    // Fill strings
     document.getElementById("txt-sub-sub").textContent = translations[lang].subSub;
     document.getElementById("txt-location").textContent = translations[lang].location;
     document.getElementById("txt-hero-desc").textContent = translations[lang].heroDesc;
@@ -212,12 +204,15 @@ window.selectLanguage = (lang) => {
     document.getElementById("txt-clear-btn").textContent = translations[lang].clearBtn;
     document.getElementById("txt-submit-btn").textContent = translations[lang].submitBtn;
 
-    // Re-render structural elements
     renderCategoryNav(menuData);
     renderMenuGrid(menuData);
     checkTableBadge();
     updateCartUI();
 };
+
+document.addEventListener("DOMContentLoaded", () => {
+    setupCartListeners();
+});
 
 function checkTableBadge() {
     if (tableNumber && currentLang) {
@@ -324,7 +319,6 @@ window.changeQty = (encodedName, adjustment) => {
     updateCartUI();
 };
 
-// Update cart parameters and floating slide visibility 
 function updateCartUI() {
     if (!currentLang) return;
     
@@ -389,7 +383,6 @@ function setupCartListeners() {
     document.getElementById("whatsapp-btn").addEventListener("click", sendWhatsAppOrder);
 }
 
-// Format final output strings based on structural language variations
 function sendWhatsAppOrder() {
     if (cart.length === 0 || !currentLang) return;
 

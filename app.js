@@ -1,15 +1,15 @@
-// Constants
+// Configuration constants
 const WHATSAPP_NUMBER = "9647511631324";
 const FRUIT_FLAVORS = ["Strawberry", "Blueberry", "Apple", "Mango", "Peach", "Pineapple", "Raspberry", "Kiwi", "Cherry", "Passion Fruit"];
 
-// Cart State
+// Application state canvas 
 let cart = [];
 
-// 1. READ THE TABLE NUMBER FROM THE URL PARAMS
+// Parse incoming routing parameter allocations safely
 const urlParams = new URLSearchParams(window.location.search);
-const tableNumber = urlParams.get('table'); // Will grab "1" from ?table=1
+const tableNumber = urlParams.get('table');
 
-// Helper to generate flavored items dynamically
+// Helper component utilities
 const createFlavoredItems = (suffix, price, prefix = "") => {
     return FRUIT_FLAVORS.map(flavor => ({
         name: `${prefix}${flavor}${suffix}`,
@@ -17,10 +17,11 @@ const createFlavoredItems = (suffix, price, prefix = "") => {
     }));
 };
 
-// Menu Data Structure
+// Master item data tree structure 
 const menuData = [
     {
         name: "Mojito",
+        id: "cat-mojito",
         image: "mojito.jpg",
         items: [
             { name: "Classic Mojito", price: 6000 },
@@ -29,16 +30,19 @@ const menuData = [
     },
     {
         name: "Smoothies",
+        id: "cat-smoothies",
         image: "smoothies.jpg",
         items: createFlavoredItems(" Smoothie", 7000)
     },
     {
         name: "Ice Tea",
+        id: "cat-icetea",
         image: "ice-tea.jpg",
         items: createFlavoredItems(" Ice Tea", 7000)
     },
     {
         name: "Hot Drinks",
+        id: "cat-hotdrinks",
         image: "hot-drinks.jpg",
         items: [
             { name: "Espresso", price: 4000 },
@@ -50,6 +54,7 @@ const menuData = [
     },
     {
         name: "Latte",
+        id: "cat-latte",
         image: "latte.jpg",
         items: [
             { name: "Classic Latte", price: 6000 },
@@ -63,6 +68,7 @@ const menuData = [
     },
     {
         name: "Sandwiches",
+        id: "cat-sandwiches",
         image: "sandwiches.jpg",
         items: [
             { name: "Chicken Classic", price: 6000 },
@@ -74,6 +80,7 @@ const menuData = [
     },
     {
         name: "Croissant",
+        id: "cat-croissant",
         image: "croissant.jpg",
         items: [
             { name: "Cheese Croissant", price: 5000 },
@@ -87,6 +94,7 @@ const menuData = [
     },
     {
         name: "Cakes",
+        id: "cat-cakes",
         image: "cakes.jpg",
         items: [
             { name: "Banana Cake", price: 3000 },
@@ -100,6 +108,7 @@ const menuData = [
     },
     {
         name: "Energy Drinks",
+        id: "cat-energy",
         image: "energy-drinks.jpg",
         items: [
             { name: "Red Bull Classic", price: 4000 },
@@ -108,6 +117,7 @@ const menuData = [
     },
     {
         name: "Pastries",
+        id: "cat-pastries",
         note: "Prices to be confirmed with staff",
         items: [
             { name: "Cinnamon Roll", price: 5000 },
@@ -122,64 +132,112 @@ const menuData = [
     }
 ];
 
+// Flat internal tracking dictionary for fast computational operations 
 const itemPriceLookup = {};
 menuData.forEach(cat => cat.items.forEach(i => itemPriceLookup[i.name] = i.price));
 
+// Lifecycle Bootstrapping Init Hook
 document.addEventListener("DOMContentLoaded", () => {
-    renderMenu();
+    renderCategoryNav();
+    renderMenuGrid();
     setupCartListeners();
-    displayTableNotice(); // Run visibility notice helper
+    checkTableRoutingContext();
+    
+    // Fire up vector graphic replacements dynamically
+    if (window.lucide) {
+        window.lucide.createIcons();
+    }
 });
 
-// Helper to show table number header dynamically if present
-function displayTableNotice() {
+function checkTableRoutingContext() {
     if (tableNumber) {
-        const notice = document.getElementById("table-notice");
-        if (notice) {
-            notice.textContent = `📍 Table ${tableNumber}`;
-            notice.classList.remove("hidden");
+        const noticeBox = document.getElementById("table-notice");
+        const noticeVal = document.getElementById("table-notice-val");
+        if (noticeBox && noticeVal) {
+            noticeVal.textContent = `Table ${tableNumber}`;
+            noticeBox.classList.remove("hidden");
+            noticeBox.classList.add("flex");
         }
     }
 }
 
-function renderMenu() {
+// Generate the Top sticky category tabs row
+function renderCategoryNav() {
+    const navBar = document.getElementById("category-nav-pills");
+    if (!navBar) return;
+
+    menuData.forEach((category, idx) => {
+        const pill = document.createElement("button");
+        pill.className = `px-4 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all whitespace-nowrap cursor-pointer border ${
+            idx === 0 
+            ? "bg-yellow-400 text-black border-yellow-400 shadow-md" 
+            : "bg-zinc-950 text-zinc-400 border-zinc-900 hover:text-zinc-200 hover:border-zinc-800"
+        }`;
+        pill.textContent = category.name;
+        pill.onclick = (e) => {
+            // Smooth Scroll view hook alignment
+            const element = document.getElementById(category.id);
+            if (element) {
+                const topOffset = element.getBoundingClientRect().top + window.scrollY - 130;
+                window.scrollTo({ top: topOffset, behavior: 'smooth' });
+            }
+            
+            // Clean dynamic active pill switches
+            document.querySelectorAll("#category-nav-pills button").forEach(b => {
+                b.className = "px-4 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all whitespace-nowrap cursor-pointer border bg-zinc-950 text-zinc-400 border-zinc-900 hover:text-zinc-200 hover:border-zinc-800";
+            });
+            pill.className = "px-4 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all whitespace-nowrap cursor-pointer border bg-yellow-400 text-black border-yellow-400 shadow-md";
+        };
+        navBar.appendChild(pill);
+    });
+}
+
+// Render modern menu grid cards layout
+function renderMenuGrid() {
     const container = document.getElementById("menu-container");
+    if (!container) return;
     container.innerHTML = "";
 
     menuData.forEach(category => {
         const section = document.createElement("section");
-        section.className = "mb-10";
+        section.id = category.id;
+        section.className = "scroll-mt-32";
 
         let bannerHTML = "";
         if (category.image) {
             bannerHTML = `
-                <div class="flex items-center gap-4 mb-5">
-                    <img src="${category.image}" alt="${category.name}" class="w-20 h-20 md:w-24 md:h-24 rounded-2xl object-cover shrink-0 border border-zinc-800" loading="lazy">
-                    <h2 class="text-3xl font-bold text-yellow-400">${category.name}</h2>
+                <div class="flex items-center gap-4 mb-6 border-b border-zinc-900 pb-3">
+                    <div class="w-14 h-14 md:w-16 md:h-16 rounded-2xl overflow-hidden shadow-xl ring-2 ring-zinc-900 shrink-0 bg-zinc-900">
+                        <img src="${category.image}" alt="${category.name}" class="w-full h-full object-cover" loading="lazy">
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-black tracking-wide text-white">${category.name}</h2>
+                        <p class="text-zinc-500 text-[11px] font-medium uppercase tracking-wider">Premium Selection</p>
+                    </div>
                 </div>`;
         } else {
             bannerHTML = `
-                <div class="rounded-2xl mb-5 p-4 bg-gradient-to-r from-yellow-600/25 to-zinc-900 border border-yellow-700/40">
-                    <h2 class="text-3xl font-bold text-yellow-400">${category.name}</h2>
-                    ${category.note ? `<p class="text-zinc-400 text-sm mt-1">${category.note}</p>` : ""}
+                <div class="rounded-2xl mb-6 p-5 bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 shadow-md">
+                    <h2 class="text-xl font-black tracking-wide text-yellow-400">${category.name}</h2>
+                    ${category.note ? `<p class="text-zinc-400 text-xs font-medium mt-1 flex items-center gap-1.5"><i data-lucide="info" class="w-3.5 h-3.5 text-zinc-500"></i>${category.note}</p>` : ""}
                 </div>`;
         }
 
-        let itemsHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+        let itemsHTML = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3.5">`;
         category.items.forEach(item => {
             const safeName = btoa(unescape(encodeURIComponent(item.name))); 
             itemsHTML += `
-                <div class="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 flex justify-between items-center">
-                    <div>
-                        <h3 class="text-lg font-semibold">${item.name}</h3>
-                        <p class="text-yellow-400">${item.price.toLocaleString()} IQD</p>
+                <div class="group bg-zinc-950/40 hover:bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-2xl p-4 flex justify-between items-center transition-all duration-200 shadow-sm hover:shadow-md">
+                    <div class="space-y-1 pr-2">
+                        <h3 class="text-sm font-semibold tracking-wide text-zinc-200 group-hover:text-white transition-colors">${item.name}</h3>
+                        <p class="text-yellow-400 font-bold text-xs tracking-wide">${item.price.toLocaleString()} <span class="text-[10px] text-yellow-500/80 font-medium">IQD</span></p>
                     </div>
-                    <div class="flex items-center gap-2" data-item-id="${safeName}">
-                        <div class="quantity-controls flex items-center gap-2 hidden">
-                            <button onclick="changeQty('${safeName}', -1)" class="bg-zinc-700 text-white w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center cursor-pointer">-</button>
-                            <span class="quantity-val text-yellow-400 font-bold w-6 text-center">0</span>
+                    <div class="flex items-center gap-2.5 shrink-0" data-item-id="${safeName}">
+                        <div class="quantity-controls flex items-center gap-2.5 hidden">
+                            <button onclick="changeQty('${safeName}', -1)" class="w-8 h-8 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white font-bold text-base flex items-center justify-center transition-colors cursor-pointer border border-zinc-800 active:scale-95">-</button>
+                            <span class="quantity-val text-yellow-400 font-extrabold text-sm w-5 text-center">0</span>
                         </div>
-                        <button onclick="changeQty('${safeName}', 1)" class="bg-yellow-500 text-black w-8 h-8 rounded-lg font-bold text-lg flex items-center justify-center cursor-pointer">+</button>
+                        <button onclick="changeQty('${safeName}', 1)" class="w-8 h-8 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-base flex items-center justify-center transition-all cursor-pointer shadow-md shadow-yellow-500/5 active:scale-95">+</button>
                     </div>
                 </div>`;
         });
@@ -208,14 +266,22 @@ function updateCartUI() {
     const tagsContainer = document.getElementById("cart-summary-tags");
 
     if (cart.length === 0) {
-        cartBar.classList.add("hidden");
+        // Smooth slide out transitions animations
+        cartBar.style.transform = "translateY(20px)";
+        cartBar.style.opacity = "0";
+        cartBar.style.pointerEvents = "none";
+        
         document.querySelectorAll('.quantity-controls').forEach(el => el.classList.add('hidden'));
         document.querySelectorAll('.quantity-val').forEach(el => el.textContent = '0');
         return;
     }
 
-    cartBar.classList.remove("hidden");
-    cartCount.textContent = `${cart.length} ${cart.length === 1 ? 'item' : 'items'}`;
+    // Trigger floating canvas display frames
+    cartBar.style.transform = "translateY(0)";
+    cartBar.style.opacity = "1";
+    cartBar.style.pointerEvents = "auto";
+    
+    cartCount.textContent = `${cart.length} ${cart.length === 1 ? 'item selected' : 'items selected'}`;
 
     const counts = {};
     let totalCost = 0;
@@ -226,6 +292,7 @@ function updateCartUI() {
 
     cartTotal.textContent = `${totalCost.toLocaleString()} IQD`;
 
+    // Fast-sync grid quantities numbers counters
     document.querySelectorAll('[data-item-id]').forEach(controlBox => {
         const id = controlBox.getAttribute('data-item-id');
         const originalName = decodeURIComponent(escape(atob(id)));
@@ -241,11 +308,12 @@ function updateCartUI() {
         }
     });
 
+    // Populate the running preview badge horizontal row layout
     tagsContainer.innerHTML = "";
     Object.entries(counts).forEach(([name, qty]) => {
         const span = document.createElement("span");
-        span.className = "bg-zinc-800 text-zinc-300 text-xs px-2 py-1 rounded-lg";
-        span.textContent = `${qty}x ${name}`;
+        span.className = "bg-zinc-900 border border-zinc-800/60 text-zinc-300 text-[11px] font-semibold px-3 py-1 rounded-xl whitespace-nowrap flex items-center gap-1";
+        span.innerHTML = `<span class="text-yellow-400 font-extrabold">${qty}x</span> ${name}`;
         tagsContainer.appendChild(span);
     });
 }
@@ -258,14 +326,12 @@ function setupCartListeners() {
     document.getElementById("whatsapp-btn").addEventListener("click", sendWhatsAppOrder);
 }
 
-// 2. INJECT TABLE NUMBER INTO WHATSAPP TEXT
 function sendWhatsAppOrder() {
     if (cart.length === 0) return;
 
     const counts = {};
     cart.forEach(name => counts[name] = (counts[name] || 0) + 1);
 
-    // Dynamic header greeting incorporating location if available
     let textMessage = "Hello Maccannoli 👋\n";
     if (tableNumber) {
         textMessage += `👉 ORDER FROM TABLE: ${tableNumber}\n\n`;

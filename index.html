@@ -9,27 +9,41 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Kufi+Arabic:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
-        /* CORE PREMIUM STYLING STACK */
+        /* CORE RESET SYSTEM */
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Plus Jakarta Sans', 'Noto Kufi Arabic', sans-serif; background-color: #09090b; color: #fafafa; line-height: 1.5; overflow-x: hidden; }
+        html, body { height: 100%; min-height: 100dvh; background-color: #09090b; color: #fafafa; font-family: 'Plus Jakarta Sans', 'Noto Kufi Arabic', sans-serif; overflow-x: hidden; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* THE VISIBILITY CONTROLLER GATES */
-        #language-gate { position: fixed; inset: 0; z-index: 100; background-color: #09090b; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        /* FOOLPROOF FULL SCREEN LANGUAGE OVERLAY */
+        #language-gate { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100vw; 
+            height: 100dvh; 
+            z-index: 9999; 
+            background-color: #09090b; 
+            display: flex !important; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 24px;
+            box-sizing: border-box;
+        }
         #application-content-wrapper { display: none; padding: 0 16px 140px 16px; max-width: 1024px; margin: 0 auto; }
         
-        /* INTERACTIVE INTERFACE TOKENS */
+        /* BOX SYSTEM INTERFACE TOKENS */
         .gate-card { background: #0c0c0e; border: 1px solid #18181b; padding: 32px 24px; border-radius: 24px; text-align: center; width: 100%; max-width: 340px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        .brand-logo { w: 72px; h: 72px; border-radius: 16px; margin: 0 auto 16px auto; overflow: hidden; border: 3px solid #18181b; }
-        .brand-logo img { width: 100%; height: 100%; object-fit: cover; }
+        .brand-logo { width: 72px; h: 72px; max-width: 72px; max-height: 72px; border-radius: 16px; margin: 0 auto 16px auto; overflow: hidden; border: 3px solid #18181b; aspect-ratio: 1/1; }
+        .brand-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .gate-title { font-size: 20px; font-weight: 800; tracking: 0.15em; color: #facc15; margin-bottom: 6px; }
         .gate-subtitle { font-size: 11px; color: #a1a1aa; margin-bottom: 24px; line-height: 1.4; }
         .lang-btn { width: 100%; background: #18181b; border: 1px solid #27272a; color: #fff; font-weight: 700; padding: 14px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
         .lang-btn:active { transform: scale(0.97); background: #27272a; }
         
-        /* HEADER AND PILLS STACK */
-        .sticky-navbar { position: sticky; top: 0; z-index: 40; background: rgba(9,9,11,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-b: 1px solid #18181b; padding: 12px 0; margin-bottom: 24px; }
+        /* HEADER PILLS STACK */
+        .sticky-navbar { position: sticky; top: 0; z-index: 40; background: rgba(9,9,11,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #18181b; padding: 12px 0; margin-bottom: 24px; }
         .nav-container { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
         .nav-brand { display: flex; align-items: center; gap: 8px; background: none; border: none; cursor: pointer; text-decoration: none; }
         .nav-brand-img { width: 28px; height: 28px; border-radius: 6px; }
@@ -38,16 +52,16 @@
         .native-dropdown { background: #0c0c0e; color: #a1a1aa; border: 1px solid #18181b; padding: 6px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; outline: none; }
         .table-badge { background: linear-gradient(135deg, #facc15, #f59e0b); color: #000; font-weight: 800; font-size: 11px; padding: 6px 14px; border-radius: 9999px; display: none; align-items: center; }
         .pills-scroll-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-        .nav-pill { background: #0c0c0e; border: 1px solid #18181b; color: #a1a1aa; font-size: 11px; font-weight: 700; padding: 8px 16px; border-radius: 10px; whitespace: nowrap; cursor: pointer; text-transform: uppercase; }
+        .nav-pill { background: #0c0c0e; border: 1px solid #18181b; color: #a1a1aa; font-size: 11px; font-weight: 700; padding: 8px 16px; border-radius: 10px; white-space: nowrap; cursor: pointer; text-transform: uppercase; }
         .nav-pill.active { background: #facc15; color: #000; border-color: #facc15; }
         
-        /* MAIN BANNER CARD */
+        /* MAIN HERO WRAPPER CARD */
         .hero-banner { text-align: center; border: 1px solid #18181b; background: rgba(12,12,14,0.4); padding: 24px; border-radius: 24px; margin-bottom: 40px; }
         .hero-banner h1 { font-size: 26px; font-weight: 800; letter-spacing: 0.15em; margin-top: 12px; }
         .hero-meta { display: flex; justify-content: center; gap: 8px; font-size: 12px; color: #a1a1aa; margin-top: 4px; }
         .hero-desc { font-size: 12px; color: #71717a; margin-top: 16px; line-height: 1.5; }
         
-        /* MENU ITEM GRID GRAPHICS */
+        /* INTERACTIVE MENU ITEM CARDS */
         .section-title-wrapper { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid #18181b; padding-bottom: 8px; margin-top: 32px; }
         .section-img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; border: 1px solid #18181b; }
         .section-title { font-size: 18px; font-weight: 800; }
@@ -59,16 +73,15 @@
         .item-price { font-size: 13px; font-weight: 700; color: #facc15; }
         .item-currency { font-size: 10px; color: #eab308; opacity: 0.8; font-weight: 500; }
         
-        /* CONTROL TRIGGERS */
+        /* INCREMENT CONTROL ROW TRIPS */
         .controls-wrapper { display: flex; align-items: center; gap: 10px; }
         .qty-controls { display: none; align-items: center; gap: 10px; }
         .qty-controls.active { display: flex; }
         .qty-btn { width: 32px; height: 32px; border-radius: 10px; border: 1px solid #27272a; background: #18181b; color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
         .qty-val { color: #facc15; font-weight: 800; font-size: 14px; min-width: 16px; text-align: center; }
         .add-btn { width: 32px; height: 32px; border-radius: 10px; border: none; background: #facc15; color: #000; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .qty-btn:active, .add-btn:active { transform: scale(0.9); }
         
-        /* FLOATING APP SYSTEM CART BAR */
+        /* STICKY BOTTOM APP FLOATING ACTION HUB CARDS CANVAS */
         #cart-bar { position: fixed; bottom: 16px; left: 16px; right: 16px; background: rgba(12,12,14,0.95); border: 1px solid #27272a; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 20px; padding: 16px; z-index: 50; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; gap: 12px; }
         @media(min-width: 768px) { #cart-bar { left: 50%; right: auto; transform: translateX(-50%); width: 100%; max-width: 600px; } }
         .cart-info-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #18181b; padding-bottom: 8px; }
@@ -77,13 +90,12 @@
         .cart-total-lbl { font-size: 10px; color: #71717a; text-transform: uppercase; text-align: right; }
         .cart-total-val { font-size: 16px; font-weight: 900; color: #facc15; tracking: 0.02em; }
         .cart-tags-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
-        .cart-tag { background: #18181b; border: 1px solid #27272a; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 8px; whitespace: nowrap; color: #d4d4d8; }
+        .cart-tag { background: #18181b; border: 1px solid #27272a; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 8px; white-space: nowrap; color: #d4d4d8; }
         .cart-actions { display: flex; gap: 10px; }
         .btn-clear { background: #0c0c0e; border: 1px solid #27272a; color: #a1a1aa; font-weight: 700; padding: 12px 16px; border-radius: 12px; font-size: 12px; cursor: pointer; }
         .btn-submit { flex: 1; background: #16a34a; border: none; color: #fff; font-weight: 800; padding: 12px; border-radius: 12px; font-size: 12px; cursor: pointer; text-transform: uppercase; tracking: 0.05em; text-align: center; }
-        .btn-clear:active, .btn-submit:active { transform: scale(0.98); }
-
-        /* FOOTER BRAND CODES */
+        
+        /* FOOTER BRAND FRAME DESIGNS */
         .footer-frame { margin-top: 80px; border-top: 1px solid #18181b; padding-top: 40px; text-align: center; }
         .qr-box { display: inline-block; background: #0c0c0e; border: 1px solid #18181b; padding: 24px; border-radius: 24px; max-width: 280px; margin-bottom: 24px; }
         .qr-wrapper { background: #fff; padding: 10px; border-radius: 14px; display: inline-block; }
@@ -93,7 +105,7 @@
         .printed-menu-link { display: inline-block; color: #a1a1aa; font-size: 12px; text-decoration: underline; margin-bottom: 24px; font-weight: 600; }
         .thanks-msg { font-size: 10px; tracking: 0.1em; text-transform: uppercase; color: #3f3f46; }
 
-        /* RTL ALIGNMENT SYSTEM */
+        /* RTL ENGINE MODIFIERS */
         body[dir="rtl"] { text-align: right; }
         body[dir="rtl"] .cart-total-lbl { text-align: left; }
     </style>
@@ -102,9 +114,9 @@
 
     <div id="language-gate">
         <div class="gate-card">
-            <div class="brand-logo"><img src="logo.png" alt="Maccannoli"></div>
+            <div class="brand-logo"><img src="logo.png" alt="Maccannoli Logo"></div>
             <h2 class="gate-title">MACCANNOLI</h2>
-            <p class="gate-subtitle">Please choose your preferred language<br>تکایە زمانێک هەڵبژێرە<br>الرجاء اختيار اللغة</p>
+            <p class="gate-subtitle">Please choose your language<br>تکایە زمانێک هەڵبژێرە<br>الرجاء اختيار اللغة</p>
             <button onclick="bootAppEngine('en')" class="lang-btn">English</button>
             <button onclick="bootAppEngine('ku')" class="lang-btn">کوردی (Kurdî)</button>
             <button onclick="bootAppEngine('ar')" class="lang-btn">العربية</button>
@@ -132,7 +144,7 @@
         </div>
 
         <header class="hero-banner">
-            <div class="brand-logo" style="width:80px; height:80px; border-radius:20px;"><img src="logo.png" alt="Maccannoli"></div>
+            <div class="brand-logo" style="width:80px; height:80px; border-radius:20px;"><img src="logo.png" alt="M"></div>
             <h1 id="txt-title">MACCANNOLI</h1>
             <div class="hero-meta"><span id="txt-meta-type">Bakery & Café</span>•<span id="txt-meta-loc">Erbil</span></div>
             <p class="hero-desc" id="txt-hero-desc">Loading parameters...</p>
@@ -142,9 +154,9 @@
 
         <footer class="footer-frame">
             <div class="qr-box">
-                <div class="qr-wrapper"><img src="qr.png" alt="QR Link"></div>
+                <div class="qr-wrapper"><img src="qr.png" alt="Menu Link"></div>
                 <div class="qr-title" id="txt-qr-title">Scan to Order</div>
-                <div class="qr-desc" id="txt-qr-desc">Point your camera here to view the menu.</div>
+                <div class="qr-desc" id="txt-qr-desc">Point your camera here to open the menu.</div>
             </div>
             <div><a href="menu-full.jpg" target="_blank" class="printed-menu-link" id="txt-menu-link">View Traditional Layout Printed Menu</a></div>
             <p class="thanks-msg" id="txt-thanks">Thank you and enjoy • Maccannoli Bakery & Café</p>
@@ -201,7 +213,7 @@
                 cartL: "الطلب المحدد", totalL: "الحساب الإجمالي", clearL: "مسح", submitL: "إرسال الطلب إلى الطاقم",
                 tNo: "طاولة", itemSingular: "صنف واحد مختار", itemPlural: "أصناف مختارة", confPrice: "الأسعار يتم تأكيدها مع الموظفين",
                 mojito: "موهيتو", smoothies: "سموذي", icetea: "شاي مثلج", hotdrinks: "مشروبات ساخنة", latte: "لاتيه", sandwiches: "سندويشات", croissant: "كرواسون", cakes: "كيك", energy: "مشروبات طاقة", pastries: "معجنات وحلويات",
-                waG: "مرحباً ماكانولي 👋", waT: "👉 طلب من طاولة", waO: "طلبي", waTot: "المجموع الكلي"
+                waG: "مرحباً ماكانولي 👋", waT: "👉 طلب من طاولة", waO: "طلبي", waTotal: "المجموع الكلي"
             }
         };
 
@@ -300,18 +312,16 @@
 
         function bootAppEngine(lang) {
             currentLang = lang;
-            document.getElementById("language-gate").style.display = "none";
-            document.getElementById("application-content-wrapper").style.display = "block";
+            document.getElementById("language-gate").style.setProperty("display", "none", "important");
+            document.getElementById("application-content-wrapper").style.setProperty("display", "block", "important");
             document.body.setAttribute("dir", langPack[lang].dir);
             document.getElementById("lang-switcher").value = lang;
 
             const data = generateMenuTree(lang);
             
-            // Rebuild flat prices dict
             flatPricesLookup = {};
             data.forEach(c => c.items.forEach(i => flatPricesLookup[i.name] = i.price));
 
-            // Populate plain text nodes
             const pack = langPack[lang];
             document.getElementById("txt-meta-type").textContent = pack.metaType;
             document.getElementById("txt-meta-loc").textContent = pack.metaLoc;
@@ -328,7 +338,7 @@
             if (tableNum) {
                 const badge = document.getElementById("table-badge-el");
                 badge.textContent = `📍 ${pack.tNo} ${tableNum}`;
-                badge.style.display = "flex";
+                badge.style.setProperty("display", "flex", "important");
             }
 
             renderInterfacePills(data);
@@ -371,10 +381,10 @@
                 
                 let cardsBlock = `<div class="items-grid">`;
                 cat.items.forEach(item => {
-                    const safeId = btoa(encodeURIComponent(item.name)).replace(/=/g, "");
+                    const safeId = btoa(encodeURIComponent(item.name)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
                     cardsBlock += `
                         <div class="menu-card">
-                            <div>
+                            <div style="padding-right: 8px;">
                                 <h3 class="item-name">${item.name}</h3>
                                 <p class="item-price">${item.price.toLocaleString()} <span class="item-currency">IQD</span></p>
                             </div>
@@ -411,7 +421,6 @@
             let totalCount = 0;
             let totalPrice = 0;
             
-            // Reset counters on all elements 
             document.querySelectorAll(".qty-controls").forEach(el => el.classList.remove("active"));
             document.querySelectorAll(".qty-val").forEach(el => el.textContent = "0");
 
@@ -422,7 +431,7 @@
                 totalCount += qty;
                 totalPrice += (flatPricesLookup[name] || 0) * qty;
 
-                const safeId = btoa(encodeURIComponent(name)).replace(/=/g, "");
+                const safeId = btoa(encodeURIComponent(name)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
                 const group = document.getElementById(`group-${safeId}`);
                 const val = document.getElementById(`val-${safeId}`);
                 
@@ -431,7 +440,6 @@
                     val.textContent = qty;
                 }
 
-                // Add scrollable badge tags
                 const tag = document.createElement("div");
                 tag.className = "cart-tag";
                 tag.innerHTML = `<span style="color:#facc15; font-weight:800;">${qty}x</span> ${name}`;

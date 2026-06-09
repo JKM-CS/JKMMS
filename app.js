@@ -1,190 +1,255 @@
 // Configuration constants
 const WHATSAPP_NUMBER = "9647511631324";
-const FRUIT_FLAVORS = ["Strawberry", "Blueberry", "Apple", "Mango", "Peach", "Pineapple", "Raspberry", "Kiwi", "Cherry", "Passion Fruit"];
 
-// Application state canvas 
+// Translation Lookups Engine Data
+const translations = {
+    en: {
+        dir: "ltr",
+        subSub: "Bakery & Café",
+        location: "Erbil",
+        heroDesc: "Tap items to build your selection. When finished, press the checkout button below to route your dynamic table request straight to our waiters via WhatsApp.",
+        qrTitle: "Scan to Order",
+        qrDesc: "Point your mobile camera over this design element to automatically launch the interactive portal link directly.",
+        printedBtn: "View Traditional Printed Layout Menu",
+        footerThanks: "Thank you and enjoy • Maccannoli Bakery & Café",
+        cartTitle: "Selected Order",
+        cartTotalLabel: "Total Bill",
+        clearBtn: "Clear",
+        submitBtn: "Submit Order to Waiters",
+        tableLabel: "Table",
+        itemsLabel: "items selected",
+        itemLabel: "item selected",
+        notePastries: "Prices to be confirmed with staff",
+        mojito: "Mojito", smoothies: "Smoothies", icetea: "Ice Tea", hotdrinks: "Hot Drinks", latte: "Latte", sandwiches: "Sandwiches", croissant: "Croissant", cakes: "Cakes", energy: "Energy Drinks", pastries: "Pastries",
+        waGreeting: "Hello Maccannoli 👋", waTable: "👉 ORDER FROM TABLE", waOrder: "My Order", waTotal: "Total"
+    },
+    ku: {
+        dir: "rtl",
+        subSub: "نانەواخانە و کافێ",
+        location: "هەولێر",
+        heroDesc: "کلیک لەسەر بابەتەکان بکە بۆ زیادکردنیان. کاتێک تەواو بوویت، دوگمەی ناردن لە خوارەوە دابگرە بۆ ناردنی داواکارییەکەت ڕاستەوخۆ بۆ کارمەندانمان لە ڕێگەی واتسئەپەوە.",
+        qrTitle: "بۆ داواکردن سکان بکە",
+        qrDesc: "کامێرای مۆبایلەکەت ڕووبەڕووی ئەم کۆدە بکەرەوە بۆ کردنەوەی ڕاستەوخۆی مینیو.",
+        printedBtn: "بینینی مینیۆی چاپکراوی نەریتی",
+        footerThanks: "سوپاس بۆ سەردانەکەتان • نانەواخانە و کافێی ماکانۆلی",
+        cartTitle: "داواکاری هەڵبژێردراو",
+        cartTotalLabel: "کۆیی گشتی",
+        clearBtn: "سڕینەوە",
+        submitBtn: "ناردنی داواکاری بۆ کارمەندان",
+        tableLabel: "مێزی",
+        itemsLabel: "بابەت هەڵبژێردراون",
+        itemLabel: "بابەت هەڵبژێردراوە",
+        notePastries: "نرخەکان لەگەڵ ستاف پشتڕاست دەکرێنەوە",
+        mojito: "مۆهیتۆ", smoothies: "سمووزی", icetea: "ئایس تی", hotdrinks: "خواردنەوە گەرمەکان", latte: "لاتێ", sandwiches: "ساندویچ", croissant: "کرۆسان", cakes: "کێک", energy: "خواردنەوە وزەبەخشەکان", pastries: "شیرینی و هەویرکاری",
+        waGreeting: "سڵاو ماکانۆلی 👋", waTable: "👉 داواکاری لە مێزی", waOrder: "داواکارییەکەم", waTotal: "کۆیی گشتی"
+    },
+    ar: {
+        dir: "rtl",
+        subSub: "مخبز ومقهى",
+        location: "أربيل",
+        heroDesc: "اضغط على الأصناف لبناء طلبك. عند الانتهاء، اضغط على زر إرسال الطلب في الأسفل لإرسال طلب الطاولة الخاص بك مباشرة إلى طاقمنا عبر الواتساب.",
+        qrTitle: "امسح الرمز للطلب",
+        qrDesc: "وجه كاميرا هاتفك فوق الرمز لفتح قائمة الطعام التفاعلية مباشرة.",
+        printedBtn: "عرض القائمة المطبوعة التقليدية",
+        footerThanks: "شكراً لكم واستمتعوا بوقتكم • مخبز ومقهى ماكانولي",
+        cartTitle: "الطلب المحدد",
+        cartTotalLabel: "الحساب الإجمالي",
+        clearBtn: "مسح",
+        submitBtn: "إرسال الطلب إلى الطاقم",
+        tableLabel: "طاولة",
+        itemsLabel: "أصناف مختارة",
+        itemLabel: "صنف واحد مختار",
+        notePastries: "الأسعار يتم تأكيدها مع الموظفين",
+        mojito: "موهيتو", smoothies: "سموذي", icetea: "شاي مثلج", hotdrinks: "مشروبات ساخنة", latte: "لاتيه", sandwiches: "سندويشات", croissant: "كرواسون", cakes: "كيك", energy: "مشروبات طاقة", pastries: "معجنات وحلويات",
+        waGreeting: "مرحباً ماكانولي 👋", waTable: "👉 طلب من طاولة", waOrder: "طلبي", waTotal: "المجموع الكلي"
+    }
+};
+
+const FRUIT_FLAVORS = {
+    en: ["Strawberry", "Blueberry", "Apple", "Mango", "Peach", "Pineapple", "Raspberry", "Kiwi", "Cherry", "Passion Fruit"],
+    ku: ["شلیک", "بلو بێری", "سێو", "مانگۆ", "خۆخ", "ئەنەناس", "ڕاسبێری", "کیوی", "گێلاس", "پاشن فروت"],
+    ar: ["فراولة", "توت أزرق", "تفاح", "مانجو", "خوخ", "أناناس", "توت عليق", "كيوي", "كرز", "فاكهة العاطفة"]
+};
+
+// Current dynamic runtime selections 
+let currentLang = null;
 let cart = [];
 
-// Parse incoming routing parameter allocations safely
 const urlParams = new URLSearchParams(window.location.search);
 const tableNumber = urlParams.get('table');
 
-// Helper component utilities
-const createFlavoredItems = (suffix, price, prefix = "") => {
-    return FRUIT_FLAVORS.map(flavor => ({
+// Core dynamic item generation mapping tree
+const getMenuData = (lang) => {
+    const f = FRUIT_FLAVORS[lang];
+    const makeFlavors = (suffix, price, prefix = "") => f.map(flavor => ({
         name: `${prefix}${flavor}${suffix}`,
         price: price
     }));
+
+    return [
+        {
+            name: translations[lang].mojito, id: "cat-mojito", image: "mojito.jpg",
+            items: [{ name: lang === "en" ? "Classic Mojito" : lang === "ku" ? "مۆهیتۆ کلاسیک" : "موهيتو كلاسيك", price: 6000 }, ...makeFlavors(lang === "en" ? " Mojito" : lang === "ku" ? " مۆهیتۆ" : " موهيتو", 7000)]
+        },
+        { name: translations[lang].smoothies, id: "cat-smoothies", image: "smoothies.jpg", items: makeFlavors(lang === "en" ? " Smoothie" : lang === "ku" ? " سمووزی" : " سموذي", 7000) },
+        { name: translations[lang].icetea, id: "cat-icetea", image: "ice-tea.jpg", items: makeFlavors(lang === "en" ? " Ice Tea" : lang === "ku" ? " ئایس تی" : " شاي مثلج", 7000) },
+        {
+            name: translations[lang].hotdrinks, id: "cat-hotdrinks", image: "hot-drinks.jpg",
+            items: [
+                { name: lang === "en" ? "Espresso" : lang === "ku" ? "ئێسپرێسۆ" : "إسبريسو", price: 4000 },
+                { name: lang === "en" ? "Americano" : lang === "ku" ? "ئەمەریکانۆ" : "أمريكانو", price: 6000 },
+                { name: lang === "en" ? "Cappuccino" : lang === "ku" ? "کاپوچینۆ" : "كابوتشينو", price: 7000 },
+                { name: lang === "en" ? "Hot Chocolate" : lang === "ku" ? "شۆکۆلاتەی گەرم" : "شوكولاتة ساخنة", price: 7000 },
+                { name: lang === "en" ? "Tea" : lang === "ku" ? "چای" : "شاي", price: 2000 }
+            ]
+        },
+        {
+            name: translations[lang].latte, id: "cat-latte", image: "latte.jpg",
+            items: ["Classic", "Vanilla", "Caramel", "Spanish", "Rose", "Cinnamon", "Lavender"].map(n => {
+                const mapPrices = { "Classic": 6000, "Vanilla": 7000, "Caramel": 7000, "Spanish": 7000, "Rose": 7000, "Cinnamon": 7000, "Lavender": 7000 };
+                const locNames = {
+                    en: `${n} Latte`,
+                    ku: `لاتێ ${langNameKU(n)}`,
+                    ar: `لاتيه ${langNameAR(n)}`
+                };
+                return { name: locNames[lang], price: mapPrices[n] };
+            })
+        },
+        {
+            name: translations[lang].sandwiches, id: "cat-sandwiches", image: "sandwiches.jpg",
+            items: [
+                { name: lang === "en" ? "Chicken Classic" : lang === "ku" ? "مریشکی کلاسیک" : "دجاج كلاسيك", price: 6000 },
+                { name: lang === "en" ? "Chicken Caesar" : lang === "ku" ? "مریشکی قەیسەر" : "دجاج سيزر", price: 6000 },
+                { name: lang === "en" ? "Meat Sandwich" : lang === "ku" ? "ساندویچی گۆشت" : "سندويش لحم", price: 6000 },
+                { name: lang === "en" ? "Hot Dog" : lang === "ku" ? "هۆت دۆگ" : "هوت دوغ", price: 6000 },
+                { name: lang === "en" ? "Salami" : lang === "ku" ? "سەلامی" : "سلامي", price: 6000 }
+            ]
+        },
+        {
+            name: translations[lang].croissant, id: "cat-croissant", image: "croissant.jpg",
+            items: [
+                { name: lang === "en" ? "Cheese Croissant" : lang === "ku" ? "کرۆسانی پەنیر" : "كرواسون جبنة", price: 5000 },
+                { name: lang === "en" ? "Chocolate Croissant" : lang === "ku" ? "کرۆسانی شوکۆلاتە" : "كرواسون شوكولاتة", price: 5000 },
+                { name: lang === "en" ? "Plain Croissant" : lang === "ku" ? "کرۆسانی سادە" : "كرواسون سادة", price: 5000 },
+                { name: lang === "en" ? "Cube Croissant" : lang === "ku" ? "کرۆسانی چوارگۆشە (Cube)" : "كرواسون مكعب", price: 5000 },
+                { name: lang === "en" ? "Roll Croissant" : lang === "ku" ? "کرۆسانی ڕۆڵ" : "كرواسون رول", price: 5000 },
+                { name: lang === "en" ? "Ribbon Croissant" : lang === "ku" ? "کرۆسانی ڕیبۆن" : "كرواسون ريبون", price: 5000 },
+                { name: lang === "en" ? "Crema with Fruit Croissant" : lang === "ku" ? "کرۆسانی کرێم و میوە" : "كرواسون كريمة وفواكه", price: 5000 }
+            ]
+        },
+        {
+            name: translations[lang].cakes, id: "cat-cakes", image: "cakes.jpg",
+            items: [
+                { name: lang === "en" ? "Banana Cake" : lang === "ku" ? "کێکی مۆز" : "كيك موز", price: 3000 },
+                { name: lang === "en" ? "Brownie Cube" : lang === "ku" ? "بڕاونی چوارگۆشە" : "مكعب براوني", price: 6000 },
+                { name: lang === "en" ? "Brownie" : lang === "ku" ? "بڕاونی" : "براوني", price: 7000 },
+                { name: lang === "en" ? "Chocolate Mousse" : lang === "ku" ? "موویسی شوکۆلاتە" : "موس الشوكولاتة", price: 6000 },
+                { name: lang === "en" ? "Tiramisu" : lang === "ku" ? "تیرامیسو" : "تيراميسو", price: 5000 },
+                { name: lang === "en" ? "Red Velvet" : lang === "ku" ? "ڕێد ڤێلڤێت" : "ريد فيلفيت", price: 7000 },
+                { name: lang === "en" ? "Lazy Cake" : lang === "ku" ? "لەیزی کێک" : "ليزى كيك", price: 5000 }
+            ]
+        },
+        {
+            name: translations[lang].energy, id: "cat-energy", image: "energy-drinks.jpg",
+            items: [
+                { name: lang === "en" ? "Red Bull Classic" : lang === "ku" ? "ڕێد بۆڵ کلاسیک" : "ريد بول كلاسيك", price: 4000 },
+                ...makeFlavors("", 7000, lang === "en" ? "Red Bull " : lang === "ku" ? "ڕێد بۆڵ " : "ريد بول ")
+            ]
+        },
+        {
+            name: translations[lang].pastries, id: "cat-pastries", note: translations[lang].notePastries,
+            items: [
+                { name: lang === "en" ? "Cinnamon Roll" : lang === "ku" ? "سینامۆن ڕۆڵ" : "لفافة القرفة", price: 5000 },
+                { name: lang === "en" ? "Canele" : lang === "ku" ? "کانێلی" : "كانيل", price: 3000 },
+                { name: lang === "en" ? "Bombolini with Fruit" : lang === "ku" ? "بۆمبۆلینی لەگەڵ میوە" : "بومبوليني بالفواكه", price: 5000 },
+                { name: lang === "en" ? "Bombolini" : lang === "ku" ? "بۆمبۆلینی سادە" : "بومبوليني", price: 4000 },
+                { name: lang === "en" ? "Danish with Fruit" : lang === "ku" ? "دانۆش لەگەڵ میوە" : "دانش بالفواكه", price: 5000 },
+                { name: lang === "en" ? "Danish" : lang === "ku" ? "دانۆش سادە" : "دانش", price: 4000 },
+                { name: lang === "en" ? "Donut" : lang === "ku" ? "دۆنات" : "دونات", price: 3000 },
+                { name: lang === "en" ? "Galette" : lang === "ku" ? "گالێت" : "غاليت", price: 5000 }
+            ]
+        }
+    ];
 };
 
-// Master item data tree structure 
-const menuData = [
-    {
-        name: "Mojito",
-        id: "cat-mojito",
-        image: "mojito.jpg",
-        items: [
-            { name: "Classic Mojito", price: 6000 },
-            ...createFlavoredItems(" Mojito", 7000)
-        ]
-    },
-    {
-        name: "Smoothies",
-        id: "cat-smoothies",
-        image: "smoothies.jpg",
-        items: createFlavoredItems(" Smoothie", 7000)
-    },
-    {
-        name: "Ice Tea",
-        id: "cat-icetea",
-        image: "ice-tea.jpg",
-        items: createFlavoredItems(" Ice Tea", 7000)
-    },
-    {
-        name: "Hot Drinks",
-        id: "cat-hotdrinks",
-        image: "hot-drinks.jpg",
-        items: [
-            { name: "Espresso", price: 4000 },
-            { name: "Americano", price: 6000 },
-            { name: "Cappuccino", price: 7000 },
-            { name: "Hot Chocolate", price: 7000 },
-            { name: "Tea", price: 2000 }
-        ]
-    },
-    {
-        name: "Latte",
-        id: "cat-latte",
-        image: "latte.jpg",
-        items: [
-            { name: "Classic Latte", price: 6000 },
-            { name: "Vanilla Latte", price: 7000 },
-            { name: "Caramel Latte", price: 7000 },
-            { name: "Spanish Latte", price: 7000 },
-            { name: "Rose Latte", price: 7000 },
-            { name: "Cinnamon Latte", price: 7000 },
-            { name: "Lavender Latte", price: 7000 }
-        ]
-    },
-    {
-        name: "Sandwiches",
-        id: "cat-sandwiches",
-        image: "sandwiches.jpg",
-        items: [
-            { name: "Chicken Classic", price: 6000 },
-            { name: "Chicken Caesar", price: 6000 },
-            { name: "Meat", price: 6000 },
-            { name: "Hot Dog", price: 6000 },
-            { name: "Salami", price: 6000 }
-        ]
-    },
-    {
-        name: "Croissant",
-        id: "cat-croissant",
-        image: "croissant.jpg",
-        items: [
-            { name: "Cheese Croissant", price: 5000 },
-            { name: "Chocolate Croissant", price: 5000 },
-            { name: "Plain Croissant", price: 5000 },
-            { name: "Cube Croissant", price: 5000 },
-            { name: "Roll Croissant", price: 5000 },
-            { name: "Ribbon Croissant", price: 5000 },
-            { name: "Crema with Fruit Croissant", price: 5000 }
-        ]
-    },
-    {
-        name: "Cakes",
-        id: "cat-cakes",
-        image: "cakes.jpg",
-        items: [
-            { name: "Banana Cake", price: 3000 },
-            { name: "Brownie Cube", price: 6000 },
-            { name: "Brownie", price: 7000 },
-            { name: "Chocolate Mousse", price: 6000 },
-            { name: "Tiramisu", price: 5000 },
-            { name: "Red Velvet", price: 7000 },
-            { name: "Lazy Cake", price: 5000 }
-        ]
-    },
-    {
-        name: "Energy Drinks",
-        id: "cat-energy",
-        image: "energy-drinks.jpg",
-        items: [
-            { name: "Red Bull Classic", price: 4000 },
-            ...createFlavoredItems("", 7000, "Red Bull ")
-        ]
-    },
-    {
-        name: "Pastries",
-        id: "cat-pastries",
-        note: "Prices to be confirmed with staff",
-        items: [
-            { name: "Cinnamon Roll", price: 5000 },
-            { name: "Canele", price: 3000 },
-            { name: "Bombolini with Fruit", price: 5000 },
-            { name: "Bombolini", price: 4000 },
-            { name: "Danish with Fruit", price: 5000 },
-            { name: "Danish", price: 4000 },
-            { name: "Donut", price: 3000 },
-            { name: "Galette", price: 5000 }
-        ]
-    }
-];
+function langNameKU(n) {
+    const m = { "Classic": "کلاسیک", "Vanilla": "ڤانیلا", "Caramel": "کارامێل", "Spanish": "سپانیش", "Rose": "گوڵ", "Cinnamon": "دارچینی", "Lavender": "لاڤێندەر" };
+    return m[n] || n;
+}
+function langNameAR(n) {
+    const m = { "Classic": "كلاسيك", "Vanilla": "فانيليا", "Caramel": "كاراميل", "Spanish": "سبانيش", "Rose": "ورد", "Cinnamon": "قرفة", "Lavender": "خزامى" };
+    return m[n] || n;
+}
 
-// Flat internal tracking dictionary for fast computational operations 
-const itemPriceLookup = {};
-menuData.forEach(cat => cat.items.forEach(i => itemPriceLookup[i.name] = i.price));
+let itemPriceLookup = {};
 
-// Lifecycle Bootstrapping Init Hook
-document.addEventListener("DOMContentLoaded", () => {
-    renderCategoryNav();
-    renderMenuGrid();
-    setupCartListeners();
-    checkTableRoutingContext();
+// Handle App Language Changes Trigger State Routing
+window.selectLanguage = (lang) => {
+    currentLang = lang;
+    document.getElementById("language-gate").classList.add("hidden");
     
-    // Fire up vector graphic replacements dynamically
-    if (window.lucide) {
-        window.lucide.createIcons();
-    }
-});
+    const bodyEl = document.getElementById("main-body");
+    bodyEl.classList.remove("invisible");
+    bodyEl.setAttribute("dir", translations[lang].dir);
+    
+    document.getElementById("lang-switcher").value = lang;
 
-function checkTableRoutingContext() {
-    if (tableNumber) {
+    // Repopulate dynamic calculations tree
+    const menuData = getMenuData(lang);
+    itemPriceLookup = {};
+    menuData.forEach(cat => cat.items.forEach(i => itemPriceLookup[i.name] = i.price));
+
+    // Update hardcoded document content blocks strings
+    document.getElementById("txt-sub-sub").textContent = translations[lang].subSub;
+    document.getElementById("txt-location").textContent = translations[lang].location;
+    document.getElementById("txt-hero-desc").textContent = translations[lang].heroDesc;
+    document.getElementById("txt-qr-title").textContent = translations[lang].qrTitle;
+    document.getElementById("txt-qr-desc").textContent = translations[lang].qrDesc;
+    document.getElementById("txt-printed-btn").textContent = translations[lang].printedBtn;
+    document.getElementById("txt-footer-thanks").textContent = translations[lang].footerThanks;
+    document.getElementById("txt-cart-title").textContent = translations[lang].cartTitle;
+    document.getElementById("txt-cart-total-label").textContent = translations[lang].cartTotalLabel;
+    document.getElementById("txt-clear-btn").textContent = translations[lang].clearBtn;
+    document.getElementById("txt-submit-btn").textContent = translations[lang].submitBtn;
+
+    // Re-render structural elements
+    renderCategoryNav(menuData);
+    renderMenuGrid(menuData);
+    checkTableBadge();
+    updateCartUI();
+};
+
+function checkTableBadge() {
+    if (tableNumber && currentLang) {
         const noticeBox = document.getElementById("table-notice");
         const noticeVal = document.getElementById("table-notice-val");
         if (noticeBox && noticeVal) {
-            noticeVal.textContent = `Table ${tableNumber}`;
+            noticeVal.textContent = `${translations[currentLang].tableLabel} ${tableNumber}`;
             noticeBox.classList.remove("hidden");
             noticeBox.classList.add("flex");
         }
     }
 }
 
-// Generate the Top sticky category tabs row
-function renderCategoryNav() {
+function renderCategoryNav(menuData) {
     const navBar = document.getElementById("category-nav-pills");
     if (!navBar) return;
+    navBar.innerHTML = "";
 
     menuData.forEach((category, idx) => {
         const pill = document.createElement("button");
         pill.className = `px-4 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all whitespace-nowrap cursor-pointer border ${
-            idx === 0 
-            ? "bg-yellow-400 text-black border-yellow-400 shadow-md" 
-            : "bg-zinc-950 text-zinc-400 border-zinc-900 hover:text-zinc-200 hover:border-zinc-800"
+            idx === 0 ? "bg-yellow-400 text-black border-yellow-400 shadow-md" : "bg-zinc-950 text-zinc-400 border-zinc-900"
         }`;
         pill.textContent = category.name;
-        pill.onclick = (e) => {
-            // Smooth Scroll view hook alignment
+        pill.onclick = () => {
             const element = document.getElementById(category.id);
             if (element) {
                 const topOffset = element.getBoundingClientRect().top + window.scrollY - 130;
                 window.scrollTo({ top: topOffset, behavior: 'smooth' });
             }
-            
-            // Clean dynamic active pill switches
             document.querySelectorAll("#category-nav-pills button").forEach(b => {
-                b.className = "px-4 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all whitespace-nowrap cursor-pointer border bg-zinc-950 text-zinc-400 border-zinc-900 hover:text-zinc-200 hover:border-zinc-800";
+                b.className = "px-4 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all whitespace-nowrap cursor-pointer border bg-zinc-950 text-zinc-400 border-zinc-900";
             });
             pill.className = "px-4 py-2 rounded-xl text-xs font-bold tracking-wide uppercase transition-all whitespace-nowrap cursor-pointer border bg-yellow-400 text-black border-yellow-400 shadow-md";
         };
@@ -192,8 +257,7 @@ function renderCategoryNav() {
     });
 }
 
-// Render modern menu grid cards layout
-function renderMenuGrid() {
+function renderMenuGrid(menuData) {
     const container = document.getElementById("menu-container");
     if (!container) return;
     container.innerHTML = "";
@@ -212,7 +276,7 @@ function renderMenuGrid() {
                     </div>
                     <div>
                         <h2 class="text-xl font-black tracking-wide text-white">${category.name}</h2>
-                        <p class="text-zinc-500 text-[11px] font-medium uppercase tracking-wider">Premium Selection</p>
+                        <p class="text-zinc-500 text-[11px] font-medium uppercase tracking-wider">Maccannoli Premium</p>
                     </div>
                 </div>`;
         } else {
@@ -227,17 +291,17 @@ function renderMenuGrid() {
         category.items.forEach(item => {
             const safeName = btoa(unescape(encodeURIComponent(item.name))); 
             itemsHTML += `
-                <div class="group bg-zinc-950/40 hover:bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-2xl p-4 flex justify-between items-center transition-all duration-200 shadow-sm hover:shadow-md">
+                <div class="group bg-zinc-950/40 hover:bg-zinc-950 border border-zinc-900 hover:border-zinc-800 rounded-2xl p-4 flex justify-between items-center transition-all duration-200">
                     <div class="space-y-1 pr-2">
                         <h3 class="text-sm font-semibold tracking-wide text-zinc-200 group-hover:text-white transition-colors">${item.name}</h3>
                         <p class="text-yellow-400 font-bold text-xs tracking-wide">${item.price.toLocaleString()} <span class="text-[10px] text-yellow-500/80 font-medium">IQD</span></p>
                     </div>
                     <div class="flex items-center gap-2.5 shrink-0" data-item-id="${safeName}">
                         <div class="quantity-controls flex items-center gap-2.5 hidden">
-                            <button onclick="changeQty('${safeName}', -1)" class="w-8 h-8 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white font-bold text-base flex items-center justify-center transition-colors cursor-pointer border border-zinc-800 active:scale-95">-</button>
+                            <button onclick="changeQty('${safeName}', -1)" class="w-8 h-8 rounded-xl bg-zinc-900 text-zinc-400 font-bold text-base flex items-center justify-center cursor-pointer border border-zinc-800 active:scale-95">-</button>
                             <span class="quantity-val text-yellow-400 font-extrabold text-sm w-5 text-center">0</span>
                         </div>
-                        <button onclick="changeQty('${safeName}', 1)" class="w-8 h-8 rounded-xl bg-yellow-400 hover:bg-yellow-300 text-black font-bold text-base flex items-center justify-center transition-all cursor-pointer shadow-md shadow-yellow-500/5 active:scale-95">+</button>
+                        <button onclick="changeQty('${safeName}', 1)" class="w-8 h-8 rounded-xl bg-yellow-400 text-black font-bold text-base flex items-center justify-center cursor-pointer active:scale-95">+</button>
                     </div>
                 </div>`;
         });
@@ -246,6 +310,7 @@ function renderMenuGrid() {
         section.innerHTML = bannerHTML + itemsHTML;
         container.appendChild(section);
     });
+    if (window.lucide) window.lucide.createIcons();
 }
 
 window.changeQty = (encodedName, adjustment) => {
@@ -259,29 +324,29 @@ window.changeQty = (encodedName, adjustment) => {
     updateCartUI();
 };
 
+// Update cart parameters and floating slide visibility 
 function updateCartUI() {
+    if (!currentLang) return;
+    
     const cartBar = document.getElementById("cart-bar");
     const cartCount = document.getElementById("cart-count");
     const cartTotal = document.getElementById("cart-total");
     const tagsContainer = document.getElementById("cart-summary-tags");
 
     if (cart.length === 0) {
-        // Smooth slide out transitions animations
         cartBar.style.transform = "translateY(20px)";
         cartBar.style.opacity = "0";
         cartBar.style.pointerEvents = "none";
-        
         document.querySelectorAll('.quantity-controls').forEach(el => el.classList.add('hidden'));
         document.querySelectorAll('.quantity-val').forEach(el => el.textContent = '0');
         return;
     }
 
-    // Trigger floating canvas display frames
     cartBar.style.transform = "translateY(0)";
     cartBar.style.opacity = "1";
     cartBar.style.pointerEvents = "auto";
     
-    cartCount.textContent = `${cart.length} ${cart.length === 1 ? 'item selected' : 'items selected'}`;
+    cartCount.textContent = `${cart.length} ${cart.length === 1 ? translations[currentLang].itemLabel : translations[currentLang].itemsLabel}`;
 
     const counts = {};
     let totalCost = 0;
@@ -292,7 +357,6 @@ function updateCartUI() {
 
     cartTotal.textContent = `${totalCost.toLocaleString()} IQD`;
 
-    // Fast-sync grid quantities numbers counters
     document.querySelectorAll('[data-item-id]').forEach(controlBox => {
         const id = controlBox.getAttribute('data-item-id');
         const originalName = decodeURIComponent(escape(atob(id)));
@@ -308,7 +372,6 @@ function updateCartUI() {
         }
     });
 
-    // Populate the running preview badge horizontal row layout
     tagsContainer.innerHTML = "";
     Object.entries(counts).forEach(([name, qty]) => {
         const span = document.createElement("span");
@@ -326,20 +389,22 @@ function setupCartListeners() {
     document.getElementById("whatsapp-btn").addEventListener("click", sendWhatsAppOrder);
 }
 
+// Format final output strings based on structural language variations
 function sendWhatsAppOrder() {
-    if (cart.length === 0) return;
+    if (cart.length === 0 || !currentLang) return;
 
+    const t = translations[currentLang];
     const counts = {};
     cart.forEach(name => counts[name] = (counts[name] || 0) + 1);
 
-    let textMessage = "Hello Maccannoli 👋\n";
+    let textMessage = `${t.waGreeting}\n`;
     if (tableNumber) {
-        textMessage += `👉 ORDER FROM TABLE: ${tableNumber}\n\n`;
+        textMessage += `${t.waTable}: ${tableNumber}\n\n`;
     } else {
         textMessage += "\n";
     }
     
-    textMessage += "My Order:\n";
+    textMessage += `${t.waOrder}:\n`;
     
     let totalCost = 0;
     Object.entries(counts).forEach(([name, qty]) => {
@@ -348,7 +413,7 @@ function sendWhatsAppOrder() {
         totalCost += qty * itemCost;
     });
 
-    textMessage += `\nTotal: ${totalCost.toLocaleString()} IQD`;
+    textMessage += `\n${t.waTotal}: ${totalCost.toLocaleString()} IQD`;
 
     const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(textMessage)}`;
     window.open(url, "_blank", "noopener,noreferrer") || (window.location.href = url);

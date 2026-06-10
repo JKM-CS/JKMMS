@@ -157,7 +157,7 @@ const getMenuData = (lang) => {
                 { name: lang === "en" ? "Bombolini with Fruit" : lang === "ku" ? "بۆمبۆلینی لەگەڵ میوە" : "بومبوليني بالفواكه", price: 5000 },
                 { name: lang === "en" ? "Bombolini" : lang === "ku" ? "بۆمبۆلینی سادە" : "بومبوليني", price: 4000 },
                 { name: lang === "en" ? "Danish with Fruit" : lang === "ku" ? "دانیش لەگەڵ میوە" : "دانش بالفواكه", price: 5000 },
-                { name: lang === "en" ? "Danish" : lang === "ku" ? "دانۆش سادە" : "دانش", price: 4000 },
+                { name: lang === "en" ? "Danish" : lang === "ku" ? "دانیش سادە" : "دانش", price: 4000 },
                 { name: lang === "en" ? "Donut" : lang === "ku" ? "دۆنات" : "دونات", price: 3000 },
                 { name: lang === "en" ? "Galette" : lang === "ku" ? "گالێت" : "غاليت", price: 5000 }
             ]

@@ -111,8 +111,8 @@ const getMenuData = (lang) => {
         {
             name: translations[lang].sandwiches, id: "cat-sandwiches", image: "sandwiches.jpg",
             items: [
-                { name: lang === "en" ? "Chicken Classic" : lang === "ku" ? "مریشکی کلاسیک" : "دجاج كلاسيك", price: 6000 },
-                { name: lang === "en" ? "Chicken Caesar" : lang === "ku" ? "مریشکی قەیسەر" : "دجاج سيزر", price: 6000 },
+                { name: lang === "en" ? "Chicken Classic" : lang === "ku" ? "مریشك سانويچ" : "دجاج كلاسيك", price: 6000 },
+                { name: lang === "en" ? "Chicken Caesar" : lang === "ku" ? "مریشک سیزەر" : "دجاج سيزر", price: 6000 },
                 { name: lang === "en" ? "Meat Sandwich" : lang === "ku" ? "ساندویچی گۆشت" : "سندويش لحم", price: 6000 },
                 { name: lang === "en" ? "Hot Dog" : lang === "ku" ? "هۆت دۆگ" : "هوت دوغ", price: 6000 },
                 { name: lang === "en" ? "Salami" : lang === "ku" ? "سەلامی" : "سلامي", price: 6000 }
@@ -156,7 +156,7 @@ const getMenuData = (lang) => {
                 { name: lang === "en" ? "Canele" : lang === "ku" ? "کانێلی" : "كانيل", price: 3000 },
                 { name: lang === "en" ? "Bombolini with Fruit" : lang === "ku" ? "بۆمبۆلینی لەگەڵ میوە" : "بومبوليني بالفواكه", price: 5000 },
                 { name: lang === "en" ? "Bombolini" : lang === "ku" ? "بۆمبۆلینی سادە" : "بومبوليني", price: 4000 },
-                { name: lang === "en" ? "Danish with Fruit" : lang === "ku" ? "دانۆش لەگەڵ میوە" : "دانش بالفواكه", price: 5000 },
+                { name: lang === "en" ? "Danish with Fruit" : lang === "ku" ? "دانیش لەگەڵ میوە" : "دانش بالفواكه", price: 5000 },
                 { name: lang === "en" ? "Danish" : lang === "ku" ? "دانۆش سادە" : "دانش", price: 4000 },
                 { name: lang === "en" ? "Donut" : lang === "ku" ? "دۆنات" : "دونات", price: 3000 },
                 { name: lang === "en" ? "Galette" : lang === "ku" ? "گالێت" : "غاليت", price: 5000 }

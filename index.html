@@ -4,180 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Maccannoli • Premium Bakery & Café</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Kufi+Arabic:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <style>
-        /* CORE RESET SYSTEM */
-        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        html, body { height: 100%; min-height: 100dvh; background-color: #09090b; color: #fafafa; font-family: 'Plus Jakarta Sans', 'Noto Kufi Arabic', sans-serif; overflow-x: hidden; }
+        body { font-family: 'Plus Jakarta Sans', 'Noto Kufi Arabic', sans-serif; background-color: #09090b; color: #fafafa; }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* FOOLPROOF FULL SCREEN LANGUAGE OVERLAY */
         #language-gate { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100vw; 
-            height: 100dvh; 
-            z-index: 9999; 
-            background-color: #09090b; 
-            display: flex !important; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 24px;
-            box-sizing: border-box;
+            position: fixed; inset: 0; z-index: 9999; background-color: #09090b; 
+            display: flex !important; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
         }
-        #application-content-wrapper { display: none; padding: 0 16px 140px 16px; max-width: 1024px; margin: 0 auto; }
+        #application-content-wrapper { display: none; }
         
-        /* BOX SYSTEM INTERFACE TOKENS */
-        .gate-card { background: #0c0c0e; border: 1px solid #18181b; padding: 32px 24px; border-radius: 24px; text-align: center; width: 100%; max-width: 340px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
-        .brand-logo { width: 72px; h: 72px; max-width: 72px; max-height: 72px; border-radius: 16px; margin: 0 auto 16px auto; overflow: hidden; border: 3px solid #18181b; aspect-ratio: 1/1; }
-        .brand-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
-        .gate-title { font-size: 20px; font-weight: 800; tracking: 0.15em; color: #facc15; margin-bottom: 6px; }
-        .gate-subtitle { font-size: 11px; color: #a1a1aa; margin-bottom: 24px; line-height: 1.4; }
-        .lang-btn { width: 100%; background: #18181b; border: 1px solid #27272a; color: #fff; font-weight: 700; padding: 14px; border-radius: 12px; margin-bottom: 10px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
-        .lang-btn:active { transform: scale(0.97); background: #27272a; }
+        /* Fixed mobile height overrides */
+        html, body { height: 100%; min-height: 100dvh; }
         
-        /* HEADER PILLS STACK */
-        .sticky-navbar { position: sticky; top: 0; z-index: 40; background: rgba(9,9,11,0.8); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid #18181b; padding: 12px 0; margin-bottom: 24px; }
-        .nav-container { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 12px; }
-        .nav-brand { display: flex; align-items: center; gap: 8px; background: none; border: none; cursor: pointer; text-decoration: none; }
-        .nav-brand-img { width: 28px; height: 28px; border-radius: 6px; }
-        .nav-brand-txt { font-weight: 800; font-size: 13px; tracking: 0.1em; color: #facc15; }
-        .nav-right-actions { display: flex; align-items: center; gap: 10px; }
-        .native-dropdown { background: #0c0c0e; color: #a1a1aa; border: 1px solid #18181b; padding: 6px 10px; border-radius: 10px; font-size: 12px; font-weight: 700; outline: none; }
-        .table-badge { background: linear-gradient(135deg, #facc15, #f59e0b); color: #000; font-weight: 800; font-size: 11px; padding: 6px 14px; border-radius: 9999px; display: none; align-items: center; }
-        .pills-scroll-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-        .nav-pill { background: #0c0c0e; border: 1px solid #18181b; color: #a1a1aa; font-size: 11px; font-weight: 700; padding: 8px 16px; border-radius: 10px; white-space: nowrap; cursor: pointer; text-transform: uppercase; }
-        .nav-pill.active { background: #facc15; color: #000; border-color: #facc15; }
+        /* Smooth scrolling for top category shortcuts */
+        html { scroll-behavior: smooth; }
+        .scroll-mt-custom { scroll-margin-top: 130px; }
         
-        /* MAIN HERO WRAPPER CARD */
-        .hero-banner { text-align: center; border: 1px solid #18181b; background: rgba(12,12,14,0.4); padding: 24px; border-radius: 24px; margin-bottom: 40px; }
-        .hero-banner h1 { font-size: 26px; font-weight: 800; letter-spacing: 0.15em; margin-top: 12px; }
-        .hero-meta { display: flex; justify-content: center; gap: 8px; font-size: 12px; color: #a1a1aa; margin-top: 4px; }
-        .hero-desc { font-size: 12px; color: #71717a; margin-top: 16px; line-height: 1.5; }
-        
-        /* INTERACTIVE MENU ITEM CARDS */
-        .section-title-wrapper { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; border-bottom: 1px solid #18181b; padding-bottom: 8px; margin-top: 32px; }
-        .section-img { width: 48px; height: 48px; border-radius: 12px; object-fit: cover; border: 1px solid #18181b; }
-        .section-title { font-size: 18px; font-weight: 800; }
-        .section-note { background: #18181b; border: 1px solid #27272a; border-radius: 14px; padding: 12px; font-size: 12px; color: #a1a1aa; margin-bottom: 16px; }
-        .items-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-        @media(min-width: 768px) { .items-grid { grid-template-columns: 1fr 1fr; } }
-        .menu-card { background: rgba(12,12,14,0.4); border: 1px solid #18181b; border-radius: 16px; padding: 16px; display: flex; justify-content: space-between; align-items: center; }
-        .item-name { font-size: 14px; font-weight: 600; margin-bottom: 4px; color: #e4e4e7; }
-        .item-price { font-size: 13px; font-weight: 700; color: #facc15; }
-        .item-currency { font-size: 10px; color: #eab308; opacity: 0.8; font-weight: 500; }
-        
-        /* INCREMENT CONTROL ROW TRIPS */
-        .controls-wrapper { display: flex; align-items: center; gap: 10px; }
-        .qty-controls { display: none; align-items: center; gap: 10px; }
-        .qty-controls.active { display: flex; }
-        .qty-btn { width: 32px; height: 32px; border-radius: 10px; border: 1px solid #27272a; background: #18181b; color: #fff; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .qty-val { color: #facc15; font-weight: 800; font-size: 14px; min-width: 16px; text-align: center; }
-        .add-btn { width: 32px; height: 32px; border-radius: 10px; border: none; background: #facc15; color: #000; font-weight: 700; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        
-        /* STICKY BOTTOM APP FLOATING ACTION HUB CARDS CANVAS */
-        #cart-bar { position: fixed; bottom: 16px; left: 16px; right: 16px; background: rgba(12,12,14,0.95); border: 1px solid #27272a; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 20px; padding: 16px; z-index: 50; box-shadow: 0 20px 40px rgba(0,0,0,0.6); display: none; flex-direction: column; gap: 12px; }
-        @media(min-width: 768px) { #cart-bar { left: 50%; right: auto; transform: translateX(-50%); width: 100%; max-width: 600px; } }
-        .cart-info-row { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #18181b; padding-bottom: 8px; }
-        .cart-lbl { font-size: 13px; font-weight: 700; }
-        .cart-cnt { font-size: 11px; color: #71717a; margin-top: 1px; }
-        .cart-total-lbl { font-size: 10px; color: #71717a; text-transform: uppercase; text-align: right; }
-        .cart-total-val { font-size: 16px; font-weight: 900; color: #facc15; tracking: 0.02em; }
-        .cart-tags-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
-        .cart-tag { background: #18181b; border: 1px solid #27272a; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 8px; white-space: nowrap; color: #d4d4d8; }
-        .cart-actions { display: flex; gap: 10px; }
-        .btn-clear { background: #0c0c0e; border: 1px solid #27272a; color: #a1a1aa; font-weight: 700; padding: 12px 16px; border-radius: 12px; font-size: 12px; cursor: pointer; }
-        .btn-submit { flex: 1; background: #16a34a; border: none; color: #fff; font-weight: 800; padding: 12px; border-radius: 12px; font-size: 12px; cursor: pointer; text-transform: uppercase; tracking: 0.05em; text-align: center; }
-        
-        /* FOOTER BRAND FRAME DESIGNS */
-        .footer-frame { margin-top: 80px; border-top: 1px solid #18181b; padding-top: 40px; text-align: center; }
-        .qr-box { display: inline-block; background: #0c0c0e; border: 1px solid #18181b; padding: 24px; border-radius: 24px; max-width: 280px; margin-bottom: 24px; }
-        .qr-wrapper { background: #fff; padding: 10px; border-radius: 14px; display: inline-block; }
-        .qr-wrapper img { width: 120px; height: 120px; display: block; }
-        .qr-title { font-size: 13px; font-weight: 700; color: #facc15; margin-top: 12px; }
-        .qr-desc { font-size: 11px; color: #52525b; margin-top: 4px; line-height: 1.4; }
-        .printed-menu-link { display: inline-block; color: #a1a1aa; font-size: 12px; text-decoration: underline; margin-bottom: 24px; font-weight: 600; }
-        .thanks-msg { font-size: 10px; tracking: 0.1em; text-transform: uppercase; color: #3f3f46; }
-
-        /* RTL ENGINE MODIFIERS */
         body[dir="rtl"] { text-align: right; }
-        body[dir="rtl"] .cart-total-lbl { text-align: left; }
     </style>
 </head>
-<body>
+<body class="min-h-screen bg-[#09090b] text-[#fafafa] antialiased pb-36">
 
     <div id="language-gate">
-        <div class="gate-card">
-            <div class="brand-logo"><img src="IMG_6187.png" alt="Maccannoli Logo"></div>
-            <h2 class="gate-title">MACCANNOLI</h2>
-            <p class="gate-subtitle">Please choose your language<br>تکایە زمانێک هەڵبژێرە<br>الرجاء اختيار اللغة</p>
-            <button onclick="bootAppEngine('en')" class="lang-btn">English</button>
-            <button onclick="bootAppEngine('ku')" class="lang-btn">کوردی (Kurdî)</button>
-            <button onclick="bootAppEngine('ar')" class="lang-btn">العربية</button>
+        <div class="bg-[#0c0c0e] border border-zinc-900 padding p-8 rounded-3xl text-center w-full max-w-[340px] shadow-2xl">
+            <div class="mx-auto w-16 h-16 rounded-xl overflow-hidden border-2 border-zinc-800 mb-4">
+                <img src="IMG_6187.png" alt="Maccannoli Logo" class="w-full h-full object-cover">
+            </div>
+            <h2 class="text-lg font-black tracking-widest text-yellow-400 mb-1">MACCANNOLI</h2>
+            <p class="text-zinc-500 text-[11px] leading-normal mb-6">Choose your language / زمانت هەڵبژێرە / اختر لغتك</p>
+            
+            <div class="flex flex-col gap-2">
+                <button onclick="bootAppEngine('en')" class="w-full bg-[#18181b] hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3 px-4 rounded-xl text-xs active:scale-[0.98]">English</button>
+                <button onclick="bootAppEngine('ku')" class="w-full bg-[#18181b] hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3 px-4 rounded-xl text-xs active:scale-[0.98]">کوردی (Kurdî)</button>
+                <button onclick="bootAppEngine('ar')" class="w-full bg-[#18181b] hover:bg-zinc-800 border border-zinc-800 text-white font-bold py-3 px-4 rounded-xl text-xs active:scale-[0.98]">العربية</button>
+            </div>
         </div>
     </div>
 
-    <div id="application-content-wrapper">
+    <div id="application-content-wrapper" class="px-4 max-w-5xl mx-auto">
         
-        <div class="sticky-navbar">
-            <div class="nav-container">
-                <div class="nav-brand" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-                    <img src="IMG_6187.png" class="nav-brand-img" alt="M">
-                    <span class="nav-brand-txt">MACCANNOLI</span>
+        <div class="sticky top-0 z-40 bg-[#09090b]/90 backdrop-blur-md border-b border-zinc-900 py-3 mb-6">
+            <div class="flex items-center justify-between gap-4 mb-3">
+                <div class="flex items-center gap-2 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+                    <img src="IMG_6187.png" class="w-7 h-7 rounded-md object-cover" alt="M">
+                    <span class="font-extrabold text-sm tracking-wider text-yellow-400">MACCANNOLI</span>
                 </div>
-                <div class="nav-right-actions">
-                    <select id="lang-switcher" onchange="bootAppEngine(this.value)" class="native-dropdown">
+                <div class="flex items-center gap-3">
+                    <select id="lang-switcher" onchange="bootAppEngine(this.value)" class="bg-[#0c0c0e] text-zinc-400 border border-zinc-900 px-2.5 py-1.5 rounded-xl text-xs font-bold outline-none cursor-pointer">
                         <option value="en">EN</option>
                         <option value="ku">KU</option>
                         <option value="ar">AR</option>
                     </select>
-                    <div id="table-badge-el" class="table-badge">📍 Table --</div>
+                    <div id="table-badge-el" class="bg-gradient-to-r from-yellow-400 to-amber-500 text-black font-black text-[11px] px-3 py-1.5 rounded-full hidden">📍 Table --</div>
                 </div>
             </div>
-            <div class="pills-scroll-row no-scrollbar" id="nav-pills-container"></div>
+            
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
+                <a href="#m-mojito" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-mojito">Mojito</a>
+                <a href="#m-smoothie" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-smoothies">Smoothies</a>
+                <a href="#m-icetea" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-icetea">Ice Tea</a>
+                <a href="#m-hot" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-hotdrinks">Hot Drinks</a>
+                <a href="#m-latte" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-latte">Latte</a>
+                <a href="#m-sand" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-sandwiches">Sandwiches</a>
+                <a href="#m-crois" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-croissant">Croissant</a>
+                <a href="#m-cake" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-cakes">Cakes</a>
+                <a href="#m-energy" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-energy">Energy Drinks</a>
+                <a href="#m-pastry" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-pastries">Pastries</a>
+            </div>
         </div>
 
-        <header class="hero-banner">
-            <div class="brand-logo" style="width:80px; height:80px; border-radius:20px;"><img src="IMG_6187.png" alt="M"></div>
-            <h1 id="txt-title">MACCANNOLI</h1>
-            <div class="hero-meta"><span id="txt-meta-type">Bakery & Café</span>•<span id="txt-meta-loc">Erbil</span></div>
-            <p class="hero-desc" id="txt-hero-desc">Loading parameters...</p>
+        <header class="text-center border border-zinc-900 bg-zinc-950/40 p-6 rounded-3xl mb-10">
+            <div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden border-2 border-zinc-800"><img src="IMG_6187.png" alt="Logo" class="w-full h-full object-cover"></div>
+            <h1 class="text-2xl font-black tracking-widest mt-3">MACCANNOLI</h1>
+            <div class="flex justify-center gap-2 text-xs text-zinc-500 mt-1"><span id="txt-meta-type">Bakery & Café</span>•<span id="txt-meta-loc">Erbil</span></div>
+            <p class="text-xs text-zinc-400 mt-4 leading-relaxed max-w-md mx-auto" id="txt-hero-desc">Building selection parameters...</p>
         </header>
 
-        <main id="menu-cards-container"></main>
+        <main id="menu-cards-container" class="space-y-4"></main>
 
-        <footer class="footer-frame">
-            <div class="qr-box">
-                <div class="qr-wrapper"><img src="qr.png" alt="Menu Link"></div>
-                <div class="qr-title" id="txt-qr-title">Scan to Order</div>
-                <div class="qr-desc" id="txt-qr-desc">Point your camera here to open the menu.</div>
+        <footer class="mt-20 border-t border-zinc-900 pt-10 text-center pb-12">
+            <div class="inline-block bg-[#0c0c0e] border border-zinc-900 p-6 rounded-2xl max-w-xs mb-6">
+                <div class="bg-white p-2 rounded-xl inline-block"><img src="qr.png" class="w-28 h-28" alt="Menu QR"></div>
+                <div class="text-sm font-bold text-yellow-400 mt-3" id="txt-qr-title">Scan to Order</div>
+                <div class="text-[11px] text-zinc-500 mt-1 leading-relaxed" id="txt-qr-desc">Point your camera here to view the menu.</div>
             </div>
-            <div><a href="menu-full.jpg" target="_blank" class="printed-menu-link" id="txt-menu-link">View Traditional Layout Printed Menu</a></div>
-            <p class="thanks-msg" id="txt-thanks">Thank you and enjoy • Maccannoli Bakery & Café</p>
+            <div><a href="menu-full.jpg" target="_blank" class="inline-block text-zinc-400 text-xs underline mb-6 font-semibold" id="txt-menu-link">View Traditional Layout Printed Menu</a></div>
+            <p class="text-[10px] tracking-wider text-zinc-600 uppercase font-medium" id="txt-thanks">Thank you and enjoy • Maccannoli Bakery & Café</p>
         </footer>
     </div>
 
-    <div id="cart-bar">
-        <div class="cart-info-row">
+    <div id="cart-bar" class="fixed bottom-4 left-4 right-4 md:left-1/2 md:right-auto md:-translate-x-1/2 md:w-full md:max-w-xl bg-zinc-950/95 border border-zinc-800 backdrop-blur-md p-4 rounded-2xl shadow-2xl hidden flex-col gap-3">
+        <div class="flex justify-between items-center border-b border-zinc-900 pb-2">
             <div>
-                <p class="cart-lbl" id="txt-cart-lbl">Selected Order</p>
-                <p class="cart-cnt" id="cart-items-count-val">0 items selected</p>
+                <p class="text-xs font-bold text-white" id="txt-cart-lbl">Selected Order</p>
+                <p class="text-[11px] text-zinc-500" id="cart-items-count-val">0 items selected</p>
             </div>
-            <div>
-                <p class="cart-total-lbl" id="txt-total-lbl">Total Bill</p>
-                <p class="cart-total-val" id="cart-total-price-val">0 IQD</p>
+            <div class="text-right">
+                <p class="text-[9px] text-zinc-500 uppercase tracking-wide" id="txt-total-lbl">Total Bill</p>
+                <p class="text-base font-black text-yellow-400" id="cart-total-price-val">0 IQD</p>
             </div>
         </div>
-        <div class="cart-tags-row no-scrollbar" id="cart-tags-container"></div>
-        <div class="cart-actions">
-            <button class="btn-clear" onclick="clearCart()" id="txt-clear-btn">Clear</button>
-            <button class="btn-submit" onclick="submitOrderViaWhatsApp()" id="txt-submit-btn">Submit Order to Waiters</button>
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar" id="cart-tags-container"></div>
+        <div class="flex gap-2">
+            <button class="bg-[#0c0c0e] border border-zinc-800 text-zinc-400 font-bold px-4 py-3 rounded-xl text-xs cursor-pointer active:bg-zinc-900" onclick="clearCart()" id="txt-clear-btn">Clear</button>
+            <button class="flex-1 bg-green-600 text-white font-extrabold px-4 py-3 rounded-xl text-xs tracking-wider uppercase cursor-pointer active:bg-green-700" onclick="submitOrderViaWhatsApp()" id="txt-submit-btn">Submit Order to Waiters</button>
         </div>
     </div>
 
@@ -335,32 +272,26 @@
             document.getElementById("txt-clear-btn").textContent = pack.clearL;
             document.getElementById("txt-submit-btn").textContent = pack.submitL;
 
+            // Map translated shortcuts pills plain text labels strings
+            document.getElementById("tab-mojito").textContent = pack.mojito;
+            document.getElementById("tab-smoothies").textContent = pack.smoothies;
+            document.getElementById("tab-icetea").textContent = pack.icetea;
+            document.getElementById("tab-hotdrinks").textContent = pack.hotdrinks;
+            document.getElementById("tab-latte").textContent = pack.latte;
+            document.getElementById("tab-sandwiches").textContent = pack.sandwiches;
+            document.getElementById("tab-croissant").textContent = pack.croissant;
+            document.getElementById("tab-cakes").textContent = pack.cakes;
+            document.getElementById("tab-energy").textContent = pack.energy;
+            document.getElementById("tab-pastries").textContent = pack.pastries;
+
             if (tableNum) {
                 const badge = document.getElementById("table-badge-el");
                 badge.textContent = `📍 ${pack.tNo} ${tableNum}`;
                 badge.style.setProperty("display", "flex", "important");
             }
 
-            renderInterfacePills(data);
             renderMenuGridCards(data);
             syncCartUIState();
-        }
-
-        function renderInterfacePills(data) {
-            const container = document.getElementById("nav-pills-container");
-            container.innerHTML = "";
-            data.forEach((cat, index) => {
-                const b = document.createElement("button");
-                b.className = "nav-pill" + (index === 0 ? " active" : "");
-                b.textContent = cat.name;
-                b.onclick = () => {
-                    document.querySelectorAll(".nav-pill").forEach(el => el.classList.remove("active"));
-                    b.classList.add("active");
-                    const target = document.getElementById(cat.id);
-                    if(target) window.scrollTo({ top: target.offsetTop - 120, behavior: 'smooth' });
-                };
-                container.appendChild(b);
-            });
         }
 
         function renderMenuGridCards(data) {
@@ -370,30 +301,31 @@
             data.forEach(cat => {
                 const sect = document.createElement("div");
                 sect.id = cat.id;
+                sect.className = "scroll-mt-custom"; // Anchor scrolling distance margin buffer
 
                 let titleBlock = `
-                    <div class="section-title-wrapper">
-                        ${cat.image ? `<img src="${cat.image}" class="section-img" alt="">` : ""}
-                        <h2 class="section-title">${cat.name}</h2>
+                    <div class="flex items-center gap-3 mb-4 border-b border-zinc-900 pb-2 mt-8">
+                        ${cat.image ? `<img src="${cat.image}" class="w-12 h-12 rounded-xl object-cover border border-zinc-800" alt="">` : ""}
+                        <h2 class="text-lg font-black tracking-wide">${cat.name}</h2>
                     </div>`;
                 
-                let noteBlock = cat.note ? `<div class="section-note">ℹ️ ${cat.note}</div>` : "";
+                let noteBlock = cat.note ? `<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-400 mb-4">ℹ️ ${cat.note}</div>` : "";
                 
-                let cardsBlock = `<div class="items-grid">`;
+                let cardsBlock = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3">`;
                 cat.items.forEach(item => {
                     const safeId = btoa(encodeURIComponent(item.name)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
                     cardsBlock += `
-                        <div class="menu-card">
+                        <div class="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-4 flex justify-between items-center">
                             <div style="padding-right: 8px;">
-                                <h3 class="item-name">${item.name}</h3>
-                                <p class="item-price">${item.price.toLocaleString()} <span class="item-currency">IQD</span></p>
+                                <h3 class="text-sm font-semibold text-zinc-200">${item.name}</h3>
+                                <p class="text-xs font-bold text-yellow-400 mt-1">${item.price.toLocaleString()} <span class="text-[10px] text-yellow-500 opacity-80 font-medium">IQD</span></p>
                             </div>
-                            <div class="controls-wrapper">
-                                <div class="qty-controls" id="group-${safeId}">
-                                    <button class="qty-btn" onclick="modifyQty('${safeId}', '${encodeURIComponent(item.name)}', -1)">-</button>
-                                    <span class="qty-val" id="val-${safeId}">0</span>
+                            <div class="flex items-center gap-2">
+                                <div class="hidden items-center gap-2" id="group-${safeId}">
+                                    <button class="w-8 h-8 rounded-lg border border-zinc-800 bg-zinc-900 text-white font-bold text-sm cursor-pointer flex items-center justify-center active:scale-90" onclick="modifyQty('${safeId}', '${encodeURIComponent(item.name)}', -1)">-</button>
+                                    <span class="text-yellow-400 font-extrabold text-sm min-w-4 text-center" id="val-${safeId}">0</span>
                                 </div>
-                                <button class="add-btn" onclick="modifyQty('${safeId}', '${encodeURIComponent(item.name)}', 1)">+</button>
+                                <button class="w-8 h-8 rounded-lg border-none bg-yellow-400 text-black font-bold text-sm cursor-pointer flex items-center justify-center active:scale-90" onclick="modifyQty('${safeId}', '${encodeURIComponent(item.name)}', 1)">+</button>
                             </div>
                         </div>`;
                 });
@@ -421,8 +353,10 @@
             let totalCount = 0;
             let totalPrice = 0;
             
-            document.querySelectorAll(".qty-controls").forEach(el => el.classList.remove("active"));
-            document.querySelectorAll(".qty-val").forEach(el => el.textContent = "0");
+            document.querySelectorAll("[id^='group-']").forEach(el => {
+                el.style.setProperty("display", "none", "important");
+            });
+            document.querySelectorAll("[id^='val-']").forEach(el => el.textContent = "0");
 
             const tagsContainer = document.getElementById("cart-tags-container");
             tagsContainer.innerHTML = "";
@@ -436,21 +370,21 @@
                 const val = document.getElementById(`val-${safeId}`);
                 
                 if (group && val) {
-                    group.classList.add("active");
+                    group.style.setProperty("display", "flex", "important");
                     val.textContent = qty;
                 }
 
                 const tag = document.createElement("div");
-                tag.className = "cart-tag";
+                tag.className = "bg-zinc-900 border border-zinc-800 font-semibold text-[11px] px-3 py-1 rounded-lg whitespace-nowrap text-zinc-300";
                 tag.innerHTML = `<span style="color:#facc15; font-weight:800;">${qty}x</span> ${name}`;
                 tagsContainer.appendChild(tag);
             });
 
             const bar = document.getElementById("cart-bar");
             if (totalCount === 0) {
-                bar.style.display = "none";
+                bar.style.setProperty("display", "none", "important");
             } else {
-                bar.style.display = "flex";
+                bar.style.setProperty("display", "flex", "important");
                 const pack = langPack[currentLang];
                 document.getElementById("cart-items-count-val").textContent = `${totalCount} ${totalCount === 1 ? pack.itemSingular : pack.itemPlural}`;
                 document.getElementById("cart-total-price-val").textContent = `${totalPrice.toLocaleString()} IQD`;

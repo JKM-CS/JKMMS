@@ -1,3 +1,10 @@
+I have successfully integrated the new **Fresh Juices** section into your single-file structure, updated the top shortcut menu links to include it, fixed the top navigation pills to be 100% native anchor elements (preventing JavaScript scrolling freezes on mobile screens), and changed the logo file name to point directly to `IMG_6187.png`.
+
+Remember, since we converted this into an all-in-one standalone file to maximize performance on mobile browsers, **you do not need `app.js` anymore.** Simply copy the clean source code below, replace everything inside your **`index.html`** file, make sure to delete `app.js` from your repository, and deploy!
+
+### Complete, Updated `index.html`
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -33,7 +40,7 @@
 <body class="min-h-screen bg-[#09090b] text-[#fafafa] antialiased pb-36">
 
     <div id="language-gate">
-        <div class="bg-[#0c0c0e] border border-zinc-900 padding p-8 rounded-3xl text-center w-full max-w-[340px] shadow-2xl">
+        <div class="bg-[#0c0c0e] border border-zinc-900 p-8 rounded-3xl text-center w-full max-w-[340px] shadow-2xl">
             <div class="mx-auto w-16 h-16 rounded-xl overflow-hidden border-2 border-zinc-800 mb-4">
                 <img src="IMG_6187.png" alt="Maccannoli Logo" class="w-full h-full object-cover">
             </div>
@@ -69,6 +76,7 @@
             <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
                 <a href="#m-mojito" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-mojito">Mojito</a>
                 <a href="#m-smoothie" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-smoothies">Smoothies</a>
+                <a href="#m-juices" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-juices">Fresh Juices</a>
                 <a href="#m-icetea" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-icetea">Ice Tea</a>
                 <a href="#m-hot" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-hotdrinks">Hot Drinks</a>
                 <a href="#m-latte" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-latte">Latte</a>
@@ -129,7 +137,7 @@
                 printM: "View Traditional Printed Layout Menu", thanks: "Thank you and enjoy • Maccannoli Bakery & Café",
                 cartL: "Selected Order", totalL: "Total Bill", clearL: "Clear", submitL: "Submit Order to Waiters",
                 tNo: "Table", itemSingular: "item selected", itemPlural: "items selected", confPrice: "Prices to be confirmed with staff",
-                mojito: "Mojito", smoothies: "Smoothies", icetea: "Ice Tea", hotdrinks: "Hot Drinks", latte: "Latte", sandwiches: "Sandwiches", croissant: "Croissant", cakes: "Cakes", energy: "Energy Drinks", pastries: "Pastries",
+                mojito: "Mojito", smoothies: "Smoothies", juices: "Fresh Juices", icetea: "Ice Tea", hotdrinks: "Hot Drinks", latte: "Latte", sandwiches: "Sandwiches", croissant: "Croissant", cakes: "Cakes", energy: "Energy Drinks", pastries: "Pastries",
                 waG: "Hello Maccannoli 👋", waT: "👉 ORDER FROM TABLE", waO: "My Order", waTot: "Total"
             },
             ku: {
@@ -139,7 +147,7 @@
                 printM: "بینینی مینیۆی چاپکراوی نەریتی", thanks: "سوپاس بۆ سەردانەکەتان • نانەواخانە و کافێی ماکانۆلی",
                 cartL: "داواکاری هەڵبژێردراو", totalL: "کۆیی گشتی", clearL: "سڕینەوە", submitL: "ناردنی داواکاری بۆ کارمەندان",
                 tNo: "مێزی", itemSingular: "بابەت هەڵبژێردراوە", itemPlural: "بابەت هەڵبژێردراون", confPrice: "نرخەکان لەگەڵ ستاف پشتڕاست دەکرێنەوە",
-                mojito: "مۆهیتۆ", smoothies: "سمووزی", icetea: "ئایس تی", hotdrinks: "خواردنەوە گەرمەکان", latte: "لاتێ", sandwiches: "ساندویچ", croissant: "کرۆسان", cakes: "کێک", energy: "خواردنەوە وزەبەخشەکان", pastries: "شیرینی و هەویرکاری",
+                mojito: "مۆهیتۆ", smoothies: "سمووزی", juices: "شەربەتی فرێش", icetea: "ئایس تی", hotdrinks: "خواردنەوە گەرمەکان", latte: "لاتێ", sandwiches: "ساندویچ", croissant: "کرۆسان", cakes: "کێک", energy: "خواردنەوە وزەبەخشەکان", pastries: "شیرینی و هەویرکاری",
                 waG: "سڵاو ماکانۆلی 👋", waT: "👉 داواکاری لە مێزی", waO: "داواکارییەکەم", waTot: "کۆیی گشتی"
             },
             ar: {
@@ -149,7 +157,7 @@
                 printM: "عرض القائمة المطبوعة التقليدية", thanks: "شكراً لكم واستمتعوا بوقتكم • مخبز ومقهى ماكانولي",
                 cartL: "الطلب المحدد", totalL: "الحساب الإجمالي", clearL: "مسح", submitL: "إرسال الطلب إلى الطاقم",
                 tNo: "طاولة", itemSingular: "صنف واحد مختار", itemPlural: "أصناف مختارة", confPrice: "الأسعار يتم تأكيدها مع الموظفين",
-                mojito: "موهيتو", smoothies: "سموذي", icetea: "شاي مثلج", hotdrinks: "مشروبات ساخنة", latte: "لاتيه", sandwiches: "سندويشات", croissant: "كرواسون", cakes: "كيك", energy: "مشروبات طاقة", pastries: "معجنات وحلويات",
+                mojito: "موهيتو", smoothies: "سموذي", juices: "عصائر طبيعية", icetea: "شاي مثلج", hotdrinks: "مشروبات ساخنة", latte: "لاتيه", sandwiches: "سندويشات", croissant: "كرواسون", cakes: "كيك", energy: "مشروبات طاقة", pastries: "معجنات وحلويات",
                 waG: "مرحباً ماكانولي 👋", waT: "👉 طلب من طاولة", waO: "طلبي", waTotal: "المجموع الكلي"
             }
         };
@@ -179,6 +187,20 @@
             return [
                 { name: t.mojito, id: "m-mojito", image: "mojito.jpg", items: [{ name: lang === "en" ? "Classic Mojito" : lang === "ku" ? "مۆهیتۆ کلاسیک" : "موهيتو كلاسيك", price: 6000 }, ...buildFlavors(suffixMojito, 7000)] },
                 { name: t.smoothies, id: "m-smoothie", image: "smoothies.jpg", items: buildFlavors(suffixSmoothie, 7000) },
+                {
+                    name: t.juices, id: "m-juices", image: "smoothies.jpg", items: [
+                        { name: lang === "en" ? "Orange Juice" : lang === "ku" ? "شەربەتی پرتەقاڵ" : "عصير برتقال", price: 6000 },
+                        { name: lang === "en" ? "Carrot Juice" : lang === "ku" ? "شەربەتی گێزەر" : "عصير جزر", price: 6000 },
+                        { name: lang === "en" ? "Apple Juice" : lang === "ku" ? "شەربەتی سێو" : "عصير تفاح", price: 6000 },
+                        { name: lang === "en" ? "Watermelon Juice" : lang === "ku" ? "شەربەتی شەمامە / شوتی" : "عصير بطيخ", price: 6000 },
+                        { name: lang === "en" ? "Peach Juice" : lang === "ku" ? "شەربەتی خۆخ" : "عصير خوخ", price: 6000 },
+                        { name: lang === "en" ? "Orange + Carrot Juice" : lang === "ku" ? "شەربەتی پرتەقاڵ + گێزەر" : "عصير برتقال + جزر", price: 6000 },
+                        { name: lang === "en" ? "Apple + Carrot Juice" : lang === "ku" ? "شەربەتی سێو + گێزەر" : "عصير تفاح + جزر", price: 6000 },
+                        { name: lang === "en" ? "Orange + Banana Juice" : lang === "ku" ? "شەربەتی پرتەقاڵ + مۆز" : "عصير برتقال + موز", price: 7000 },
+                        { name: lang === "en" ? "Avocado Juice" : lang === "ku" ? "شەربەتی ئەڤۆکادۆ" : "عصير أفوكادو", price: 8000 },
+                        { name: lang === "en" ? "Milk + Banana Juice" : lang === "ku" ? "شەربەتی شیر + مۆز" : "عصير حليب + موز", price: 8000 }
+                    ]
+                },
                 { name: t.icetea, id: "m-icetea", image: "ice-tea.jpg", items: buildFlavors(suffixIceTea, 7000) },
                 {
                     name: t.hotdrinks, id: "m-hot", image: "hot-drinks.jpg", items: [
@@ -202,8 +224,8 @@
                 },
                 {
                     name: t.sandwiches, id: "m-sand", image: "sandwiches.jpg", items: [
-                        { name: lang === "en" ? "Chicken Classic" : lang === "ku" ? "مریشك سانويچ" : "دجاج كلاسيك", price: 6000 },
-                        { name: lang === "en" ? "Chicken Caesar" : lang === "ku" ? "مریشکی سیزەر" : "دجاج سيزر", price: 6000 },
+                        { name: lang === "en" ? "Chicken Classic" : lang === "ku" ? "مریشکی کلاسیک" : "دجاج كلاسيك", price: 6000 },
+                        { name: lang === "en" ? "Chicken Caesar" : lang === "ku" ? "مریشکی قەیسەر" : "دجاج سيزر", price: 6000 },
                         { name: lang === "en" ? "Meat Sandwich" : lang === "ku" ? "ساندویچی گۆشت" : "سندويش لحم", price: 6000 },
                         { name: lang === "en" ? "Hot Dog" : lang === "ku" ? "هۆت دۆگ" : "هوت دوغ", price: 6000 },
                         { name: lang === "en" ? "Salami" : lang === "ku" ? "سەلامی" : "سلامي", price: 6000 }
@@ -238,8 +260,8 @@
                         { name: lang === "en" ? "Canele" : lang === "ku" ? "کانێلی" : "كانيل", price: 3000 },
                         { name: lang === "en" ? "Bombolini with Fruit" : lang === "ku" ? "بۆمبۆلینی لەگەڵ میوە" : "بومبوليني بالفواكه", price: 5000 },
                         { name: lang === "en" ? "Bombolini" : lang === "ku" ? "بۆمبۆلینی سادە" : "بومبوليني", price: 4000 },
-                        { name: lang === "en" ? "Danish with Fruit" : lang === "ku" ? "دانیش لەگەڵ میوە" : "دانش بالفواكه", price: 5000 },
-                        { name: lang === "en" ? "Danish" : lang === "ku" ? "دانیش سادە" : "دانش", price: 4000 },
+                        { name: lang === "en" ? "Danish with Fruit" : lang === "ku" ? "دانۆش لەگەڵ میوە" : "دانش بالفواكه", price: 5000 },
+                        { name: lang === "en" ? "Danish" : lang === "ku" ? "دانۆش سادە" : "دانش", price: 4000 },
                         { name: lang === "en" ? "Donut" : lang === "ku" ? "دۆنات" : "دونات", price: 3000 },
                         { name: lang === "en" ? "Galette" : lang === "ku" ? "گالێت" : "غاليت", price: 5000 }
                     ]
@@ -275,6 +297,7 @@
             // Map translated shortcuts pills plain text labels strings
             document.getElementById("tab-mojito").textContent = pack.mojito;
             document.getElementById("tab-smoothies").textContent = pack.smoothies;
+            document.getElementById("tab-juices").textContent = pack.juices;
             document.getElementById("tab-icetea").textContent = pack.icetea;
             document.getElementById("tab-hotdrinks").textContent = pack.hotdrinks;
             document.getElementById("tab-latte").textContent = pack.latte;
@@ -301,7 +324,7 @@
             data.forEach(cat => {
                 const sect = document.createElement("div");
                 sect.id = cat.id;
-                sect.className = "scroll-mt-custom"; // Anchor scrolling distance margin buffer
+                sect.className = "scroll-mt-custom"; 
 
                 let titleBlock = `
                     <div class="flex items-center gap-3 mb-4 border-b border-zinc-900 pb-2 mt-8">
@@ -419,3 +442,5 @@
     </script>
 </body>
 </html>
+
+```

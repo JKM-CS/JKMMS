@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,14 +19,9 @@
             display: flex !important; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
         }
         #application-content-wrapper { display: none; }
-        
-        /* Fixed mobile height overrides */
         html, body { height: 100%; min-height: 100dvh; }
-        
-        /* Smooth scrolling for top category shortcuts */
         html { scroll-behavior: smooth; }
         .scroll-mt-custom { scroll-margin-top: 130px; }
-        
         body[dir="rtl"] { text-align: right; }
     </style>
 </head>
@@ -67,26 +61,14 @@
                 </div>
             </div>
             
-            <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-                <a href="#m-mojito" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-mojito">Mojito</a>
-                <a href="#m-smoothie" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-smoothies">Smoothies</a>
-                <a href="#m-juices" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-juices">Fresh Juices</a>
-                <a href="#m-icetea" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-icetea">Ice Tea</a>
-                <a href="#m-hot" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-hotdrinks">Hot Drinks</a>
-                <a href="#m-latte" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-latte">Latte</a>
-                <a href="#m-sand" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-sandwiches">Sandwiches</a>
-                <a href="#m-crois" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-croissant">Croissant</a>
-                <a href="#m-cake" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-cakes">Cakes</a>
-                <a href="#m-energy" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-energy">Energy Drinks</a>
-                <a href="#m-pastry" class="bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black" id="tab-pastries">Pastries</a>
-            </div>
+            <div class="flex gap-2 overflow-x-auto no-scrollbar py-1" id="category-pills-container"></div>
         </div>
 
         <header class="text-center border border-zinc-900 bg-zinc-950/40 p-6 rounded-3xl mb-10">
             <div class="mx-auto w-20 h-20 rounded-2xl overflow-hidden border-2 border-zinc-800"><img src="IMG_6187.png" alt="Logo" class="w-full h-full object-cover"></div>
             <h1 class="text-2xl font-black tracking-widest mt-3">MACCANNOLI</h1>
             <div class="flex justify-center gap-2 text-xs text-zinc-500 mt-1"><span id="txt-meta-type">Bakery & Café</span>•<span id="txt-meta-loc">Erbil</span></div>
-            <p class="text-xs text-zinc-400 mt-4 leading-relaxed max-w-md mx-auto" id="txt-hero-desc">Building selection parameters...</p>
+            <p class="text-xs text-zinc-400 mt-4 leading-relaxed max-w-md mx-auto" id="txt-hero-desc">Loading menu preferences...</p>
         </header>
 
         <main id="menu-cards-container" class="space-y-4"></main>
@@ -120,9 +102,32 @@
         </div>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpMpNyWRP3u6h4N4o2QPpWJ4cbvHtSrvM",
+            authDomain: "maccannoli-83c54.firebaseapp.com",
+            projectId: "maccannoli-83c54",
+            storageBucket: "maccannoli-83c54.firebasestorage.app",
+            messagingSenderId: "199923494866",
+            appId: "1:199923494866:web:69bd2235d45fccce03220b",
+            measurementId: "G-EEMGQ3718G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Expose critical engines and parameters to the window context safely
+        window.firebaseDB = db;
+        window.firestoreGetDocs = getDocs;
+        window.firestoreCollection = collection;
+        window.firestoreDoc = doc;
+        window.firestoreGetDoc = getDoc;
+    </script>
+
     <script>
-        const WA_PHONE = "9647508244835";
-        
         const langPack = {
             en: {
                 dir: "ltr", metaType: "Bakery & Café", metaLoc: "Erbil",
@@ -130,8 +135,7 @@
                 qrT: "Scan to Order", qrD: "Point your mobile camera over this design element to automatically launch the link.",
                 printM: "View Traditional Printed Layout Menu", thanks: "Thank you and enjoy • Maccannoli Bakery & Café",
                 cartL: "Selected Order", totalL: "Total Bill", clearL: "Clear", submitL: "Submit Order to Waiters",
-                tNo: "Table", itemSingular: "item selected", itemPlural: "items selected", confPrice: "Prices to be confirmed with staff",
-                mojito: "Mojito", smoothies: "Smoothies", juices: "Fresh Juices", icetea: "Ice Tea", hotdrinks: "Hot Drinks", latte: "Latte", sandwiches: "Sandwiches", croissant: "Croissant", cakes: "Cakes", energy: "Energy Drinks", pastries: "Pastries",
+                tNo: "Table", itemSingular: "item selected", itemPlural: "items selected",
                 waG: "Hello Maccannoli 👋", waT: "👉 ORDER FROM TABLE", waO: "My Order", waTot: "Total"
             },
             ku: {
@@ -140,8 +144,7 @@
                 qrT: "بۆ داواکردن سکان بکە", qrD: "کامێرای مۆبایلەکەت ڕووبەڕووی ئەم کۆدە بکەرەوە بۆ کردنەوەی ڕاستەوخۆی مینیو.",
                 printM: "بینینی مینیۆی چاپکراوی نەریتی", thanks: "سوپاس بۆ سەردانەکەتان • نانەواخانە و کافێی ماکانۆلی",
                 cartL: "داواکاری هەڵبژێردراو", totalL: "کۆیی گشتی", clearL: "سڕینەوە", submitL: "ناردنی داواکاری بۆ کارمەندان",
-                tNo: "مێزی", itemSingular: "بابەت هەڵبژێردراوە", itemPlural: "بابەت هەڵبژێردراون", confPrice: "نرخەکان لەگەڵ ستاف پشتڕاست دەکرێنەوە",
-                mojito: "مۆهیتۆ", smoothies: "سمووزی", juices: "شەربەتی فرێش", icetea: "ئایس تی", hotdrinks: "خواردنەوە گەرمەکان", latte: "لاتێ", sandwiches: "ساندویچ", croissant: "کرۆسان", cakes: "کێک", energy: "خواردنەوە وزەبەخشەکان", pastries: "شیرینی و هەویرکاری",
+                tNo: "مێزی", itemSingular: "بابەت هەڵبژێردراوە", itemPlural: "بابەت هەڵبژێردراون",
                 waG: "سڵاو ماکانۆلی 👋", waT: "👉 داواکاری لە مێزی", waO: "داواکارییەکەم", waTot: "کۆیی گشتی"
             },
             ar: {
@@ -150,117 +153,55 @@
                 qrT: "امسح الرمز للطلب", qrD: "وجه كاميرا هاتفك فوق الرمز لفتح قائمة الطعام التفاعلية مباشرة.",
                 printM: "عرض القائمة المطبوعة التقليدية", thanks: "شكراً لكم واستمتعوا بوقتكم • مخبز ومقهى ماكانولي",
                 cartL: "الطلب المحدد", totalL: "الحساب الإجمالي", clearL: "مسح", submitL: "إرسال الطلب إلى الطاقم",
-                tNo: "طاولة", itemSingular: "صنف واحد مختار", itemPlural: "أصناف مختارة", confPrice: "الأسعار يتم تأكيدها مع الموظفين",
-                mojito: "موهيتو", smoothies: "سموذي", juices: "عصائر طبيعية", icetea: "شاي مثلج", hotdrinks: "مشروبات ساخنة", latte: "لاتيه", sandwiches: "سندويشات", croissant: "كرواسون", cakes: "كيك", energy: "مشروبات طاقة", pastries: "معجنات وحلويات",
-                waG: "مرحباً ماكانولي 👋", waT: "👉 طلب من طاولة", waO: "طلبي", waTotal: "المجموع الكلي"
+                tNo: "طاولة", itemSingular: "صنف واحد مختار", itemPlural: "أصناف مختارة",
+                waG: "مرحباً ماكانولي 👋", waT: "👉 طلب من طاولة", waO: "طلبي", waTot: "المجموع الكلي"
             }
-        };
-
-        const flavorsMapping = {
-            en: ["Strawberry", "Blueberry", "Apple", "Mango", "Peach", "Pineapple", "Raspberry", "Kiwi", "Cherry", "Passion Fruit"],
-            ku: ["شلیک", "بلو بێری", "سێو", "مانگۆ", "خۆخ", "ئەنەناس", "ڕاسبێری", "کیوی", "گێلاس", "پاشن فروت"],
-            ar: ["فراولة", "توت أزرق", "تفاح", "مانجو", "خوخ", "أناناس", "توت عليق", "كيوي", "كرز", "فاكهة العاطفة"]
         };
 
         let currentLang = 'en';
         let cart = {}; 
         let flatPricesLookup = {};
+        let activeWhatsAppNumber = "9647508244835"; // Fallback default
+        let loadedMenuData = [];
 
         const tableNum = new URLSearchParams(window.location.search).get('table');
 
-        function generateMenuTree(lang) {
-            const f = flavorsMapping[lang];
-            const t = langPack[lang];
-            const suffixMojito = lang === "en" ? " Mojito" : lang === "ku" ? " مۆهیتۆ" : " موهيتو";
-            const suffixSmoothie = lang === "en" ? " Smoothie" : lang === "ku" ? " سمووزی" : " سموذي";
-            const suffixIceTea = lang === "en" ? " Ice Tea" : lang === "ku" ? " ئایس تی" : " شاي مثلج";
-            const prefixRedBull = lang === "en" ? "Red Bull " : lang === "ku" ? "ڕێد بۆڵ " : "ريد بول ";
+        // Check window intervals to verify module runtime completion
+        function checkFirebaseReady() {
+            if (window.firebaseDB) {
+                fetchSettingsAndMenu();
+            } else {
+                setTimeout(checkFirebaseReady, 100);
+            }
+        }
+        window.addEventListener('DOMContentLoaded', checkFirebaseReady);
 
-            const buildFlavors = (sfx, prc, pfx="") => f.map(name => ({ name: `${pfx}${name}${sfx}`, price: prc }));
-
-            return [
-                { name: t.mojito, id: "m-mojito", image: "mojito.jpg", items: [{ name: lang === "en" ? "Classic Mojito" : lang === "ku" ? "مۆهیتۆ کلاسیک" : "موهيتو كلاسيك", price: 6000 }, ...buildFlavors(suffixMojito, 7000)] },
-                { name: t.smoothies, id: "m-smoothie", image: "smoothies.jpg", items: buildFlavors(suffixSmoothie, 7000) },
-                {
-                    name: t.juices, id: "m-juices", image: "smoothies.jpg", items: [
-                        { name: lang === "en" ? "Orange Juice" : lang === "ku" ? "شەربەتی پرتەقاڵ" : "عصير برتقال", price: 6000 },
-                        { name: lang === "en" ? "Carrot Juice" : lang === "ku" ? "شەربەتی گێزەر" : "عصير جزر", price: 6000 },
-                        { name: lang === "en" ? "Apple Juice" : lang === "ku" ? "شەربەتی سێو" : "عصير تفاح", price: 6000 },
-                        { name: lang === "en" ? "Watermelon Juice" : lang === "ku" ? "شەربەتی شەمامە / شوتی" : "عصير بطيخ", price: 6000 },
-                        { name: lang === "en" ? "Peach Juice" : lang === "ku" ? "شەربەتی خۆخ" : "عصير خوخ", price: 6000 },
-                        { name: lang === "en" ? "Orange + Carrot Juice" : lang === "ku" ? "شەربەتی پرتەقاڵ + گێزەر" : "عصير برتقال + جزر", price: 6000 },
-                        { name: lang === "en" ? "Apple + Carrot Juice" : lang === "ku" ? "شەربەتی سێو + گێزەر" : "عصير تفاح + جزر", price: 6000 },
-                        { name: lang === "en" ? "Orange + Banana Juice" : lang === "ku" ? "شەربەتی پرتەقاڵ + مۆز" : "عصير برتقال + موز", price: 7000 },
-                        { name: lang === "en" ? "Avocado Juice" : lang === "ku" ? "شەربەتی ئەڤۆکادۆ" : "عصير أفوكادو", price: 8000 },
-                        { name: lang === "en" ? "Milk + Banana Juice" : lang === "ku" ? "شەربەتی شیر + مۆز" : "عصير حليب + موز", price: 8000 }
-                    ]
-                },
-                { name: t.icetea, id: "m-icetea", image: "ice-tea.jpg", items: buildFlavors(suffixIceTea, 7000) },
-                {
-                    name: t.hotdrinks, id: "m-hot", image: "hot-drinks.jpg", items: [
-                        { name: lang === "en" ? "Espresso" : lang === "ku" ? "ئێسپرێسۆ" : "إسبريسو", price: 4000 },
-                        { name: lang === "en" ? "Americano" : lang === "ku" ? "ئەمەریکانۆ" : "أمريكانو", price: 6000 },
-                        { name: lang === "en" ? "Cappuccino" : lang === "ku" ? "کاپوچینۆ" : "كابوتشينو", price: 7000 },
-                        { name: lang === "en" ? "Hot Chocolate" : lang === "ku" ? "شۆکۆلاتەی گەرم" : "شوكولاتة ساخنة", price: 7000 },
-                        { name: lang === "en" ? "Tea" : lang === "ku" ? "چای" : "شاي", price: 2000 }
-                    ]
-                },
-                {
-                    name: t.latte, id: "m-latte", image: "latte.jpg", items: ["Classic", "Vanilla", "Caramel", "Spanish", "Rose", "Cinnamon", "Lavender"].map(n => {
-                        const prices = { "Classic": 6000, "Vanilla": 7000, "Caramel": 7000, "Spanish": 7000, "Rose": 7000, "Cinnamon": 7000, "Lavender": 7000 };
-                        const kMap = { "Classic": "کلاسیک", "Vanilla": "ڤانیلا", "Caramel": "کارامێل", "Spanish": "سپانیش", "Rose": "گوڵ", "Cinnamon": "دارچینی", "Lavender": "لاڤێندەر" };
-                        const aMap = { "Classic": "كلاسيك", "Vanilla": "فانيليا", "Caramel": "كاراميل", "Spanish": "سبانيش", "Rose": "ورد", "Cinnamon": "قرفة", "Lavender": "خزامى" };
-                        let finalN = `${n} Latte`;
-                        if(lang === "ku") finalN = `لاتێ ${kMap[n]}`;
-                        if(lang === "ar") finalN = `لاتيه ${aMap[n]}`;
-                        return { name: finalN, price: prices[n] };
-                    })
-                },
-                {
-                    name: t.sandwiches, id: "m-sand", image: "sandwiches.jpg", items: [
-                        { name: lang === "en" ? "Chicken Classic" : lang === "ku" ? "مریشکی کلاسیک" : "دجاج كلاسيك", price: 6000 },
-                        { name: lang === "en" ? "Chicken Caesar" : lang === "ku" ? "مریشکی قەیسەر" : "دجاج سيزر", price: 6000 },
-                        { name: lang === "en" ? "Meat Sandwich" : lang === "ku" ? "ساندویچی گۆشت" : "سندويش لحم", price: 6000 },
-                        { name: lang === "en" ? "Hot Dog" : lang === "ku" ? "هۆت دۆگ" : "هوت دوغ", price: 6000 },
-                        { name: lang === "en" ? "Salami" : lang === "ku" ? "سەلامی" : "سلامي", price: 6000 }
-                    ]
-                },
-                {
-                    name: t.croissant, id: "m-crois", image: "croissant.jpg", items: [
-                        { name: lang === "en" ? "Cheese Croissant" : lang === "ku" ? "کرۆسانی پەنیر" : "كرواسون جبنة", price: 5000 },
-                        { name: lang === "en" ? "Chocolate Croissant" : lang === "ku" ? "کرۆسانی شوکۆلاتە" : "كرواسون شوكولاتة", price: 5000 },
-                        { name: lang === "en" ? "Plain Croissant" : lang === "ku" ? "کرۆسانی سادە" : "كرواسون سادة", price: 5000 },
-                        { name: lang === "en" ? "Cube Croissant" : lang === "ku" ? "کرۆسانی چوارگۆشە (Cube)" : "كرواسون مكعب", price: 5000 },
-                        { name: lang === "en" ? "Roll Croissant" : lang === "ku" ? "کرۆسانی ڕۆڵ" : "كرواسون رول", price: 5000 },
-                        { name: lang === "en" ? "Ribbon Croissant" : lang === "ku" ? "کرۆسانی ڕیبۆن" : "كرواسون ريبون", price: 5000 },
-                        { name: lang === "en" ? "Crema with Fruit Croissant" : lang === "ku" ? "کرۆسانی کرێم و میوە" : "كرواسون كريمة وفواكه", price: 5000 }
-                    ]
-                },
-                {
-                    name: t.cakes, id: "m-cake", image: "cakes.jpg", items: [
-                        { name: lang === "en" ? "Banana Cake" : lang === "ku" ? "کێکی مۆز" : "كيك موز", price: 3000 },
-                        { name: lang === "en" ? "Brownie Cube" : lang === "ku" ? "بڕاونی چوارگۆشە" : "مكعب براوني", price: 6000 },
-                        { name: lang === "en" ? "Brownie" : lang === "ku" ? "بڕاونی" : "براوني", price: 7000 },
-                        { name: lang === "en" ? "Chocolate Mousse" : lang === "ku" ? "موویسی شوکۆلاتە" : "موس الشوكولاتة", price: 6000 },
-                        { name: lang === "en" ? "Tiramisu" : lang === "ku" ? "تیرامیسو" : "تيراميسو", price: 5000 },
-                        { name: lang === "en" ? "Red Velvet" : lang === "ku" ? "ڕێد ڤێلڤێت" : "ريد فيلفيت", price: 7000 },
-                        { name: lang === "en" ? "Lazy Cake" : lang === "ku" ? "لەیزی کێک" : "ليزى كيك", price: 5000 }
-                    ]
-                },
-                { name: t.energy, id: "m-energy", image: "energy-drinks.jpg", items: [{ name: lang === "en" ? "Red Bull Classic" : lang === "ku" ? "ڕێد بۆڵ کلاسیک" : "ريد بول كلاسيك", price: 4000 }, ...buildFlavors("", 7000, prefixRedBull)] },
-                {
-                    name: t.pastries, id: "m-pastry", note: t.notePastries, items: [
-                        { name: lang === "en" ? "Cinnamon Roll" : lang === "ku" ? "سینامۆن ڕۆڵ" : "لفافة القرفة", price: 5000 },
-                        { name: lang === "en" ? "Canele" : lang === "ku" ? "کانێلی" : "كانيل", price: 3000 },
-                        { name: lang === "en" ? "Bombolini with Fruit" : lang === "ku" ? "بۆمبۆلینی لەگەڵ میوە" : "بومبوليني بالفواكه", price: 5000 },
-                        { name: lang === "en" ? "Bombolini" : lang === "ku" ? "بۆمبۆلینی سادە" : "بومبوليني", price: 4000 },
-                        { name: lang === "en" ? "Danish with Fruit" : lang === "ku" ? "دانۆش لەگەڵ میوە" : "دانش بالفواكه", price: 5000 },
-                        { name: lang === "en" ? "Danish" : lang === "ku" ? "دانۆش سادە" : "دانش", price: 4000 },
-                        { name: lang === "en" ? "Donut" : lang === "ku" ? "دۆنات" : "دونات", price: 3000 },
-                        { name: lang === "en" ? "Galette" : lang === "ku" ? "گالێت" : "غاليت", price: 5000 }
-                    ]
+        async function fetchSettingsAndMenu() {
+            try {
+                // Fetch Global Custom Settings (WhatsApp Gateway Number)
+                const configDocRef = window.firestoreDoc(window.firebaseDB, "settings", "config");
+                const configSnap = await window.firestoreGetDoc(configDocRef);
+                if (configSnap.exists()) {
+                    activeWhatsAppNumber = configSnap.data().whatsapp_phone || activeWhatsAppNumber;
                 }
-            ];
+
+                // Fetch Database Categories
+                const querySnapshot = await window.firestoreGetDocs(window.firestoreCollection(window.firebaseDB, "categories"));
+                let rawCategories = [];
+                querySnapshot.forEach((doc) => {
+                    rawCategories.push({ docId: doc.id, ...doc.data() });
+                });
+
+                // Alphabetical or customized sort using collection IDs (e.g. "01_mojito")
+                rawCategories.sort((a, b) => a.docId.localeCompare(b.docId));
+                loadedMenuData = rawCategories;
+
+                // Fire application rendering frame
+                bootAppEngine('en');
+            } catch (err) {
+                console.error("Error connecting to Firestore data nodes:", err);
+                document.getElementById("txt-hero-desc").textContent = "Error updating database structures. Please connect online.";
+            }
         }
 
         function bootAppEngine(lang) {
@@ -270,10 +211,32 @@
             document.body.setAttribute("dir", langPack[lang].dir);
             document.getElementById("lang-switcher").value = lang;
 
-            const data = generateMenuTree(lang);
-            
             flatPricesLookup = {};
-            data.forEach(c => c.items.forEach(i => flatPricesLookup[i.name] = i.price));
+            
+            // Rebuild categories pills navigation links mapping
+            const pillsContainer = document.getElementById("category-pills-container");
+            pillsContainer.innerHTML = "";
+
+            loadedMenuData.forEach(cat => {
+                const localizedCatName = cat[`name_${lang}`] || cat.name_en;
+                
+                // Add scrolling shortcuts links frames
+                const pill = document.createElement("a");
+                pill.href = `#${cat.id}`;
+                pill.className = "bg-[#0c0c0e] border border-zinc-900 text-zinc-400 text-[11px] font-bold px-4 py-2 rounded-xl whitespace-nowrap active:bg-yellow-400 active:text-black";
+                pill.textContent = localizedCatName;
+                pillsContainer.appendChild(pill);
+
+                // Map product item price points safely contextually
+                if (cat.items && Array.isArray(cat.items)) {
+                    cat.items.forEach(item => {
+                        if (item.enabled !== false) {
+                            const localizedItemName = item[`name_${lang}`] || item.name_en;
+                            flatPricesLookup[localizedItemName] = item.price;
+                        }
+                    });
+                }
+            });
 
             const pack = langPack[lang];
             document.getElementById("txt-meta-type").textContent = pack.metaType;
@@ -288,34 +251,23 @@
             document.getElementById("txt-clear-btn").textContent = pack.clearL;
             document.getElementById("txt-submit-btn").textContent = pack.submitL;
 
-            // Map translated shortcuts pills plain text labels strings
-            document.getElementById("tab-mojito").textContent = pack.mojito;
-            document.getElementById("tab-smoothies").textContent = pack.smoothies;
-            document.getElementById("tab-juices").textContent = pack.juices;
-            document.getElementById("tab-icetea").textContent = pack.icetea;
-            document.getElementById("tab-hotdrinks").textContent = pack.hotdrinks;
-            document.getElementById("tab-latte").textContent = pack.latte;
-            document.getElementById("tab-sandwiches").textContent = pack.sandwiches;
-            document.getElementById("tab-croissant").textContent = pack.croissant;
-            document.getElementById("tab-cakes").textContent = pack.cakes;
-            document.getElementById("tab-energy").textContent = pack.energy;
-            document.getElementById("tab-pastries").textContent = pack.pastries;
-
             if (tableNum) {
                 const badge = document.getElementById("table-badge-el");
                 badge.textContent = `📍 ${pack.tNo} ${tableNum}`;
                 badge.style.setProperty("display", "flex", "important");
             }
 
-            renderMenuGridCards(data);
+            renderMenuGridCards(loadedMenuData, lang);
             syncCartUIState();
         }
 
-        function renderMenuGridCards(data) {
+        function renderMenuGridCards(data, lang) {
             const container = document.getElementById("menu-cards-container");
             container.innerHTML = "";
 
             data.forEach(cat => {
+                const localizedCatName = cat[`name_${lang}`] || cat.name_en;
+                
                 const sect = document.createElement("div");
                 sect.id = cat.id;
                 sect.className = "scroll-mt-custom"; 
@@ -323,33 +275,42 @@
                 let titleBlock = `
                     <div class="flex items-center gap-3 mb-4 border-b border-zinc-900 pb-2 mt-8">
                         ${cat.image ? `<img src="${cat.image}" class="w-12 h-12 rounded-xl object-cover border border-zinc-800" alt="">` : ""}
-                        <h2 class="text-lg font-black tracking-wide">${cat.name}</h2>
+                        <h2 class="text-lg font-black tracking-wide">${localizedCatName}</h2>
                     </div>`;
                 
-                let noteBlock = cat.note ? `<div class="bg-zinc-900 border border-zinc-800 rounded-xl p-3 text-xs text-zinc-400 mb-4">ℹ️ ${cat.note}</div>` : "";
-                
                 let cardsBlock = `<div class="grid grid-cols-1 md:grid-cols-2 gap-3">`;
-                cat.items.forEach(item => {
-                    const safeId = btoa(encodeURIComponent(item.name)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
-                    cardsBlock += `
-                        <div class="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-4 flex justify-between items-center">
-                            <div style="padding-right: 8px;">
-                                <h3 class="text-sm font-semibold text-zinc-200">${item.name}</h3>
-                                <p class="text-xs font-bold text-yellow-400 mt-1">${item.price.toLocaleString()} <span class="text-[10px] text-yellow-500 opacity-80 font-medium">IQD</span></p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <div class="hidden items-center gap-2" id="group-${safeId}">
-                                    <button class="w-8 h-8 rounded-lg border border-zinc-800 bg-zinc-900 text-white font-bold text-sm cursor-pointer flex items-center justify-center active:scale-90" onclick="modifyQty('${safeId}', '${encodeURIComponent(item.name)}', -1)">-</button>
-                                    <span class="text-yellow-400 font-extrabold text-sm min-w-4 text-center" id="val-${safeId}">0</span>
+                let displayableCount = 0;
+
+                if (cat.items && Array.isArray(cat.items)) {
+                    cat.items.forEach(item => {
+                        if (item.enabled === false) return; // Skip disabled selections globally
+                        
+                        displayableCount++;
+                        const localizedItemName = item[`name_${lang}`] || item.name_en;
+                        const safeId = btoa(encodeURIComponent(localizedItemName)).replace(/=/g, "").replace(/\+/g, "-").replace(/\//g, "_");
+                        
+                        cardsBlock += `
+                            <div class="bg-zinc-950/40 border border-zinc-900 rounded-2xl p-4 flex justify-between items-center">
+                                <div style="padding-right: 8px;">
+                                    <h3 class="text-sm font-semibold text-zinc-200">${localizedItemName}</h3>
+                                    <p class="text-xs font-bold text-yellow-400 mt-1">${item.price.toLocaleString()} <span class="text-[10px] text-yellow-500 opacity-80 font-medium">IQD</span></p>
                                 </div>
-                                <button class="w-8 h-8 rounded-lg border-none bg-yellow-400 text-black font-bold text-sm cursor-pointer flex items-center justify-center active:scale-90" onclick="modifyQty('${safeId}', '${encodeURIComponent(item.name)}', 1)">+</button>
-                            </div>
-                        </div>`;
-                });
+                                <div class="flex items-center gap-2">
+                                    <div class="hidden items-center gap-2" id="group-${safeId}">
+                                        <button class="w-8 h-8 rounded-lg border border-zinc-800 bg-zinc-900 text-white font-bold text-sm cursor-pointer flex items-center justify-center active:scale-90" onclick="modifyQty('${safeId}', '${encodeURIComponent(localizedItemName)}', -1)">-</button>
+                                        <span class="text-yellow-400 font-extrabold text-sm min-w-4 text-center" id="val-${safeId}">0</span>
+                                    </div>
+                                    <button class="w-8 h-8 rounded-lg border-none bg-yellow-400 text-black font-bold text-sm cursor-pointer flex items-center justify-center active:scale-90" onclick="modifyQty('${safeId}', '${encodeURIComponent(localizedItemName)}', 1)">+</button>
+                                </div>
+                            </div>`;
+                    });
+                }
                 cardsBlock += `</div>`;
 
-                sect.innerHTML = titleBlock + noteBlock + cardsBlock;
-                container.appendChild(sect);
+                if (displayableCount > 0) {
+                    sect.innerHTML = titleBlock + cardsBlock;
+                    container.appendChild(sect);
+                }
             });
         }
 
@@ -430,11 +391,9 @@
 
             msg += `\n${pack.waTot}: ${total.toLocaleString()} IQD`;
             
-            const targetUrl = `https://wa.me/${WA_PHONE}?text=${encodeURIComponent(msg)}`;
+            const targetUrl = `https://wa.me/${activeWhatsAppNumber}?text=${encodeURIComponent(msg)}`;
             window.open(targetUrl, "_blank", "noopener,noreferrer") || (window.location.href = targetUrl);
         }
     </script>
 </body>
 </html>
-
-```

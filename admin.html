@@ -12,6 +12,7 @@
 </head>
 <body class="min-h-screen">
 
+    <!-- 1. AUTHENTICATION LOGIN OVERLAY (Shows when logged out) -->
     <div id="login-overlay" class="fixed inset-0 bg-zinc-950 flex items-center justify-center p-6 z-50">
         <div class="max-w-sm w-full bg-zinc-900 border border-zinc-800 p-8 rounded-3xl shadow-2xl">
             <div class="mx-auto w-16 h-16 rounded-xl overflow-hidden border-2 border-zinc-800 mb-4">
@@ -37,9 +38,11 @@
         </div>
     </div>
 
+    <!-- 2. SECURE PORTAL APPLICATION WRAPPER (Hidden until login passes) -->
     <div id="admin-app" class="hidden p-4 md:p-8">
         <div class="max-w-4xl mx-auto">
             
+            <!-- Dashboard Header Navigation -->
             <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-800 pb-6 mb-8 gap-4">
                 <div>
                     <h1 class="text-2xl font-black tracking-wide text-yellow-400">MACCANNOLI Portal</h1>
@@ -62,15 +65,18 @@
                 </div>
             </header>
 
+            <!-- Loading Live Data Matrix Placeholder -->
             <div id="loading-fallback" class="text-center py-12 bg-zinc-950 border border-zinc-900 rounded-3xl text-zinc-500 text-sm font-semibold">
                 Downloading live Firestore database streams...
             </div>
 
+            <!-- Main Live Interactive Editor Grid -->
             <main id="admin-main-container" class="space-y-6 hidden"></main>
 
         </div>
     </div>
 
+    <!-- Firebase v10 Web Engine Modularity Modules -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
@@ -106,7 +112,6 @@
             if (user) {
                 overlay.classList.add("hidden");
                 appWrapper.classList.remove("hidden");
-                // User is verified, safely download layout data
                 loadAdminDashboardData();
             } else {
                 overlay.classList.remove("hidden");
@@ -134,7 +139,6 @@
 
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                // Clear input cells for security
                 document.getElementById("login-email").value = "";
                 document.getElementById("login-password").value = "";
             } catch (error) {
@@ -152,19 +156,18 @@
         };
     </script>
 
+    <!-- UI Component Rendering Actions Script -->
     <script>
         let localDashboardCategories = [];
 
         async function loadAdminDashboardData() {
             try {
-                // Pull Global Config Settings Object
                 const configDocRef = window.firestoreDoc(window.firebaseDB, "settings", "config");
                 const configSnap = await window.firestoreGetDoc(configDocRef);
                 if (configSnap.exists()) {
                     document.getElementById("wa-input").value = configSnap.data().whatsapp_phone || "";
                 }
 
-                // Gather Categories Arrays
                 const querySnapshot = await window.firestoreGetDocs(window.firestoreCollection(window.firebaseDB, "categories"));
                 let categoriesList = [];
                 querySnapshot.forEach((doc) => {
@@ -192,13 +195,32 @@
                 catBox.className = "bg-zinc-950 border border-zinc-900 rounded-3xl p-6 shadow-xl mb-6";
 
                 let headerBlock = `
-                    <div class="flex items-center justify-between border-b border-zinc-900 pb-4 mb-4">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-zinc-900 pb-4 mb-4 gap-4">
                         <div class="flex items-center gap-3">
                             ${category.image ? `<img src="${category.image}" class="w-10 h-10 rounded-xl object-cover border border-zinc-800">` : ""}
                             <div>
                                 <h2 class="text-base font-black text-white">${category.name_en} <span class="text-zinc-600 text-xs font-normal">(${category.docId})</span></h2>
                                 <p class="text-xs text-zinc-500">${category.name_ar} • ${category.name_ku}</p>
                             </div>
+                        </div>
+                        <button onclick="toggleNewItemForm('${category.docId}')" class="bg-zinc-900 hover:bg-zinc-800 text-yellow-400 font-bold text-xs px-3 py-1.5 rounded-xl border border-zinc-800 transition cursor-pointer">
+                            + Add Item
+                        </button>
+                    </div>`;
+
+                // Hidden inline creation row form
+                let newItemFormBlock = `
+                    <div id="form-new-${category.docId}" class="hidden bg-zinc-900/40 border border-zinc-900 rounded-2xl p-4 mb-4 space-y-3">
+                        <p class="text-[11px] uppercase font-bold tracking-wider text-yellow-400/80">Add New Item to ${category.name_en}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                            <input type="text" id="add-en-${category.docId}" placeholder="English Name" class="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-yellow-400">
+                            <input type="text" id="add-ku-${category.docId}" placeholder="Kurdish Name" class="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-yellow-400 text-right">
+                            <input type="text" id="add-ar-${category.docId}" placeholder="Arabic Name" class="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-white outline-none focus:border-yellow-400 text-right">
+                            <input type="number" id="add-price-${category.docId}" placeholder="Price (IQD)" class="bg-zinc-950 border border-zinc-800 rounded-lg px-3 py-1.5 text-xs text-yellow-400 font-bold outline-none focus:border-yellow-400">
+                        </div>
+                        <div class="flex justify-end gap-2 text-xs">
+                            <button onclick="toggleNewItemForm('${category.docId}')" class="bg-transparent hover:bg-zinc-900 text-zinc-500 px-3 py-1.5 rounded-lg transition font-medium cursor-pointer">Cancel</button>
+                            <button onclick="submitNewItem('${catIndex}', '${category.docId}')" class="bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold px-4 py-1.5 rounded-lg transition cursor-pointer">Save Item</button>
                         </div>
                     </div>`;
 
@@ -238,9 +260,49 @@
                 }
 
                 itemsTableBlock += `</tbody></table></div>`;
-                catBox.innerHTML = headerBlock + itemsTableBlock;
+                catBox.innerHTML = headerBlock + newItemFormBlock + itemsTableBlock;
                 mainContainer.appendChild(catBox);
             });
+        }
+
+        function toggleNewItemForm(docId) {
+            const rowForm = document.getElementById(`form-new-${docId}`);
+            rowForm.classList.toggle("hidden");
+        }
+
+        async function submitNewItem(catIndex, docId) {
+            const targetCat = localDashboardCategories[catIndex];
+            
+            const nameEn = document.getElementById(`add-en-${docId}`).value.trim();
+            const nameKu = document.getElementById(`add-ku-${docId}`).value.trim();
+            const nameAr = document.getElementById(`add-ar-${docId}`).value.trim();
+            const priceVal = parseFloat(document.getElementById(`add-price-${docId}`).value);
+
+            if (!nameEn || isNaN(priceVal)) {
+                return alert("At minimum, an English Name and a valid numeric Price are required.");
+            }
+
+            // Create structure framework item mapping
+            const newItem = {
+                name_en: nameEn,
+                name_ku: nameKu || nameEn,
+                name_ar: nameAr || nameEn,
+                price: priceVal,
+                enabled: true
+            };
+
+            if(!targetCat.items) targetCat.items = [];
+            targetCat.items.push(newItem);
+
+            try {
+                const docRef = window.firestoreDoc(window.firebaseDB, "categories", docId);
+                await window.firestoreUpdateDoc(docRef, { items: targetCat.items });
+                
+                // Live rebuild rendering
+                renderAdminControlInterface();
+            } catch (err) {
+                alert("Could not append item to cloud instance: " + err.message);
+            }
         }
 
         async function updateWhatsAppNumber() {

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maccannoli • Admin Control Center</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #09090b; color: #fafafa; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-zinc-800 pb-6 mb-8 gap-4">
+            <div>
+                <h1 class="text-2xl font-black tracking-wide text-yellow-400">MACCANNOLI Portal</h1>
+                <p class="text-zinc-500 text-xs mt-1">Live Database Asset Tracking Management</p>
+            </div>
+            <div class="bg-zinc-950 border border-zinc-800 p-3 rounded-2xl w-full sm:w-auto flex flex-col sm:flex-row gap-3 items-end sm:items-center">
+                <div>
+                    <label class="block text-[10px] uppercase font-bold tracking-wider text-zinc-500 mb-1">WhatsApp Target Phone</label>
+                    <input type="text" id="wa-input" class="bg-zinc-900 border border-zinc-800 rounded-xl px-3 py-1.5 text-xs font-bold text-white outline-none w-48" placeholder="964750...">
+                </div>
+                <button onclick="updateWhatsAppNumber()" class="bg-yellow-400 hover:bg-yellow-500 text-black font-extrabold text-xs px-4 py-2 rounded-xl transition cursor-pointer">Save Number</button>
+            </div>
+        </header>
+
+        <div id="loading-fallback" class="text-center py-12 bg-zinc-950 border border-zinc-900 rounded-3xl text-zinc-500 text-sm font-semibold">
+            Downloading live snapshot matrix streams...
+        </div>
+
+        <main id="admin-main-container" class="space-y-6 hidden"></main>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, getDocs, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDpMpNyWRP3u6h4N4o2QPpWJ4cbvHtSrvM",
+            authDomain: "maccannoli-83c54.firebaseapp.com",
+            projectId: "maccannoli-83c54",
+            storageBucket: "maccannoli-83c54.firebasestorage.app",
+            messagingSenderId: "199923494866",
+            appId: "1:199923494866:web:69bd2235d45fccce03220b",
+            measurementId: "G-EEMGQ3718G"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        window.firebaseDB = db;
+        window.firestoreGetDocs = getDocs;
+        window.firestoreCollection = collection;
+        window.firestoreDoc = doc;
+        window.firestoreGetDoc = getDoc;
+        window.firestoreUpdateDoc = updateDoc;
+    </script>
+
+    <script>
+        let localDashboardCategories = [];
+
+        function checkAdminFirebaseReady() {
+            if (window.firebaseDB) {
+                loadAdminDashboardData();
+            } else {
+                setTimeout(checkAdminFirebaseReady, 100);
+            }
+        }
+        window.addEventListener('DOMContentLoaded', checkAdminFirebaseReady);
+
+        async function loadAdminDashboardData() {
+            try {
+                // Pull Global Config Settings Object
+                const configDocRef = window.firestoreDoc(window.firebaseDB, "settings", "config");
+                const configSnap = await window.firestoreGetDoc(configDocRef);
+                if (configSnap.exists()) {
+                    document.getElementById("wa-input").value = configSnap.data().whatsapp_phone || "";
+                }
+
+                // Gather Categories Arrays
+                const querySnapshot = await window.firestoreGetDocs(window.firestoreCollection(window.firebaseDB, "categories"));
+                let categoriesList = [];
+                querySnapshot.forEach((doc) => {
+                    categoriesList.push({ docId: doc.id, ...doc.data() });
+                });
+
+                categoriesList.sort((a, b) => a.docId.localeCompare(b.docId));
+                localDashboardCategories = categoriesList;
+
+                renderAdminControlInterface();
+            } catch (error) {
+                console.error("Dashboard failed to retrieve dataset nodes:", error);
+                document.getElementById("loading-fallback").textContent = "Access denied. Check connection protocols.";
+            }
+        }
+
+        function renderAdminControlInterface() {
+            document.getElementById("loading-fallback").style.display = "none";
+            const mainContainer = document.getElementById("admin-main-container");
+            mainContainer.innerHTML = "";
+            mainContainer.classList.remove("hidden");
+
+            localDashboardCategories.forEach((category, catIndex) => {
+                const catBox = document.createElement("section");
+                catBox.className = "bg-zinc-950 border border-zinc-900 rounded-3xl p-6 shadow-xl";
+
+                let headerBlock = `
+                    <div class="flex items-center justify-between border-b border-zinc-900 pb-4 mb-4">
+                        <div class="flex items-center gap-3">
+                            ${category.image ? `<img src="${category.image}" class="w-10 h-10 rounded-xl object-cover border border-zinc-800">` : ""}
+                            <div>
+                                <h2 class="text-base font-black text-white">${category.name_en} <span class="text-zinc-600 text-xs font-normal">(${category.docId})</span></h2>
+                                <p class="text-xs text-zinc-500">${category.name_ar} • ${category.name_ku}</p>
+                            </div>
+                        </div>
+                    </div>`;
+
+                let itemsTableBlock = `<div class="overflow-x-auto"><table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="border-b border-zinc-900 text-zinc-500 uppercase tracking-wider font-bold">
+                            <th class="py-2 pr-2">English Name</th>
+                            <th class="py-2 pr-2">Kurdish Name</th>
+                            <th class="py-2 pr-2">Arabic Name</th>
+                            <th class="py-2 pr-2 w-28">Price (IQD)</th>
+                            <th class="py-2 text-center w-20">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>`;
+
+                if (category.items && Array.isArray(category.items)) {
+                    category.items.forEach((item, itemIndex) => {
+                        const isEnabled = item.enabled !== false;
+                        itemsTableBlock += `
+                            <tr class="border-b border-zinc-900/50 hover:bg-zinc-900/20">
+                                <td class="py-3 pr-2 font-semibold text-zinc-200">${item.name_en}</td>
+                                <td class="py-3 pr-2 text-zinc-400 font-medium">${item.name_ku || ""}</td>
+                                <td class="py-3 pr-2 text-zinc-400 font-medium">${item.name_ar || ""}</td>
+                                <td class="py-3 pr-2">
+                                    <input type="number" value="${item.price}" 
+                                        onchange="updateItemPrice(${catIndex}, ${itemIndex}, this.value)" 
+                                        class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-yellow-400 font-bold outline-none focus:border-yellow-400">
+                                </td>
+                                <td class="py-3 text-center">
+                                    <button onclick="toggleItemVisibility(${catIndex}, ${itemIndex}, ${isEnabled})" 
+                                        class="px-2.5 py-1 rounded-md text-[10px] font-black uppercase cursor-pointer transition ${isEnabled ? 'bg-green-500/10 text-green-400 border border-green-500/20 hover:bg-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20'}">
+                                        ${isEnabled ? 'Active' : 'Hidden'}
+                                    </button>
+                                </td>
+                            </tr>`;
+                    });
+                }
+
+                itemsTableBlock += `</tbody></table></div>`;
+                catBox.innerHTML = headerBlock + itemsTableBlock;
+                mainContainer.appendChild(catBox);
+            });
+        }
+
+        async function updateWhatsAppNumber() {
+            const val = document.getElementById("wa-input").value.trim();
+            if (!val) return alert("Enter a functional mobile number.");
+            
+            try {
+                const configDocRef = window.firestoreDoc(window.firebaseDB, "settings", "config");
+                await window.firestoreUpdateDoc(configDocRef, { whatsapp_phone: val });
+                alert("Global WhatsApp Target saved successfully!");
+            } catch (err) {
+                alert("Database push permission error: " + err.message);
+            }
+        }
+
+        async function updateItemPrice(catIndex, itemIndex, newPrice) {
+            const targetCat = localDashboardCategories[catIndex];
+            const parsedPrice = parseFloat(newPrice);
+            if (isNaN(parsedPrice)) return alert("Invalid price point entered.");
+
+            targetCat.items[itemIndex].price = parsedPrice;
+
+            try {
+                const docRef = window.firestoreDoc(window.firebaseDB, "categories", targetCat.docId);
+                await window.firestoreUpdateDoc(docRef, { items: targetCat.items });
+            } catch (err) {
+                alert("Error modifying dataset node: " + err.message);
+            }
+        }
+
+        async function toggleItemVisibility(catIndex, itemIndex, currentStatus) {
+            const targetCat = localDashboardCategories[catIndex];
+            targetCat.items[itemIndex].enabled = !currentStatus;
+
+            try {
+                const docRef = window.firestoreDoc(window.firebaseDB, "categories", targetCat.docId);
+                await window.firestoreUpdateDoc(docRef, { items: targetCat.items });
+                renderAdminControlInterface(); // Re-render local state matrix modifications
+            } catch (err) {
+                alert("Failed toggling target structural configuration: " + err.message);
+            }
+        }
+    </script>
+</body>
+</html>
